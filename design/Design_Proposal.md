@@ -178,7 +178,7 @@ The history tab can contain four types of very similar elements in its list:
 
 Only the last two elements are clickable and allow access to the detailed display of a product.
 
-A swipe left or right on one of the list items to delete it from the list, and the local database.
+A long press on one of the list items to delete it from the list, and the local database.
 
 When deleting a toast appears explaining the action in progress, with a cancel button.
 
@@ -193,7 +193,7 @@ The Favorites tab contains two type of item:
 
 Both are clickable and allow access to the detailed display of a product.
 
-A swipe left or right on one of the elements of the list to remove it from the list of favorites.
+A long press on one of the elements of the list to remove it from the list of favorites.
 
 When deleting favorites, toast appears explaining the action in progress, with a cancel button.
 
@@ -293,7 +293,9 @@ A special display will be developed without making any real changes in functiona
 ###Describe any libraries you’ll be using and share your reasoning for including them <a name="libraries"></a>
 
 Picasso or Glide to handle the loading and caching of images.
+
 Okhttp and Retrofit to retrieve API data
+
 All libraries that can accelerate the development and maintenance of the application:
 
 * Content provider
