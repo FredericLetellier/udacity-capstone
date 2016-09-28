@@ -232,8 +232,8 @@ The default selected category is the one that best describes the product.
 
 When a new category is selected, the five scrollable lists are updated.
 
-Then there are five horizontal scrollable lists, each with a title and the 
-number of items in the list.
+Then there are five horizontal scrollable lists, one for each of level of nutrition grade,
+each with a title and the number of items in the list.
 
 If one of the lists do not contain products, it is not displayed.
 
