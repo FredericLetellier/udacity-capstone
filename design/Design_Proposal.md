@@ -10,10 +10,10 @@
 3. [Intended User](#intended-user)
 4. [Features](#features)
 5. [User Interface Mocks](#user-interface-mocks)
-    1. [Main screen](#main-screen)
-    2. [Scan screen](#scan-screen)
-    3. [Product Detail screen](#product-detail-screen)
-    4. [Navigation](#navigation)
+    1. [Main screen](#main-screen-mocks)
+    2. [Scan screen](#scan-screen-mocks)
+    3. [Product Detail screen](#product-detail-screen-mocks)
+    4. [Navigation](#navigation-mocks)
 6. [Key Considerations](#key-considerations)
     1. [Data persistence](#data-persistence)
     2. [Corner cases of UX](#corner-cases-ux)
@@ -114,22 +114,22 @@ List the main features of your app:
 
 ##User Interface Mocks <a name="user-interface-mocks"></a>
 
-###Main screen <a name="main-screen"></a>
+###Main screen <a name="main-screen-mocks"></a>
 
 ![Main screen](https://github.com/fredericletellier/udacity-capstone/blob/master/design/mocks/Main_screen.png?raw=true)
 
 
-###Scan screen <a name="scan-screen"></a>
+###Scan screen <a name="scan-screen-mocks"></a>
 
 ![Scan screen](https://github.com/fredericletellier/udacity-capstone/blob/master/design/mocks/Scan_screen.png?raw=true)
 
 
-###Product Detail screen <a name="product-detail-screen"></a>
+###Product Detail screen <a name="product-detail-screen-mocks"></a>
 
 ![Product Detail screen](https://github.com/fredericletellier/udacity-capstone/blob/master/design/mocks/ProductDetail_screen.png?raw=true)
 
 
-###Navigation <a name="navigation"></a>
+###Navigation <a name="navigation-mocks"></a>
 
 ![Navigation](https://github.com/fredericletellier/udacity-capstone/blob/master/design/mocks/NavigationBetweenScreens.png?raw=true)
 
@@ -301,16 +301,37 @@ A special display will be developed without making any real changes in functiona
 
 ###Describe any libraries you’ll be using and share your reasoning for including them <a name="libraries"></a>
 
-Picasso or Glide to handle the loading and caching of images.
+Picasso - A powerful image downloading and caching library for Android.
+OR
+Glide - Picasso image loading alternative endorsed by Google
+OR
+Android Universal Image Loader - Popular alternative for image loading that can replace Picasso or Glide.
 
-Okhttp and Retrofit to retrieve API data
+Retrofit - A type-safe REST client for Android and Java which intelligently maps an API into a client interface using annotations.
+OR
+Android Async HTTP - Asynchronous networking client for loading remote content such as JSON.
+OR
+Volley - Google's HTTP library that makes networking for Android apps easier and most importantly, faster.
+OR
+OkHttp - Square's underlying networking library with support for asynchronous requests.
+OR
+Fast Android Networking - Fast Android Networking is a powerful library for doing any type of networking in Android applications which is made on top of OkHttp Networking Layer.
 
-All libraries that can accelerate the development and maintenance of the application:
 
-* Content provider
-* Swipe to delete an item
-* Specific design
-* Home screen at the first connection
+ButterKnife - Using Java annotations, makes Android development better by simplifying common tasks.
+Parceler - Android Parcelable made easy through code generation
+IcePick - Android Instance State made easy
+LeakCanary - Catch memory leaks in your apps
+Espresso - Powerful DSL for Android integration testing
+Robolectric - Efficient unit testing for Android
+(Mockito, Android Instrumentation, UIAutomator, ...)
+
+ZXing - Barcode or QR scanner
+OR
+barcodescanner - Newer alternative
+
+Possible use:
+Android Material Intro Screen - Library for easily adding intro screen to app.
 
 
 ###Describe how you will implement Google Play Services <a name="google-play-services"></a>
