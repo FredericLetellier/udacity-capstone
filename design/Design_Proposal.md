@@ -20,8 +20,18 @@
     3. [Libraries](#libraries)
     4. [Google Play Services](#google-play-services)
 7. [Next Steps: Required Tasks](#next-steps-required-tasks)
-    1. [Task 1: Project Setup](#task-1-project-setup)
-
+    1. [Task 1: Setup](#task-1)
+    2. [Task 2: Database](#task-2)
+    3. [Task 3: Network](#task-3)
+    4. [Task 4: Barcode scanner](#task-4)
+    5. [Task 5: User interface](#task-5)
+    6. [Task 6: Pull data](#task-6)
+    7. [Task 7: Handle Error Cases](#task-7)
+    8. [Task 8: Implement Google Play Services](#task-8)
+    9. [Task 9: Improve design](#task-9)
+    10. [Task 10: Translate](#task-10)
+    11. [Task 11: Test (again) and polish](#task-11)
+    12. [Task 12: Generate and Deploy](#task-12)
 
 ##Context <a name="context"></a>
 
@@ -98,6 +108,8 @@ that fill your closets?
 People who buy food product, who want to take care to eat well, who want 
 more transparency about food product, who want a fast solution to compare
 food products.
+
+Mainly for people who live in France, OpenFoodFacts database contains mostly products found in shops in metropolitan France.
  
 ##Features <a name="features"></a>
 
@@ -302,109 +314,140 @@ A special display will be developed without making any real changes in functiona
 ###Describe any libraries you’ll be using and share your reasoning for including them <a name="libraries"></a>
 
 
-Picasso - A powerful image downloading and caching library for Android.
+[Picasso](#http://square.github.io/picasso/) - A powerful image downloading and caching library for Android.
 
 OR
 
-Glide - Picasso image loading alternative endorsed by Google
+[Glide](#http://guides.codepath.com/android/Displaying-Images-with-the-Glide-Library) - Picasso image loading alternative endorsed by Google
 
 OR
 
-Android Universal Image Loader - Popular alternative for image loading that can replace Picasso or Glide.
+[Android Universal Image Loader](#https://github.com/nostra13/Android-Universal-Image-Loader) - Popular alternative for image loading that can replace Picasso or Glide.
 
+---
 
-Retrofit - A type-safe REST client for Android and Java which intelligently maps an API into a client interface using annotations.
-
-OR
-
-Android Async HTTP - Asynchronous networking client for loading remote content such as JSON.
+[Retrofit](#http://square.github.io/retrofit/) - A type-safe REST client for Android and Java which intelligently maps an API into a client interface using annotations.
 
 OR
 
-Volley - Google's HTTP library that makes networking for Android apps easier and most importantly, faster.
+[Android Async HTTP](#http://loopj.com/android-async-http/) - Asynchronous networking client for loading remote content such as JSON.
 
 OR
 
-OkHttp - Square's underlying networking library with support for asynchronous requests.
+[Volley](#http://developer.android.com/training/volley/index.html) - Google's HTTP library that makes networking for Android apps easier and most importantly, faster.
 
 OR
 
-Fast Android Networking - Fast Android Networking is a powerful library for doing any type of networking in Android applications which is made on top of OkHttp Networking Layer.
-
-
-ButterKnife - Using Java annotations, makes Android development better by simplifying common tasks.
-
-Parceler - Android Parcelable made easy through code generation
-
-IcePick - Android Instance State made easy
-
-LeakCanary - Catch memory leaks in your apps
-
-Espresso - Powerful DSL for Android integration testing
-
-Robolectric - Efficient unit testing for Android
-
-(Mockito, Android Instrumentation, UIAutomator, ...)
-
-
-ZXing - Barcode or QR scanner
+[OkHttp](#http://guides.codepath.com/android/Using-OkHttp) - Square's underlying networking library with support for asynchronous requests.
 
 OR
 
-barcodescanner - Newer alternative
+[Fast Android Networking](#https://github.com/amitshekhariitbhu/Fast-Android-Networking) - Fast Android Networking is a powerful library for doing any type of networking in Android applications which is made on top of OkHttp Networking Layer.
 
+---
+
+[ZXing](#https://github.com/zxing/zxing) - Barcode or QR scanner
+
+OR
+
+[barcodescanner](#https://github.com/dm77/barcodescanner)- Newer alternative
+
+---
+
+[ButterKnife](#http://guides.codepath.com/android/Reducing-View-Boilerplate-with-Butterknife) - Using Java annotations, makes Android development better by simplifying common tasks.
+
+[Parceler](#http://guides.codepath.com/android/Using-Parceler) - Android Parcelable made easy through code generation
+
+[IcePick](#https://github.com/frankiesardo/icepick) - Android Instance State made easy
+
+[LeakCanary](#https://github.com/square/leakcanary) - Catch memory leaks in your apps
+
+[Espresso](#http://guides.codepath.com/android/UI-Testing-with-Espresso) - Powerful DSL for Android integration testing
+
+[Robolectric](#http://guides.codepath.com/android/Unit-Testing-with-Robolectric) - Efficient unit testing for Android
+
+([Mockito](#), [Android Instrumentation](#), [UIAutomator](#), ...)
+
+---
 
 Possible use:
 
-Android Material Intro Screen - Library for easily adding intro screen to app.
+[Android Material Intro Screen](#) - Library for easily adding intro screen to app.
 
 
 ###Describe how you will implement Google Play Services <a name="google-play-services"></a>
 
-com.google.android.gms.vision.barcode
+com.google.android.gms.vision.barcode :
 To detect barcode and recognize it
 
-com.google.android.gms.ads
+com.google.android.gms.ads :
 to display interstitial ads
 
 ##Next Steps: Required Tasks <a name="next-steps-required-tasks"></a>
 
-This is the section where you can take the main features of your app (declared above) and decompose them into tangible technical tasks that you can complete incrementally until you have a finished app.
+###Task 1: Setup <a name="task-1"></a>
 
-###Task 1: Project Setup <a name="task-1-project-setup"></a>
+* Configure libraries
+* Choose an Architecture and implement skeleton [Android Architecture Blueprints](#https://github.com/googlesamples/android-architecture)
+* Create a debug and build variant
+* Configure tools
 
-Write out the steps you will take to setup and/or configure this project. See previous implementation guides for an example. 
+###Task 2: Database <a name="task-2"></a>
 
-You may want to list the subtasks. For example:
-* Configure libraries 
-* Something else 
+* Database
+* Content Provider
+* Data models
 
-If it helps, imagine you are describing these tasks to a friend who wants to follow along and build this app with you. 
+###Task 3: Network <a name="task-3"></a>
+* Data parsing
+* Data syncing service
 
-###Task 2: Implement UI for Each Activity and Fragment <a name=""></a>
+###Task 4: Barcode scanner <a name="task-4"></a>
+* Define what we want to detect
+* Create specific activity
+* Handle error and success and adapt user information
 
-List the subtasks. For example:
-* Build UI for MainActivity
-* Build UI for something else  
+###Task 5: User interface <a name="task-5"></a>
 
-###Task 3: Your Next Task <a name=""></a>
+* String and image resources
+* UI for main activity
+* UI for detail activities
+* Gestures, transition, ...
 
-Describe the next task. For example, “Implement Google Play Services,” or “Handle Error Cases,” or “Create Build Variant.”
+###Task 6: Pull data <a name="task-6"></a>
 
-Describe the next task. List the subtasks. For example:
-* Create layout 
-* Something else 
+* CursorLoader
+* Ask for data
 
+###Task 7: Handle Error Cases <a name="task-7"></a>
+* Empty views
+* Error message
 
-###Task 4: Your Next Task <a name=""></a>
+###Task 8: Implement Google Play Services <a name="task-8"></a>
 
-Describe the next task. List the subtasks. For example:
-* Create layout 
-* Something else 
+* Google Barcode
+* Google AdMob
 
+###Task 9: Improve design <a name="task-9"></a>
 
-###Task 5: Your Next Task <a name=""></a>
+* Landscape mode
+* Large screen
+* Tablets
+* Transitionnal screen
 
-Describe the next task. List the subtasks. For example:
-* Create layout 
-* Something else 
+###Task 10: Translate <a name="task-10"></a>
+
+* Translate in french
+
+###Task 11: Test (again) and polish <a name="task-11"></a>
+
+* Multiple devices
+* More fonctionnal test in real condition
+
+###Task 12: Generate and Deploy <a name="task-12"></a>
+
+* Generate app flavor keys
+* Create Google Play Account
+* Create APK
+* Create Google Play image and text
+* Push the APK on the store
