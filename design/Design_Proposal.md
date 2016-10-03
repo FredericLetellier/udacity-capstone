@@ -10,8 +10,10 @@
 3. [Intended User](#intended-user)
 4. [Features](#features)
 5. [User Interface Mocks](#user-interface-mocks)
-    1. [Screen 1](#screen-1)
-    2. [Screen 2](#screen-2)
+    1. [Main screen](#main-screen)
+    2. [Scan screen](#scan-screen)
+    3. [Product Detail screen](#product-detail-screen)
+    4. [Navigation](#navigation)
 6. [Key Considerations](#key-considerations)
     1. [Data persistence](#data-persistence)
     2. [Corner cases of UX](#corner-cases-ux)
@@ -19,6 +21,7 @@
     4. [Google Play Services](#google-play-services)
 7. [Next Steps: Required Tasks](#next-steps-required-tasks)
     1. [Task 1: Project Setup](#task-1-project-setup)
+
 
 ##Context <a name="context"></a>
 
@@ -110,20 +113,26 @@ List the main features of your app:
 
 
 ##User Interface Mocks <a name="user-interface-mocks"></a>
-These can be created by hand (take a photo of your drawings and insert them in this flow), or using a program like Photoshop or Balsamiq.
 
-###Screen 1 <a name="screen-1"></a>
- 
-Replace the above image with your own mock [ click on the above image, then navigate to Insert → Image… ]
-Provide descriptive text for each screen 
+###Main screen <a name="main-screen"></a>
+
+![Main screen](https://github.com/fredericletellier/udacity-capstone/blob/master/design/mocks/Main_screen.png?raw=true)
 
 
-###Screen 2 <a name="screen-2"></a>
- 
-Replace the above image with your own mock [ click on the above image, then navigate to Insert → Image… ]
-Provide descriptive text for each screen 
+###Scan screen <a name="scan-screen"></a>
 
-Add as many screens as you need to portray your app’s UI flow. 
+![Scan screen](https://github.com/fredericletellier/udacity-capstone/blob/master/design/mocks/Scan_screen.png?raw=true)
+
+
+###Product Detail screen <a name="product-detail-screen"></a>
+
+![Product Detail screen](https://github.com/fredericletellier/udacity-capstone/blob/master/design/mocks/ProductDetail_screen.png?raw=true)
+
+
+###Navigation <a name="navigation"></a>
+
+![Navigation](https://github.com/fredericletellier/udacity-capstone/blob/master/design/mocks/NavigationBetweenScreens.png?raw=true)
+
 
 ##Key Considerations <a name="key-considerations"></a>
 
