@@ -301,36 +301,61 @@ A special display will be developed without making any real changes in functiona
 
 ###Describe any libraries you’ll be using and share your reasoning for including them <a name="libraries"></a>
 
+
 Picasso - A powerful image downloading and caching library for Android.
+
 OR
+
 Glide - Picasso image loading alternative endorsed by Google
+
 OR
+
 Android Universal Image Loader - Popular alternative for image loading that can replace Picasso or Glide.
 
+
 Retrofit - A type-safe REST client for Android and Java which intelligently maps an API into a client interface using annotations.
+
 OR
+
 Android Async HTTP - Asynchronous networking client for loading remote content such as JSON.
+
 OR
+
 Volley - Google's HTTP library that makes networking for Android apps easier and most importantly, faster.
+
 OR
+
 OkHttp - Square's underlying networking library with support for asynchronous requests.
+
 OR
+
 Fast Android Networking - Fast Android Networking is a powerful library for doing any type of networking in Android applications which is made on top of OkHttp Networking Layer.
 
 
 ButterKnife - Using Java annotations, makes Android development better by simplifying common tasks.
+
 Parceler - Android Parcelable made easy through code generation
+
 IcePick - Android Instance State made easy
+
 LeakCanary - Catch memory leaks in your apps
+
 Espresso - Powerful DSL for Android integration testing
+
 Robolectric - Efficient unit testing for Android
+
 (Mockito, Android Instrumentation, UIAutomator, ...)
 
+
 ZXing - Barcode or QR scanner
+
 OR
+
 barcodescanner - Newer alternative
 
+
 Possible use:
+
 Android Material Intro Screen - Library for easily adding intro screen to app.
 
 
