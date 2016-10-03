@@ -128,22 +128,22 @@ List the main features of your app:
 
 ###Main screen <a name="main-screen-mocks"></a>
 
-![Main screen](https://github.com/fredericletellier/udacity-capstone/blob/master/design/mocks/Main_screen.png?raw=true)
+![Main screen](https://github.com/fredericletellier/udacity-capstone/blob/master/design/mocks/Main_screen.png)
 
 
 ###Scan screen <a name="scan-screen-mocks"></a>
 
-![Scan screen](https://github.com/fredericletellier/udacity-capstone/blob/master/design/mocks/Scan_screen.png?raw=true)
+![Scan screen](https://github.com/fredericletellier/udacity-capstone/blob/master/design/mocks/Scan_screen.png)
 
 
 ###Product Detail screen <a name="product-detail-screen-mocks"></a>
 
-![Product Detail screen](https://github.com/fredericletellier/udacity-capstone/blob/master/design/mocks/ProductDetail_screen.png?raw=true)
+![Product Detail screen](https://github.com/fredericletellier/udacity-capstone/blob/master/design/mocks/ProductDetail_screen.png)
 
 
 ###Navigation <a name="navigation-mocks"></a>
 
-![Navigation](https://github.com/fredericletellier/udacity-capstone/blob/master/design/mocks/NavigationBetweenScreens.png?raw=true)
+![Navigation](https://github.com/fredericletellier/udacity-capstone/blob/master/design/mocks/NavigationBetweenScreens.png)
 
 
 ##Key Considerations <a name="key-considerations"></a>
