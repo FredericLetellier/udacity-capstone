@@ -45,6 +45,8 @@ dependencies {
     compile 'com.android.support:support-v13:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'
 
+    compile 'com.google.guava:guava:19.0'
+
     // Picasso - A powerful image downloading and caching library
     compile 'com.squareup.picasso:picasso:2.5.2'
 
