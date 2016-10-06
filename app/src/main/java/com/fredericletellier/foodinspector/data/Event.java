@@ -39,7 +39,7 @@ public final class Event {
     private final String mBarcode;
 
     @Nullable
-    private final String mIdProduct;
+    private final String mProductId;
 
     @Nullable
     private final Boolean mFavorite;
@@ -49,15 +49,15 @@ public final class Event {
      * @param id
      * @param unixTimestamp
      * @param barcode
-     * @param idProduct
+     * @param productId
      * @param favorite
      */
     public Event(String id, @Nullable Long unixTimestamp, @Nullable String barcode,
-                    @Nullable String idProduct, @Nullable Boolean favorite) {
+                    @Nullable String productId, @Nullable Boolean favorite) {
         mId = id;
         mUnixTimestamp = unixTimestamp;
         mBarcode = barcode;
-        mIdProduct = idProduct;
+        mProductId = productId;
         mFavorite = favorite;
     }
 
@@ -88,8 +88,8 @@ public final class Event {
     }
 
     @Nullable
-    public String getIdProduct() {
-        return mIdProduct;
+    public String getProductId() {
+        return mProductId;
     }
 
     @Nullable
@@ -99,13 +99,13 @@ public final class Event {
 
     @Nullable
     public String getTitle() {
-        return mUnixTimestamp + " - " + mBarcode + " - " + mIdProduct;
+        return mUnixTimestamp + " - " + mBarcode + " - " + mProductId;
     }
 
     public boolean isEmpty() {
         return (mUnixTimestamp == null) &&
                 Strings.isNullOrEmpty(mBarcode) &&
-                Strings.isNullOrEmpty(mIdProduct) &&
+                Strings.isNullOrEmpty(mProductId) &&
                 (mFavorite == null);
     }
 
@@ -117,13 +117,13 @@ public final class Event {
         return Objects.equal(mId, event.mId) &&
                 Objects.equal(mUnixTimestamp, event.mUnixTimestamp) &&
                 Objects.equal(mBarcode, event.mBarcode) &&
-                Objects.equal(mIdProduct, event.mIdProduct) &&
+                Objects.equal(mProductId, event.mProductId) &&
                 Objects.equal(mFavorite, event.mFavorite);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(mId, mUnixTimestamp, mBarcode, mIdProduct, mFavorite);
+        return Objects.hashCode(mId, mUnixTimestamp, mBarcode, mProductId, mFavorite);
     }
 
     @Override
