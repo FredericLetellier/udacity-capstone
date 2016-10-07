@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.fredericletellier.foodinspector.data.source;
+package com.fredericletellier.foodinspector.data.source.local;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -26,11 +26,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
-import com.fredericletellier.foodinspector.data.source.local.CategoryPersistenceContract;
-import com.fredericletellier.foodinspector.data.source.local.EventPersistenceContract;
-import com.fredericletellier.foodinspector.data.source.local.LocalDbHelper;
-import com.fredericletellier.foodinspector.data.source.local.ProductInCategoryPersistenceContract;
-import com.fredericletellier.foodinspector.data.source.local.ProductPersistenceContract;
+import com.fredericletellier.foodinspector.data.source.local.db.CategoryPersistenceContract;
+import com.fredericletellier.foodinspector.data.source.local.db.EventPersistenceContract;
+import com.fredericletellier.foodinspector.data.source.local.db.LocalDbHelper;
+import com.fredericletellier.foodinspector.data.source.local.db.ProductInCategoryPersistenceContract;
+import com.fredericletellier.foodinspector.data.source.local.db.ProductPersistenceContract;
 
 public class FoodInspectorContentProvider extends ContentProvider {
 

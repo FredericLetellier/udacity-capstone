@@ -24,6 +24,9 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.fredericletellier.foodinspector.data.source.ProductDataSource;
+import com.fredericletellier.foodinspector.data.source.local.db.CategoryPersistenceContract;
+import com.fredericletellier.foodinspector.data.source.local.db.ProductInCategoryPersistenceContract;
+import com.fredericletellier.foodinspector.data.source.local.db.ProductPersistenceContract;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

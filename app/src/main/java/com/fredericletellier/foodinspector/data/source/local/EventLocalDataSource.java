@@ -24,6 +24,7 @@ import android.support.annotation.NonNull;
 
 import com.fredericletellier.foodinspector.data.Event;
 import com.fredericletellier.foodinspector.data.source.EventDataSource;
+import com.fredericletellier.foodinspector.data.source.local.db.EventPersistenceContract;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
