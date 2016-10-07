@@ -41,7 +41,7 @@ public interface ProductDataSource {
         void onDataNotAvailable();
     }
 
-    void getProducts(@NonNull String categoryId,@NonNull GetProductsCallback callback);
+    void getProducts(@NonNull String categoryId, @NonNull GetProductsCallback callback);
 
     void getProduct(@NonNull String productId, @NonNull GetProductCallback callback);
 
