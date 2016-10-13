@@ -19,10 +19,11 @@
 package com.fredericletellier.foodinspector.data.source;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.fredericletellier.foodinspector.data.Category;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Main entry point for accessing categories data.
@@ -31,9 +32,9 @@ public interface CategoryDataSource {
 
     interface GetCategoriesCallback {
 
-        void onCategoriesNotAvailable(Collection<Category> categories);
+        void onCategoriesNotAvailable(List<Category> categories);
     }
 
-    void getCategories(@NonNull String productId, @NonNull String countryCode, @NonNull GetCategoriesCallback callback);
+    void getCategories(@Nullable String productId, @Nullable List<Category> categories, @NonNull String countryCode, @NonNull GetCategoriesCallback callback);
 
 }

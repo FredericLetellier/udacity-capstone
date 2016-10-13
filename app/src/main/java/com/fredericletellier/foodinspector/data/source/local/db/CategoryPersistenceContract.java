@@ -51,21 +51,15 @@ public final class CategoryPersistenceContract {
     public static abstract class CategoryEntry implements BaseColumns {
 
         public static final String TABLE_NAME = "category";
-        public static final String COLUMN_NAME_COUNTRY = "country";
-        public static final String COLUMN_NAME_WORLD_ID = "worldid";
         public static final String COLUMN_NAME_COUNTRY_ID = "countryid";
-        public static final String COLUMN_NAME_NAME = "name";
-        public static final String COLUMN_NAME_SUM_OF_PRODUCTS = "sumofproducts";
-        public static final String COLUMN_URL = "url";
+        public static final String COLUMN_NAME_WORLD_CATEGORY_ID = "worldcategoryid";
+        public static final String COLUMN_HAVE_DATA = "havedata";
         public static final Uri CONTENT_CATEGORY_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
         public static String[] CATEGORY_COLUMNS = new String[]{
                 CategoryPersistenceContract.CategoryEntry._ID,
-                CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_COUNTRY,
-                CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_WORLD_ID,
                 CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_COUNTRY_ID,
-                CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_NAME,
-                CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_SUM_OF_PRODUCTS,
-                CategoryPersistenceContract.CategoryEntry.COLUMN_URL};
+                CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_WORLD_CATEGORY_ID,
+                CategoryPersistenceContract.CategoryEntry.COLUMN_HAVE_DATA};
 
         public static Uri buildCategoryUriWith(long id) {
             return ContentUris.withAppendedId(CONTENT_CATEGORY_URI, id);

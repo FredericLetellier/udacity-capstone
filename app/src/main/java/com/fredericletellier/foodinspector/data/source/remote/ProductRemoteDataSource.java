@@ -43,6 +43,10 @@ public class ProductRemoteDataSource implements ProductDataSource {
     }
 
     //TODO COMPLETE
+    //###REMOTE
+	//Je recupere l'information via l'API
+	//J'ajoute les produits récupérés
+	//(pas de callback si le nombre de produits récupérés est nul ou inférieur à ce qui a été demandé)
     @Override
     public void getXProductsInCategory(@NonNull String categoryId, @NonNull String nutritionGradeValue, @NonNull Integer skipProducts, @NonNull GetXProductsInCategoryCallback callback) {
         checkNotNull(categoryId);
@@ -50,22 +54,4 @@ public class ProductRemoteDataSource implements ProductDataSource {
         checkNotNull(skipProducts);
         checkNotNull(callback);
     }
-
-
-    //TODO DELETE
-    @Override
-    public void getProducts(@NonNull String categoryId, @NonNull GetProductsCallback callback) {
-        checkNotNull(categoryId);
-        checkNotNull(callback);
-
-    }
-
-    //TODO DELETE
-    @Override
-    public void getProduct(@NonNull String productId, @NonNull GetProductCallback callback) {
-        checkNotNull(productId);
-        checkNotNull(callback);
-
-    }
-
 }

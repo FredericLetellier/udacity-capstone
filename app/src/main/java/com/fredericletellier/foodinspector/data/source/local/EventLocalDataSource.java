@@ -19,13 +19,17 @@
 package com.fredericletellier.foodinspector.data.source.local;
 
 import android.content.ContentResolver;
-import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.fredericletellier.foodinspector.data.Event;
 import com.fredericletellier.foodinspector.data.source.EventDataSource;
 import com.fredericletellier.foodinspector.data.source.local.db.EventPersistenceContract;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -51,15 +55,40 @@ public class EventLocalDataSource implements EventDataSource {
         return INSTANCE;
     }
 
-    //TODO COMPLETE
     @Override
-    public void getEvents(@Nullable Event event, @NonNull GetEventsCallback callback){
-        checkNotNull(event);
+    public void getEvents(@Nullable List<Event> events, @NonNull GetEventsCallback callback){
         checkNotNull(callback);
 
+        Uri uri = EventPersistenceContract.EventEntry.buildEventUri();
+
+        Cursor cursor = mContentResolver.query(
+                uri,
+                null,
+                EventPersistenceContract.EventEntry.COLUMN_NAME_STATUS + " = ?",
+                new String[]{Event.STATUS_NO_NETWORK},
+                null);
+
+        events = new ArrayList<Event>();
+
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                events.add(Event.from(cursor));
+            } while (cursor.moveToNext());
+
+            callback.onEventsPendingNetwork(events);
+        }
+        cursor.close();
     }
 
     //TODO COMPLETE
+    //###LOCAL
+    //J'ai un code
+    //Je cherche ce produit dans ma base
+    //Si ce produit est dans ma base
+    //	Creation / Mise à jour du code produit et timestamp de l'evenement
+    //Si il n'y est pas
+    //	callback = erreur
     @Override
     public void addEvent(@NonNull String productId, @NonNull AddEventCallback callback){
         checkNotNull(productId);
@@ -68,114 +97,15 @@ public class EventLocalDataSource implements EventDataSource {
     }
 
     //TODO COMPLETE
+    //###LOCAL
+    //J'ai un code
+    //Je cherche cet evenement dans ma base
+    //Si cet evenement est dans ma base
+    //	Mise à jour du champ favori de l'evenement
+    //Si cet evenement n'est pas dans ma base
+    //	(callback facultatif ?!?)
     @Override
     public void updateFavoriteFieldEvent(@NonNull String productId){
         checkNotNull(productId);
     }
-
-
-    //TODO DELETE
-    @Override
-    public void getEvents(@NonNull GetEventsCallback callback){
-        // no-op the data is loaded via Cursor Loader
-    }
-
-    //TODO DELETE
-    public void addEvent(@NonNull Event event, @NonNull AddEventCallback callback){
-        checkNotNull(event);
-        checkNotNull(callback);
-
-        Long tsLong = System.currentTimeMillis()/1000;
-        String timestamp = tsLong.toString();
-
-        ContentValues values = new ContentValues();
-        values.put(EventPersistenceContract.EventEntry._ID, event.getId());
-        values.put(EventPersistenceContract.EventEntry.COLUMN_NAME_UNIX_TIMESTAMP, timestamp);
-        values.put(EventPersistenceContract.EventEntry.COLUMN_NAME_BARCODE, event.getBarcode());
-        values.put(EventPersistenceContract.EventEntry.COLUMN_NAME_PRODUCT_ID, event.getProductId());
-        values.put(EventPersistenceContract.EventEntry.COLUMN_NAME_FAVORITE, event.getFavorite() ? 1 : 0);
-
-        mContentResolver.insert(EventPersistenceContract.EventEntry.buildEventUri(), values);
-    }
-
-    //TODO DELETE
-    public void updateEvent(@NonNull String eventId, @NonNull UpdateEventCallback callback){
-        checkNotNull(eventId);
-        checkNotNull(callback);
-
-        Long tsLong = System.currentTimeMillis()/1000;
-        String timestamp = tsLong.toString();
-
-        ContentValues values = new ContentValues();
-        values.put(EventPersistenceContract.EventEntry.COLUMN_NAME_UNIX_TIMESTAMP, timestamp);
-
-        String selection = EventPersistenceContract.EventEntry._ID + " LIKE ?";
-        String[] selectionArgs = {eventId};
-
-        int rows = mContentResolver.update(EventPersistenceContract.EventEntry.buildEventUri(), values, selection, selectionArgs);
-
-        if (rows != 0){
-            callback.onEventUpdated();
-        } else {
-            callback.onEventNotUpdated();
-        }
-    }
-
-    //TODO DELETE
-    public void deleteEvent(@NonNull String eventId, @NonNull DeleteEventCallback callback){
-        checkNotNull(eventId);
-        checkNotNull(callback);
-
-        String selection = EventPersistenceContract.EventEntry._ID + " LIKE ?";
-        String[] selectionArgs = {eventId};
-
-        int rows = mContentResolver.delete(EventPersistenceContract.EventEntry.buildEventUri(), selection, selectionArgs);
-
-        if (rows != 0){
-            callback.onEventDeleted();
-        } else {
-            callback.onEventNotDeleted();
-        }
-    }
-
-    //TODO DELETE
-    public void favoriteEvent(@NonNull String eventId, @NonNull FavoriteEventCallback callback){
-        checkNotNull(eventId);
-        checkNotNull(callback);
-
-        ContentValues values = new ContentValues();
-        values.put(EventPersistenceContract.EventEntry.COLUMN_NAME_FAVORITE, true);
-
-        String selection = EventPersistenceContract.EventEntry._ID + " LIKE ?";
-        String[] selectionArgs = {eventId};
-
-        int rows = mContentResolver.update(EventPersistenceContract.EventEntry.buildEventUri(), values, selection, selectionArgs);
-
-        if (rows != 0){
-            callback.onEventFavorited();
-        } else {
-            callback.onEventNotFavorited();
-        }
-    }
-
-    //TODO DELETE
-    public void unfavoriteEvent(@NonNull String eventId, @NonNull UnfavoriteEventCallback callback){
-        checkNotNull(eventId);
-        checkNotNull(callback);
-
-        ContentValues values = new ContentValues();
-        values.put(EventPersistenceContract.EventEntry.COLUMN_NAME_FAVORITE, false);
-
-        String selection = EventPersistenceContract.EventEntry._ID + " LIKE ?";
-        String[] selectionArgs = {eventId};
-
-        int rows = mContentResolver.update(EventPersistenceContract.EventEntry.buildEventUri(), values, selection, selectionArgs);
-
-        if (rows != 0){
-            callback.onEventUnfavorited();
-        } else {
-            callback.onEventNotUnfavorited();
-        }
-    }
-
 }

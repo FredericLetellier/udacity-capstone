@@ -24,6 +24,8 @@ import android.support.annotation.Nullable;
 import com.fredericletellier.foodinspector.data.Event;
 import com.fredericletellier.foodinspector.data.source.EventDataSource;
 
+import java.util.List;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -45,14 +47,37 @@ public class EventRemoteDataSource implements EventDataSource {
     }
 
     //TODO COMPLETE
+    //###REMOTE
+	//Si il y a du réseau
+	//	Je recupere les informations du produit via l'API
+	//	Si erreur lors de la récupération
+	//		Je met à jour le code erreur de l'evenement sans changer le timestamp
+	//	Si recupération ok
+	//		J'inscris le produit en base
+	//		Je met à jour le code produit de l'evenement sans changer le timestamp
+	//Si pas de réseau
+	//	rien
     @Override
-    public void getEvents(@Nullable Event event, @NonNull GetEventsCallback callback){
-        checkNotNull(event);
-        checkNotNull(callback);
+    public void getEvents(@NonNull List<Event> events, @Nullable GetEventsCallback callback){
+        checkNotNull(events);
 
+        for (Event event : events){
+
+        }
     }
 
     //TODO COMPLETE
+    //###REMOTE
+	//Si il y a du réseau
+	//	Je recupere les informations du produit via l'API
+	//	Si erreur lors de la récupération
+	//		Creation / Mise à jour du code erreur et timestamp de l'evenement
+	//	Si recupération ok
+	//		J'inscris le produit en base
+	//		Creation / Mise à jour du code produit et timestamp de l'evenement
+	//		callback = ok
+	//Si pas de réseau
+	//	Creation / Mise à jour du code erreur et timestamp de l'evenement
     @Override
     public void addEvent(@NonNull String productId, @NonNull AddEventCallback callback){
         checkNotNull(productId);
@@ -60,10 +85,10 @@ public class EventRemoteDataSource implements EventDataSource {
 
     }
 
-    //TODO COMPLETE
     @Override
     public void updateFavoriteFieldEvent(@NonNull String productId){
         checkNotNull(productId);
+        //no-op in remote
     }
 
 }

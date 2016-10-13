@@ -18,9 +18,11 @@
 
 package com.fredericletellier.foodinspector.data;
 
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.fredericletellier.foodinspector.data.source.local.db.EventPersistenceContract;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 
@@ -28,6 +30,11 @@ import com.google.common.base.Strings;
  * Immutable model class for a Event.
  */
 public final class Event {
+
+    public static final String STATUS_OK = "OK";
+    public static final String STATUS_NOT_A_PRODUCT = "BARCODE_NOT_DESCRIBE_A_PRODUCT";
+    public static final String STATUS_NOT_IN_OFF_DATABASE = "PRODUCT_IS_NOT_IN_OPENFOODFACTS_DATABASE";
+    public static final String STATUS_NO_NETWORK = "NO_NETWORK";
 
     @NonNull
     private final String mId;
@@ -66,8 +73,19 @@ public final class Event {
      *
      * @return
      */
-
-    //TODO public static Event from(Cursor cursor)
+    public static Event from(Cursor cursor) {
+        String id = cursor.getString(cursor.getColumnIndexOrThrow(
+                EventPersistenceContract.EventEntry._ID));
+        Long unixTimestamp = cursor.getLong(cursor.getColumnIndexOrThrow(
+                EventPersistenceContract.EventEntry.COLUMN_NAME_UNIX_TIMESTAMP));
+        String status = cursor.getString(cursor.getColumnIndexOrThrow(
+                EventPersistenceContract.EventEntry.COLUMN_NAME_STATUS));
+        String productId = cursor.getString(cursor.getColumnIndexOrThrow(
+                EventPersistenceContract.EventEntry.COLUMN_NAME_PRODUCT_ID));
+        Boolean favorite = cursor.getInt(cursor.getColumnIndexOrThrow(
+                EventPersistenceContract.EventEntry.COLUMN_NAME_FAVORITE)) == 1;
+        return new Event(id, unixTimestamp, status, productId, favorite);
+    }
 
     //TODO public static Event from(ContentValues values)
 

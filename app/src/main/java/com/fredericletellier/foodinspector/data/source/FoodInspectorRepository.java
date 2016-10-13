@@ -19,8 +19,13 @@
 package com.fredericletellier.foodinspector.data.source;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import com.fredericletellier.foodinspector.data.Category;
 import com.fredericletellier.foodinspector.data.Event;
+import com.fredericletellier.foodinspector.data.source.remote.EventRemoteDataSource;
+
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -39,7 +44,7 @@ public class FoodInspectorRepository implements ProductDataSource, CategoryDataS
 
     private final CategoryDataSource mCategoryLocalDataSource;
 
-    private final EventRemoteSource mEventRemoteDataSource;
+    private final EventRemoteDataSource mEventRemoteDataSource;
 
     private final EventDataSource mEventLocalDataSource;
 
@@ -48,8 +53,8 @@ public class FoodInspectorRepository implements ProductDataSource, CategoryDataS
                                     @NonNull ProductDataSource productLocalDataSource,
                                     @NonNull CategoryDataSource categoryRemoteDataSource,
                                     @NonNull CategoryDataSource categoryLocalDataSource,
-                                    @NonNull EventRemoteSource eventRemoteDataSource,
-                                    @NonNull EventDataSource eventLocalDataSource,) {
+                                    @NonNull EventRemoteDataSource eventRemoteDataSource,
+                                    @NonNull EventDataSource eventLocalDataSource) {
         mProductRemoteDataSource = checkNotNull(productRemoteDataSource);
         mProductLocalDataSource = checkNotNull(productLocalDataSource);
         mCategoryRemoteDataSource = checkNotNull(categoryRemoteDataSource);
@@ -73,7 +78,7 @@ public class FoodInspectorRepository implements ProductDataSource, CategoryDataS
                                                       ProductDataSource productLocalDataSource,
                                                       CategoryDataSource categoryRemoteDataSource,
                                                       CategoryDataSource categoryLocalDataSource,
-                                                      EventRemoteSource eventRemoteDataSource,
+                                                      EventRemoteDataSource eventRemoteDataSource,
                                                       EventDataSource eventLocalDataSource) {
         if (INSTANCE == null) {
             INSTANCE = new FoodInspectorRepository(productRemoteDataSource, productLocalDataSource,
@@ -84,7 +89,7 @@ public class FoodInspectorRepository implements ProductDataSource, CategoryDataS
     }
 
     /**
-     * Used to force {@link #getInstance(ProductDataSource, ProductDataSource, CategoryDataSource, CategoryDataSource, EventRemoteSource, EventDataSource)}
+     * Used to force {@link #getInstance(ProductDataSource, ProductDataSource, CategoryDataSource, CategoryDataSource, EventRemoteDataSource, EventDataSource)}
      * to create a new instance next time it's called.
      */
     public static void destroyInstance() {
@@ -92,175 +97,88 @@ public class FoodInspectorRepository implements ProductDataSource, CategoryDataS
     }
 
     /**
-     * Check products exist from local data source (SQLite), if not exist get products from remote data source
-     * Note: {@link GetProductsCallback#onDataNotAvailable()} is fired if all data sources fail to
-     * get the data.
+     * Check events from local data source (SQLite), if some events are pending network,
+     * {@link GetEventsCallback#onEventsPendingNetwork(List)} is called
+     * Get data of product in remote source for each events in the callback
      */
     @Override
-    public void getProducts(@NonNull final String categoryId, @NonNull final GetProductsCallback callback) {
-        checkNotNull(categoryId);
+    public void getEvents(@Nullable List<Event> events, @NonNull final GetEventsCallback callback){
         checkNotNull(callback);
 
-        // Check exist in local
-        mProductLocalDataSource.getProducts(categoryId, new GetProductsCallback() {
+        mEventLocalDataSource.getEvents(null, new GetEventsCallback() {
             @Override
-            public void onProductsLoaded() {
-                callback.onProductsLoaded();
-            }
-
-            @Override
-            public void onDataNotAvailable() {
-
-                // Load from server
-                mProductRemoteDataSource.getProducts(categoryId, new GetProductsCallback() {
-                    @Override
-                    public void onProductsLoaded() {
-                        callback.onProductsLoaded();
-                    }
-
-                    @Override
-                    public void onDataNotAvailable() {
-                        callback.onDataNotAvailable();
-                    }
-
-                    @Override
-                    public void onErrorCategoryNotAvailable() {
-                        callback.onErrorCategoryNotAvailable();
-                    }
-                });
-            }
-
-            @Override
-            public void onErrorCategoryNotAvailable() {
-                callback.onErrorCategoryNotAvailable();
+            public void onEventsPendingNetwork(List<Event> events) {
+                mEventRemoteDataSource.getEvents(events, callback);
             }
         });
     }
 
     /**
-     * Check product exist from local data source (SQLite), if not exist get product from remote data source
-     * Note: {@link GetProductsCallback#onDataNotAvailable()} is fired if all data sources fail to
-     * get the data.
+     * Check if product of the event exist in local data source (SQLite), if not,
+     * {@link AddEventCallback#onEventProductNotAvailable()} is called and
+     * Get data of product in remote source for this event
      */
     @Override
-    public void getProduct(@NonNull final String productId, @NonNull final GetProductCallback callback) {
+    public void addEvent(@NonNull final String productId, @NonNull final AddEventCallback callback){
         checkNotNull(productId);
         checkNotNull(callback);
 
-        // Check exist in local
-        mProductLocalDataSource.getProduct(productId, new GetProductCallback() {
+        mEventLocalDataSource.addEvent(productId, new AddEventCallback() {
             @Override
-            public void onProductLoaded() {
-                callback.onProductLoaded();
-            }
-
-            @Override
-            public void onDataNotAvailable() {
-                // Load from server
-                mProductRemoteDataSource.getProduct(productId, new GetProductCallback() {
-                    @Override
-                    public void onProductLoaded() {
-                        callback.onProductLoaded();
-                    }
-
-                    @Override
-                    public void onDataNotAvailable() {
-                        callback.onDataNotAvailable();
-                    }
-                });
+            public void onEventProductNotAvailable() {
+                mEventRemoteDataSource.addEvent(productId, callback);
             }
         });
+
     }
 
     /**
-     * Check categories exist from local data source (SQLite), if not exist get categories from remote data source
-     * Note: {@link GetCategoriesCallback#onDataNotAvailable()} is fired if all data sources fail to
-     * get the data.
+     * Update the favorite field of event in local data source (SQLite)
      */
     @Override
-    public void getCategories(@NonNull final String productId, @NonNull final String countryCode, @NonNull final GetCategoriesCallback callback) {
+    public void updateFavoriteFieldEvent(@NonNull String productId){
+        checkNotNull(productId);
+
+        mEventLocalDataSource.updateFavoriteFieldEvent(productId);
+    }
+
+    /**
+     * Check if categories for this product and this country code exist in local data source (SQLite),
+     * If not, {@link GetCategoriesCallback#onCategoriesNotAvailable(List)} is called
+     * Get data in remote source for each categories in the callback
+     */
+    @Override
+    public void getCategories(@NonNull final String productId, @Nullable List<Category> categories, @NonNull final String countryCode, @NonNull final GetCategoriesCallback callback) {
         checkNotNull(productId);
         checkNotNull(countryCode);
         checkNotNull(callback);
 
-        // Check exist in local
-        mCategoryLocalDataSource.getCategories(productId, countryCode, new GetCategoriesCallback() {
+        mCategoryLocalDataSource.getCategories(productId, null, countryCode, new GetCategoriesCallback() {
             @Override
-            public void onCategoriesLoaded() {
-                callback.onCategoriesLoaded();
-            }
-
-            @Override
-            public void onDataNotAvailable() {
-                // Load from server
-                mCategoryRemoteDataSource.getCategories(productId, countryCode, new GetCategoriesCallback() {
-                    @Override
-                    public void onCategoriesLoaded() {
-                        callback.onCategoriesLoaded();
-                    }
-
-                    @Override
-                    public void onDataNotAvailable() {
-                        callback.onDataNotAvailable();
-                    }
-
-                    @Override
-                    public void onErrorProductNotAvailable() {
-                        callback.onErrorProductNotAvailable();
-                    }
-                });
-            }
-
-            @Override
-            public void onErrorProductNotAvailable() {
-                callback.onErrorProductNotAvailable();
+            public void onCategoriesNotAvailable(List<Category> categories) {
+                mCategoryRemoteDataSource.getCategories(null, categories, countryCode, callback);
             }
         });
     }
 
+    /**
+     * Check if products exist in local data source (SQLite),
+     * If not, {@link GetXProductsInCategoryCallback#onProductsNotAvailable()} is called and
+     * Get products in remote source
+     */
     @Override
-    public void getEvents(@NonNull GetEventsCallback callback) {
+    public void getXProductsInCategory(@NonNull final String categoryId, @NonNull final String nutritionGradeValue, @NonNull final Integer skipProducts, @NonNull final GetXProductsInCategoryCallback callback) {
+        checkNotNull(categoryId);
+        checkNotNull(nutritionGradeValue);
+        checkNotNull(skipProducts);
         checkNotNull(callback);
-        mEventLocalDataSource.getEvents(callback);
+
+        mProductLocalDataSource.getXProductsInCategory(categoryId, nutritionGradeValue, skipProducts, new GetXProductsInCategoryCallback() {
+            @Override
+            public void onProductsNotAvailable() {
+                mProductRemoteDataSource.getXProductsInCategory(categoryId, nutritionGradeValue, skipProducts, callback);
+            }
+        });
     }
-
-    // TODO Optimize Add/Update of Event with check of barcode and the link with the product
-    @Override
-    public void addEvent(@NonNull Event event, @NonNull AddEventCallback callback) {
-        checkNotNull(event);
-        checkNotNull(callback);
-        mEventLocalDataSource.addEvent(event, callback);
-    }
-
-    @Override
-    public void updateEvent(@NonNull String eventId, @NonNull UpdateEventCallback callback) {
-        checkNotNull(eventId);
-        checkNotNull(callback);
-        mEventLocalDataSource.updateEvent(eventId, callback);
-    }
-
-    @Override
-    public void deleteEvent(@NonNull String eventId, @NonNull DeleteEventCallback callback) {
-        checkNotNull(eventId);
-        checkNotNull(callback);
-        mEventLocalDataSource.deleteEvent(eventId, callback);
-    }
-
-    @Override
-    public void favoriteEvent(@NonNull String eventId, @NonNull FavoriteEventCallback callback) {
-        checkNotNull(eventId);
-        checkNotNull(callback);
-        mEventLocalDataSource.favoriteEvent(eventId, callback);
-    }
-
-    @Override
-    public void unfavoriteEvent(@NonNull String eventId, @NonNull UnfavoriteEventCallback callback) {
-        checkNotNull(eventId);
-        checkNotNull(callback);
-        mEventLocalDataSource.unfavoriteEvent(eventId, callback);
-    }
-
-
-    // TODO LoadDataCallback
 
 }

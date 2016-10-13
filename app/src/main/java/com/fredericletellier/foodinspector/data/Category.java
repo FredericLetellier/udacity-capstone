@@ -18,9 +18,11 @@
 
 package com.fredericletellier.foodinspector.data;
 
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.fredericletellier.foodinspector.data.source.local.db.CategoryPersistenceContract;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 
@@ -33,10 +35,10 @@ public final class Category {
     private final String mId;
 
     @Nullable
-    private final String mCountry;
+    private final String mCountryId;
 
     @Nullable
-    private final String mWorldId;
+    private final String mWorldCategoryId;
 
     @Nullable
     private final Boolean mHaveData;
@@ -44,15 +46,15 @@ public final class Category {
     /**
      * Use this constructor to create a new Product.
      * @param id
-     * @param country
-     * @param worldId
+     * @param countryId
+     * @param worldCategoryId
      * @param haveData
      */
-    public Category(String id, @Nullable String country, @Nullable String worldId,
+    public Category(String id, @Nullable String countryId, @Nullable String worldCategoryId,
                    @Nullable Boolean haveData) {
         mId = id;
-        mCountry = country;
-        mWorldId = worldId;
+        mCountryId = countryId;
+        mWorldCategoryId = worldCategoryId;
         mHaveData = haveData;
     }
 
@@ -61,8 +63,17 @@ public final class Category {
      *
      * @return
      */
-
-    //TODO public static Category from(Cursor cursor)
+    public static Category from(Cursor cursor) {
+        String id = cursor.getString(cursor.getColumnIndexOrThrow(
+                CategoryPersistenceContract.CategoryEntry._ID));
+        String countryId = cursor.getString(cursor.getColumnIndexOrThrow(
+                CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_COUNTRY_ID));
+        String worldCategoryId = cursor.getString(cursor.getColumnIndexOrThrow(
+                CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_WORLD_CATEGORY_ID));
+        Boolean haveData = cursor.getInt(cursor.getColumnIndexOrThrow(
+                CategoryPersistenceContract.CategoryEntry.COLUMN_HAVE_DATA)) == 1;
+        return new Category(id, countryId, worldCategoryId, haveData);
+    }
 
     //TODO public static Category from(ContentValues values)
 
@@ -74,12 +85,12 @@ public final class Category {
 
     @Nullable
     public String getCountry() {
-        return mCountry;
+        return mCountryId;
     }
 
     @Nullable
     public String getWorldId() {
-        return mWorldId;
+        return mWorldCategoryId;
     }
 
     @Nullable
@@ -88,8 +99,8 @@ public final class Category {
     }
 
     public boolean isEmpty() {
-        return Strings.isNullOrEmpty(mCountry) &&
-                Strings.isNullOrEmpty(mWorldId) &&
+        return Strings.isNullOrEmpty(mCountryId) &&
+                Strings.isNullOrEmpty(mWorldCategoryId) &&
                 (mHaveData == null);
     }
 
@@ -99,14 +110,14 @@ public final class Category {
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
         return Objects.equal(mId, category.mId) &&
-                Objects.equal(mCountry, category.mCountry) &&
-                Objects.equal(mWorldId, category.mWorldId) &&
+                Objects.equal(mCountryId, category.mCountryId) &&
+                Objects.equal(mWorldCategoryId, category.mWorldCategoryId) &&
                 Objects.equal(mHaveData, category.mHaveData);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(mId, mCountry, mWorldId, mHaveData);
+        return Objects.hashCode(mId, mCountryId, mWorldCategoryId, mHaveData);
     }
 
     @Override

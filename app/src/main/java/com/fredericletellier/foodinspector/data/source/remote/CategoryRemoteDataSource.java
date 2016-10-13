@@ -19,8 +19,12 @@
 package com.fredericletellier.foodinspector.data.source.remote;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import com.fredericletellier.foodinspector.data.Category;
 import com.fredericletellier.foodinspector.data.source.CategoryDataSource;
+
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -43,8 +47,12 @@ public class CategoryRemoteDataSource implements CategoryDataSource {
     }
 
     //TODO COMPLETE
+    //###REMOTE
+	//Pour chaque categorie de la liste
+	//	 Je recupere l'information via l'API sur le nombre de produits de cette catégorie avec ce code pays et ayant une note nutritionnelle
+	//	 J'ajoute en base une nouvelle entrée lié à la catégorie avec son code pays et si elle contient plus d'un produit
     @Override
-    public void getCategories(@NonNull String productId, @NonNull String countryCode, @NonNull GetCategoriesCallback callback) {
+    public void getCategories(@NonNull String productId, @Nullable List<Category> categories, @NonNull String countryCode, @NonNull GetCategoriesCallback callback) {
         checkNotNull(productId);
         checkNotNull(countryCode);
         checkNotNull(callback);

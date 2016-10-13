@@ -23,7 +23,7 @@ import android.support.annotation.Nullable;
 
 import com.fredericletellier.foodinspector.data.Event;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Main entry point for accessing events data.
@@ -32,7 +32,7 @@ public interface EventDataSource {
 
     interface GetEventsCallback {
 
-        void onEventsPendingNetwork(Collection<Event> events);
+        void onEventsPendingNetwork(List<Event> events);
 
     }
 
@@ -42,7 +42,7 @@ public interface EventDataSource {
 
     }
 
-    void getEvents(@Nullable Event event, @NonNull GetEventsCallback callback);
+    void getEvents(@Nullable List<Event> events, @NonNull GetEventsCallback callback);
 
     void addEvent(@NonNull String productId, @NonNull AddEventCallback callback);
 

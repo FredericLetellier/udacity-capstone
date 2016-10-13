@@ -54,26 +54,22 @@ public class LocalDbHelper extends SQLiteOpenHelper {
                     ProductPersistenceContract.ProductEntry.COLUMN_NAME_GENERIC_NAME + TEXT_TYPE + COMMA_SEP +
                     ProductPersistenceContract.ProductEntry.COLUMN_NAME_MAIN_BRAND + TEXT_TYPE + COMMA_SEP +
                     ProductPersistenceContract.ProductEntry.COLUMN_NAME_QUANTITY + TEXT_TYPE + COMMA_SEP +
-                    ProductPersistenceContract.ProductEntry.COLUMN_NAME_NUTRITION_GRADE + TEXT_TYPE + COMMA_SEP +
-                    ProductPersistenceContract.ProductEntry.COLUMN_NAME_CATEGORIES + TEXT_TYPE +
+                    ProductPersistenceContract.ProductEntry.COLUMN_NAME_NUTRITION_GRADE + TEXT_TYPE +
                     CLOSE_PARENTHESIS;
 
     private static final String SQL_CREATE_CATEGORY =
             CREATE_TABLE + CategoryPersistenceContract.CategoryEntry.TABLE_NAME + OPEN_PARENTHESIS +
                     CategoryPersistenceContract.CategoryEntry._ID + INTEGER_TYPE + PRIMARY_KEY + COMMA_SEP +
-                    CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_COUNTRY + TEXT_TYPE + COMMA_SEP +
-                    CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_WORLD_ID + TEXT_TYPE + COMMA_SEP +
                     CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_COUNTRY_ID + TEXT_TYPE + COMMA_SEP +
-                    CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
-                    CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_SUM_OF_PRODUCTS + INTEGER_TYPE + COMMA_SEP +
-                    CategoryPersistenceContract.CategoryEntry.COLUMN_URL + TEXT_TYPE +
+                    CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_WORLD_CATEGORY_ID + TEXT_TYPE + COMMA_SEP +
+                    CategoryPersistenceContract.CategoryEntry.COLUMN_HAVE_DATA + BOOLEAN_TYPE +
                     CLOSE_PARENTHESIS;
 
     private static final String SQL_CREATE_EVENT =
             CREATE_TABLE + EventPersistenceContract.EventEntry.TABLE_NAME + OPEN_PARENTHESIS +
                     EventPersistenceContract.EventEntry._ID + INTEGER_TYPE + PRIMARY_KEY + COMMA_SEP +
                     EventPersistenceContract.EventEntry.COLUMN_NAME_UNIX_TIMESTAMP + TEXT_TYPE + COMMA_SEP +
-                    EventPersistenceContract.EventEntry.COLUMN_NAME_BARCODE + TEXT_TYPE + COMMA_SEP +
+                    EventPersistenceContract.EventEntry.COLUMN_NAME_STATUS + TEXT_TYPE + COMMA_SEP +
                     EventPersistenceContract.EventEntry.COLUMN_NAME_PRODUCT_ID + TEXT_TYPE + COMMA_SEP +
                     EventPersistenceContract.EventEntry.COLUMN_NAME_FAVORITE + BOOLEAN_TYPE + COMMA_SEP +
 
@@ -82,17 +78,34 @@ public class LocalDbHelper extends SQLiteOpenHelper {
                     OPEN_PARENTHESIS + ProductPersistenceContract.ProductEntry._ID + CLOSE_PARENTHESIS +
                     CLOSE_PARENTHESIS;
 
-    private static final String SQL_CREATE_PRODUCTINCATEGORY =
-            CREATE_TABLE + ProductInCategoryPersistenceContract.ProductInCategoryEntry.TABLE_NAME + OPEN_PARENTHESIS +
-                    ProductInCategoryPersistenceContract.ProductInCategoryEntry._ID + INTEGER_TYPE + PRIMARY_KEY + COMMA_SEP +
-                    ProductInCategoryPersistenceContract.ProductInCategoryEntry.COLUMN_NAME_CATEGORY_ID + TEXT_TYPE + COMMA_SEP +
-                    ProductInCategoryPersistenceContract.ProductInCategoryEntry.COLUMN_NAME_PRODUCT_ID + TEXT_TYPE + COMMA_SEP +
+    private static final String SQL_CREATE_PRODUCTSINCATEGORY =
+            CREATE_TABLE + ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.TABLE_NAME + OPEN_PARENTHESIS +
+                    ProductsInCategoryPersistenceContract.ProductsInCategoryEntry._ID + INTEGER_TYPE + PRIMARY_KEY + COMMA_SEP +
+                    ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.COLUMN_NAME_CATEGORY_ID + TEXT_TYPE + COMMA_SEP +
+                    ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.COLUMN_NAME_PRODUCT_ID + TEXT_TYPE + COMMA_SEP +
 
-                    FOREIGN_KEY + OPEN_PARENTHESIS + ProductInCategoryPersistenceContract.ProductInCategoryEntry.COLUMN_NAME_CATEGORY_ID +
+                    FOREIGN_KEY + OPEN_PARENTHESIS + ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.COLUMN_NAME_CATEGORY_ID +
                     CLOSE_PARENTHESIS + REFERENCES + CategoryPersistenceContract.CategoryEntry.TABLE_NAME +
                     OPEN_PARENTHESIS + CategoryPersistenceContract.CategoryEntry._ID + CLOSE_PARENTHESIS + COMMA_SEP +
 
-                    FOREIGN_KEY + OPEN_PARENTHESIS + ProductInCategoryPersistenceContract.ProductInCategoryEntry.COLUMN_NAME_PRODUCT_ID +
+                    FOREIGN_KEY + OPEN_PARENTHESIS + ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.COLUMN_NAME_PRODUCT_ID +
+                    CLOSE_PARENTHESIS + REFERENCES + ProductPersistenceContract.ProductEntry.TABLE_NAME +
+                    OPEN_PARENTHESIS + ProductPersistenceContract.ProductEntry._ID + CLOSE_PARENTHESIS +
+                    CLOSE_PARENTHESIS;
+
+    private static final String SQL_CREATE_CATEGORIESINPRODUCT =
+            CREATE_TABLE + CategoriesInProductPersistenceContract.CategoriesInProductEntry.TABLE_NAME + OPEN_PARENTHESIS +
+                    CategoriesInProductPersistenceContract.CategoriesInProductEntry._ID + INTEGER_TYPE + PRIMARY_KEY + COMMA_SEP +
+                    CategoriesInProductPersistenceContract.CategoriesInProductEntry.COLUMN_NAME_CATEGORY_ID + TEXT_TYPE + COMMA_SEP +
+                    CategoriesInProductPersistenceContract.CategoriesInProductEntry.COLUMN_NAME_PRODUCT_ID + TEXT_TYPE + COMMA_SEP +
+                    CategoriesInProductPersistenceContract.CategoriesInProductEntry.COLUMN_NAME_RANK + INTEGER_TYPE + COMMA_SEP +
+                    CategoriesInProductPersistenceContract.CategoriesInProductEntry.COLUMN_NAME_CATEGORY_NAME + TEXT_TYPE + COMMA_SEP +
+
+                    FOREIGN_KEY + OPEN_PARENTHESIS + CategoriesInProductPersistenceContract.CategoriesInProductEntry.COLUMN_NAME_CATEGORY_ID +
+                    CLOSE_PARENTHESIS + REFERENCES + CategoryPersistenceContract.CategoryEntry.TABLE_NAME +
+                    OPEN_PARENTHESIS + CategoryPersistenceContract.CategoryEntry._ID + CLOSE_PARENTHESIS + COMMA_SEP +
+
+                    FOREIGN_KEY + OPEN_PARENTHESIS + CategoriesInProductPersistenceContract.CategoriesInProductEntry.COLUMN_NAME_PRODUCT_ID +
                     CLOSE_PARENTHESIS + REFERENCES + ProductPersistenceContract.ProductEntry.TABLE_NAME +
                     OPEN_PARENTHESIS + ProductPersistenceContract.ProductEntry._ID + CLOSE_PARENTHESIS +
                     CLOSE_PARENTHESIS;
@@ -105,7 +118,8 @@ public class LocalDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_PRODUCT);
         db.execSQL(SQL_CREATE_CATEGORY);
         db.execSQL(SQL_CREATE_EVENT);
-        db.execSQL(SQL_CREATE_PRODUCTINCATEGORY);
+        db.execSQL(SQL_CREATE_PRODUCTSINCATEGORY);
+        db.execSQL(SQL_CREATE_CATEGORIESINPRODUCT);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

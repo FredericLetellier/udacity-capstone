@@ -19,13 +19,13 @@
 package com.fredericletellier.foodinspector.data.source.local;
 
 import android.content.ContentResolver;
-import android.database.Cursor;
-import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import com.fredericletellier.foodinspector.data.Category;
 import com.fredericletellier.foodinspector.data.source.CategoryDataSource;
-import com.fredericletellier.foodinspector.data.source.local.db.CategoryPersistenceContract;
-import com.fredericletellier.foodinspector.data.source.local.db.ProductPersistenceContract;
+
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -52,59 +52,35 @@ public class CategoryLocalDataSource implements CategoryDataSource {
     }
 
     //TODO COMPLETE
+    //###LOCAL
+    //J'ai un code
+    //Je cherche ce produit dans ma base
+    //Si ce produit n'est pas dans ma base
+    //	(callback facultatif ?!?)
+    //Si ce produit est dans ma base
+    //	Je recupere le champ PARSE
+    //	Si ce champ n'est pas égal à DONE
+    //		Je parse le champ
+    //		Pour chauqe catégorie
+    //			Je cherche cette categorie et ce code pays
+    //			Si je trouve
+    //				J'ajoute en base une nouvelle entrée lié au produit pour la catégorie avec son rang, son nom, et son code
+    //			Si je ne trouve pas
+    //				J'ajoute en base le couple categorie/pays avce son code categorie et son code pays
+    //			J'ajoute en base une nouvelle entrée lié au produit pour la catégorie avec son rang, son nom, et son code
+    //		J'inscris DONE dans le champ
+    //	Je recupere la liste des catégories associées à ce produit
+    //	Pour chaque catégorie
+    //		Si la catégorie existe avec le CODE_PAYS_ACTUEL
+    //			rien
+    //		Si la catégorie n'existe pas avec le CODE_PAYS_ACTUEL
+    //			J'ajoute cette categorie à une liste
+    //	callback avec la liste des categories qui ne sont pas en local
+
     @Override
-    public void getCategories(@NonNull String productId, @NonNull String countryCode, @NonNull GetCategoriesCallback callback) {
+    public void getCategories(@NonNull String productId, @Nullable List<Category> categories, @NonNull String countryCode, @NonNull GetCategoriesCallback callback) {
         checkNotNull(productId);
         checkNotNull(countryCode);
         checkNotNull(callback);
     }
-
-
-    //TODO DELETE
-    @Override
-    public void getCategories(@NonNull String productId, @NonNull String countryCode, @NonNull GetCategoriesCallback callback) {
-        checkNotNull(productId);
-        checkNotNull(countryCode);
-        checkNotNull(callback);
-
-        String categoriesConcatened;
-
-        Uri uri = ProductPersistenceContract.ProductEntry.buildProductUriWith(productId);
-
-        Cursor cursor = mContentResolver.query(
-                uri,
-                null,
-                ProductPersistenceContract.ProductEntry._ID + " = ?",
-                new String[]{productId},
-                null);
-
-        if (cursor.moveToLast()) {
-            categoriesConcatened = cursor.getString(cursor.getColumnIndex(ProductPersistenceContract.ProductEntry.COLUMN_NAME_CATEGORIES));
-        } else {
-            callback.onErrorProductNotAvailable();
-            return;
-        }
-        cursor.close();
-
-        uri = CategoryPersistenceContract.CategoryEntry.buildCategoryUri();
-        String[] categories = categoriesConcatened.split(";");
-        for (String category : categories)
-        {
-            cursor = mContentResolver.query(
-                    uri,
-                    null,
-                    CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_WORLD_ID + " = ? AND" +
-                            CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_COUNTRY_ID + " = ?",
-                    new String[]{category, countryCode},
-                    null);
-
-            if (!cursor.moveToLast()) {
-                callback.onDataNotAvailable();
-                return;
-            }
-            cursor.close();
-        }
-        callback.onCategoriesLoaded();
-    }
-
 }

@@ -55,7 +55,6 @@ public final class ProductPersistenceContract {
         public static final String COLUMN_NAME_MAIN_BRAND = "mainbrand";
         public static final String COLUMN_NAME_QUANTITY = "quantity";
         public static final String COLUMN_NAME_NUTRITION_GRADE = "nutritiongrade";
-        public static final String COLUMN_NAME_CATEGORIES = "categories";
         public static final Uri CONTENT_PRODUCT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
         public static String[] PRODUCT_COLUMNS = new String[]{
                 ProductPersistenceContract.ProductEntry._ID,
@@ -63,8 +62,7 @@ public final class ProductPersistenceContract {
                 ProductPersistenceContract.ProductEntry.COLUMN_NAME_GENERIC_NAME,
                 ProductPersistenceContract.ProductEntry.COLUMN_NAME_MAIN_BRAND,
                 ProductPersistenceContract.ProductEntry.COLUMN_NAME_QUANTITY,
-                ProductPersistenceContract.ProductEntry.COLUMN_NAME_NUTRITION_GRADE,
-                ProductPersistenceContract.ProductEntry.COLUMN_NAME_CATEGORIES};
+                ProductPersistenceContract.ProductEntry.COLUMN_NAME_NUTRITION_GRADE};
 
         public static Uri buildProductUriWith(long id) {
             return ContentUris.withAppendedId(CONTENT_PRODUCT_URI, id);

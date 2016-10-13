@@ -19,14 +19,9 @@
 package com.fredericletellier.foodinspector.data.source.local;
 
 import android.content.ContentResolver;
-import android.database.Cursor;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.fredericletellier.foodinspector.data.source.ProductDataSource;
-import com.fredericletellier.foodinspector.data.source.local.db.CategoryPersistenceContract;
-import com.fredericletellier.foodinspector.data.source.local.db.ProductInCategoryPersistenceContract;
-import com.fredericletellier.foodinspector.data.source.local.db.ProductPersistenceContract;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -53,6 +48,14 @@ public class ProductLocalDataSource implements ProductDataSource {
     }
 
     //TODO COMPLETE
+    //###LOCAL
+    //J'ai un code categorie et un code pays
+    //Je cherche les x derniers produits avec une note nutritionnelle y
+    //Si ces produit existent dans ma base
+    //	(callback facultatif ?!?)
+    //Si ces produit n'existent pas dans ma base
+    //	(callback no data)
+
     @Override
     public void getXProductsInCategory(@NonNull String categoryId, @NonNull String nutritionGradeValue, @NonNull Integer skipProducts, @NonNull GetXProductsInCategoryCallback callback) {
         checkNotNull(categoryId);
@@ -60,67 +63,4 @@ public class ProductLocalDataSource implements ProductDataSource {
         checkNotNull(skipProducts);
         checkNotNull(callback);
     }
-
-    //TODO DELETE
-    @Override
-    public void getProducts(@NonNull String categoryId, @NonNull GetProductsCallback callback) {
-        checkNotNull(categoryId);
-        checkNotNull(callback);
-        int nbExpected;
-        int nbInDatabase;
-
-        Uri uri = CategoryPersistenceContract.CategoryEntry.buildCategoryUriWith(categoryId);
-
-        Cursor cursor = mContentResolver.query(uri, null, null, null, null);
-
-        if (cursor.moveToLast()) {
-            nbExpected = cursor.getInt(cursor.getColumnIndex(CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_SUM_OF_PRODUCTS));
-        } else {
-            callback.onErrorCategoryNotAvailable();
-            return;
-        }
-        cursor.close();
-
-        uri = ProductInCategoryPersistenceContract.ProductInCategoryEntry.buildProductInCategoryUri();
-
-        cursor = mContentResolver.query(
-                uri,
-                null,
-                ProductInCategoryPersistenceContract.ProductInCategoryEntry.COLUMN_NAME_CATEGORY_ID + " = ?",
-                new String[]{categoryId},
-                null);
-
-        if (cursor.moveToLast()) {
-            nbInDatabase = cursor.getCount();
-        } else {
-            callback.onDataNotAvailable();
-            return;
-        }
-        cursor.close();
-
-        if (nbExpected == nbInDatabase) {
-            callback.onProductsLoaded();
-        } else {
-            callback.onDataNotAvailable();
-        }
-    }
-
-    //TODO DELETE
-    @Override
-    public void getProduct(@NonNull String productId, @NonNull GetProductCallback callback) {
-        checkNotNull(productId);
-        checkNotNull(callback);
-
-        Uri uri = ProductPersistenceContract.ProductEntry.buildProductUriWith(productId);
-
-        Cursor cursor = mContentResolver.query(uri, null, null, null, null);
-
-        if (cursor != null && cursor.moveToLast()) {
-            callback.onProductLoaded();
-        } else {
-            callback.onDataNotAvailable();
-        }
-        cursor.close();
-    }
-
 }
