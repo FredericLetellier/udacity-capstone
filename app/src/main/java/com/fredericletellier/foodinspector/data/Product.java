@@ -18,9 +18,11 @@
 
 package com.fredericletellier.foodinspector.data;
 
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.fredericletellier.foodinspector.data.source.local.db.ProductPersistenceContract;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 
@@ -30,6 +32,7 @@ import com.google.common.base.Strings;
 public final class Product {
 
     public static final int LOADING_LIMIT = 20;
+    public static final String PARSING_DONE = "PARSING_DONE";
 
     @NonNull
     private final String mId;
@@ -49,6 +52,12 @@ public final class Product {
     @Nullable
     private final String mNutritionGrade;
 
+    @Nullable
+    private final String mParsableCategories;
+
+    @Nullable
+    private final String mParsableNameCategories;
+
 
     /**
      * Use this constructor to create a new Product.
@@ -58,16 +67,21 @@ public final class Product {
      * @param mainBrand
      * @param quantity
      * @param nutritionGrade
+     * @param parsableCategories
+     * @param parsableNameCategories
      */
     public Product(String id, @Nullable String productName, @Nullable String genericName,
                    @Nullable String mainBrand, @Nullable String quantity,
-                   @Nullable String nutritionGrade) {
+                   @Nullable String nutritionGrade, @Nullable String parsableCategories,
+                   @Nullable String parsableNameCategories) {
         mId = id;
         mProductName = productName;
         mGenericName = genericName;
         mMainBrand = mainBrand;
         mQuantity = quantity;
         mNutritionGrade = nutritionGrade;
+        mParsableCategories = parsableCategories;
+        mParsableNameCategories = parsableNameCategories;
     }
 
     /**
@@ -75,8 +89,25 @@ public final class Product {
      *
      * @return
      */
-
-    //TODO public static Product from(Cursor cursor)
+    public static Product from(Cursor cursor) {
+        String id = cursor.getString(cursor.getColumnIndexOrThrow(
+                ProductPersistenceContract.ProductEntry._ID));
+        String productName = cursor.getString(cursor.getColumnIndexOrThrow(
+                ProductPersistenceContract.ProductEntry.COLUMN_NAME_PRODUCT_NAME));
+        String genericName = cursor.getString(cursor.getColumnIndexOrThrow(
+                ProductPersistenceContract.ProductEntry.COLUMN_NAME_GENERIC_NAME));
+        String mainBrand = cursor.getString(cursor.getColumnIndexOrThrow(
+                ProductPersistenceContract.ProductEntry.COLUMN_NAME_MAIN_BRAND));
+        String quantity = cursor.getString(cursor.getColumnIndexOrThrow(
+                ProductPersistenceContract.ProductEntry.COLUMN_NAME_QUANTITY));
+        String nutritionGrade = cursor.getString(cursor.getColumnIndexOrThrow(
+                ProductPersistenceContract.ProductEntry.COLUMN_NAME_NUTRITION_GRADE));
+        String parsableCategories = cursor.getString(cursor.getColumnIndexOrThrow(
+                ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSABLE_CATEGORIES));
+        String parsableNameCategories = cursor.getString(cursor.getColumnIndexOrThrow(
+                ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSABLE_NAME_CATEGORIES));
+        return new Product(id, productName, genericName, mainBrand, quantity, nutritionGrade, parsableCategories, parsableNameCategories);
+    }
 
     //TODO public static Product from(ContentValues values)
 
@@ -112,6 +143,16 @@ public final class Product {
     }
 
     @Nullable
+    public String getParsableCategories() {
+        return mParsableCategories;
+    }
+
+    @Nullable
+    public String getParsableNameCategories() {
+        return mParsableNameCategories;
+    }
+
+    @Nullable
     public String getTitle() {
         return mProductName + " - " + mMainBrand + " - " + mQuantity;
     }
@@ -121,7 +162,9 @@ public final class Product {
                 Strings.isNullOrEmpty(mGenericName) &&
                 Strings.isNullOrEmpty(mMainBrand) &&
                 Strings.isNullOrEmpty(mQuantity) &&
-                Strings.isNullOrEmpty(mNutritionGrade);
+                Strings.isNullOrEmpty(mNutritionGrade) &&
+                Strings.isNullOrEmpty(mParsableCategories) &&
+                Strings.isNullOrEmpty(mParsableNameCategories);
     }
 
     @Override
@@ -134,12 +177,14 @@ public final class Product {
                 Objects.equal(mGenericName, product.mGenericName) &&
                 Objects.equal(mMainBrand, product.mMainBrand) &&
                 Objects.equal(mQuantity, product.mQuantity) &&
-                Objects.equal(mNutritionGrade, product.mNutritionGrade);
+                Objects.equal(mNutritionGrade, product.mNutritionGrade) &&
+                Objects.equal(mParsableCategories, product.mParsableCategories) &&
+                Objects.equal(mParsableNameCategories, product.mParsableNameCategories);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(mId, mProductName, mGenericName, mMainBrand, mQuantity, mNutritionGrade);
+        return Objects.hashCode(mId, mProductName, mGenericName, mMainBrand, mQuantity, mNutritionGrade, mParsableCategories, mParsableNameCategories);
     }
 
     @Override

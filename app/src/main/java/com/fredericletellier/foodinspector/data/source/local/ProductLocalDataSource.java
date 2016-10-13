@@ -57,10 +57,10 @@ public class ProductLocalDataSource implements ProductDataSource {
      * If not exist, {@link GetXProductsInCategoryCallback#onProductsNotAvailable()} is called
      */
     @Override
-    public void getXProductsInCategory(@NonNull String categoryId, @NonNull String nutritionGradeValue, @NonNull Integer skipProducts, @NonNull GetXProductsInCategoryCallback callback) {
+    public void getXProductsInCategory(@NonNull String categoryId, @NonNull String nutritionGradeValue, @NonNull Integer offsetProducts, @NonNull GetXProductsInCategoryCallback callback) {
         checkNotNull(categoryId);
         checkNotNull(nutritionGradeValue);
-        checkNotNull(skipProducts);
+        checkNotNull(offsetProducts);
         checkNotNull(callback);
 
         Uri uri = ProductPersistenceContract.ProductEntry.buildProductsincategoryJoinProductUri();
@@ -72,7 +72,7 @@ public class ProductLocalDataSource implements ProductDataSource {
         String sortOrder =
                 ProductsInCategoryPersistenceContract.ProductsInCategoryEntry._ID + " DESC" +
                 " LIMIT " + Product.LOADING_LIMIT +
-                " OFFSET " + skipProducts;
+                " OFFSET " + offsetProducts;
 
         Cursor cursor = mContentResolver.query(
                 uri,

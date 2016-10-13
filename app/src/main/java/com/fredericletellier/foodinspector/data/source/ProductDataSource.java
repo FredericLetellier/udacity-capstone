@@ -31,6 +31,6 @@ public interface ProductDataSource {
 
     }
 
-    void getXProductsInCategory(@NonNull String categoryId, @NonNull String nutritionGradeValue, @NonNull Integer skipProducts, @NonNull GetXProductsInCategoryCallback callback);
+    void getXProductsInCategory(@NonNull String categoryId, @NonNull String nutritionGradeValue, @NonNull Integer offsetProducts, @NonNull GetXProductsInCategoryCallback callback);
 
 }

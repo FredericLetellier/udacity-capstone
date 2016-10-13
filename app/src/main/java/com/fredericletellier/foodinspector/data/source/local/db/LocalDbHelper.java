@@ -54,7 +54,9 @@ public class LocalDbHelper extends SQLiteOpenHelper {
                     ProductPersistenceContract.ProductEntry.COLUMN_NAME_GENERIC_NAME + TEXT_TYPE + COMMA_SEP +
                     ProductPersistenceContract.ProductEntry.COLUMN_NAME_MAIN_BRAND + TEXT_TYPE + COMMA_SEP +
                     ProductPersistenceContract.ProductEntry.COLUMN_NAME_QUANTITY + TEXT_TYPE + COMMA_SEP +
-                    ProductPersistenceContract.ProductEntry.COLUMN_NAME_NUTRITION_GRADE + TEXT_TYPE +
+                    ProductPersistenceContract.ProductEntry.COLUMN_NAME_NUTRITION_GRADE + TEXT_TYPE + COMMA_SEP +
+                    ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSABLE_CATEGORIES + TEXT_TYPE + COMMA_SEP +
+                    ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSABLE_NAME_CATEGORIES + TEXT_TYPE +
                     CLOSE_PARENTHESIS;
 
     private static final String SQL_CREATE_CATEGORY =
@@ -103,7 +105,7 @@ public class LocalDbHelper extends SQLiteOpenHelper {
 
                     FOREIGN_KEY + OPEN_PARENTHESIS + CategoriesInProductPersistenceContract.CategoriesInProductEntry.COLUMN_NAME_CATEGORY_ID +
                     CLOSE_PARENTHESIS + REFERENCES + CategoryPersistenceContract.CategoryEntry.TABLE_NAME +
-                    OPEN_PARENTHESIS + CategoryPersistenceContract.CategoryEntry._ID + CLOSE_PARENTHESIS + COMMA_SEP +
+                    OPEN_PARENTHESIS + CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_WORLD_CATEGORY_ID + CLOSE_PARENTHESIS + COMMA_SEP +
 
                     FOREIGN_KEY + OPEN_PARENTHESIS + CategoriesInProductPersistenceContract.CategoriesInProductEntry.COLUMN_NAME_PRODUCT_ID +
                     CLOSE_PARENTHESIS + REFERENCES + ProductPersistenceContract.ProductEntry.TABLE_NAME +

@@ -48,10 +48,10 @@ public class ProductRemoteDataSource implements ProductDataSource {
 	//J'ajoute les produits récupérés
 	//(pas de callback si le nombre de produits récupérés est nul ou inférieur à ce qui a été demandé)
     @Override
-    public void getXProductsInCategory(@NonNull String categoryId, @NonNull String nutritionGradeValue, @NonNull Integer skipProducts, @NonNull GetXProductsInCategoryCallback callback) {
+    public void getXProductsInCategory(@NonNull String categoryId, @NonNull String nutritionGradeValue, @NonNull Integer offsetProducts, @NonNull GetXProductsInCategoryCallback callback) {
         checkNotNull(categoryId);
         checkNotNull(nutritionGradeValue);
-        checkNotNull(skipProducts);
+        checkNotNull(offsetProducts);
         checkNotNull(callback);
     }
 }

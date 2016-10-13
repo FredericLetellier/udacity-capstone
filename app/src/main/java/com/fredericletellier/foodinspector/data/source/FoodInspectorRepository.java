@@ -23,7 +23,6 @@ import android.support.annotation.Nullable;
 
 import com.fredericletellier.foodinspector.data.Category;
 import com.fredericletellier.foodinspector.data.Event;
-import com.fredericletellier.foodinspector.data.source.remote.EventRemoteDataSource;
 
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class FoodInspectorRepository implements ProductDataSource, CategoryDataS
 
     private final CategoryDataSource mCategoryLocalDataSource;
 
-    private final EventRemoteDataSource mEventRemoteDataSource;
+    private final EventDataSource mEventRemoteDataSource;
 
     private final EventDataSource mEventLocalDataSource;
 
@@ -53,7 +52,7 @@ public class FoodInspectorRepository implements ProductDataSource, CategoryDataS
                                     @NonNull ProductDataSource productLocalDataSource,
                                     @NonNull CategoryDataSource categoryRemoteDataSource,
                                     @NonNull CategoryDataSource categoryLocalDataSource,
-                                    @NonNull EventRemoteDataSource eventRemoteDataSource,
+                                    @NonNull EventDataSource eventRemoteDataSource,
                                     @NonNull EventDataSource eventLocalDataSource) {
         mProductRemoteDataSource = checkNotNull(productRemoteDataSource);
         mProductLocalDataSource = checkNotNull(productLocalDataSource);
@@ -78,7 +77,7 @@ public class FoodInspectorRepository implements ProductDataSource, CategoryDataS
                                                       ProductDataSource productLocalDataSource,
                                                       CategoryDataSource categoryRemoteDataSource,
                                                       CategoryDataSource categoryLocalDataSource,
-                                                      EventRemoteDataSource eventRemoteDataSource,
+                                                      EventDataSource eventRemoteDataSource,
                                                       EventDataSource eventLocalDataSource) {
         if (INSTANCE == null) {
             INSTANCE = new FoodInspectorRepository(productRemoteDataSource, productLocalDataSource,
@@ -89,7 +88,7 @@ public class FoodInspectorRepository implements ProductDataSource, CategoryDataS
     }
 
     /**
-     * Used to force {@link #getInstance(ProductDataSource, ProductDataSource, CategoryDataSource, CategoryDataSource, EventRemoteDataSource, EventDataSource)}
+     * Used to force {@link #getInstance(ProductDataSource, ProductDataSource, CategoryDataSource, CategoryDataSource, EventDataSource, EventDataSource)}
      * to create a new instance next time it's called.
      */
     public static void destroyInstance() {
