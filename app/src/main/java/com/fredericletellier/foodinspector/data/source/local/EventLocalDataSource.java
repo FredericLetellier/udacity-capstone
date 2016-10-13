@@ -19,6 +19,7 @@
 package com.fredericletellier.foodinspector.data.source.local;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -27,6 +28,7 @@ import android.support.annotation.Nullable;
 import com.fredericletellier.foodinspector.data.Event;
 import com.fredericletellier.foodinspector.data.source.EventDataSource;
 import com.fredericletellier.foodinspector.data.source.local.db.EventPersistenceContract;
+import com.fredericletellier.foodinspector.data.source.local.db.ProductPersistenceContract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +57,10 @@ public class EventLocalDataSource implements EventDataSource {
         return INSTANCE;
     }
 
+    /**
+     * Get the list of event with status No_Network
+     * If exist, {@link GetEventsCallback#onEventsPendingNetwork(List)} is called
+     */
     @Override
     public void getEvents(@Nullable List<Event> events, @NonNull GetEventsCallback callback){
         checkNotNull(callback);
@@ -70,7 +76,6 @@ public class EventLocalDataSource implements EventDataSource {
 
         events = new ArrayList<Event>();
 
-
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 events.add(Event.from(cursor));
@@ -81,31 +86,101 @@ public class EventLocalDataSource implements EventDataSource {
         cursor.close();
     }
 
-    //TODO COMPLETE
-    //###LOCAL
-    //J'ai un code
-    //Je cherche ce produit dans ma base
-    //Si ce produit est dans ma base
-    //	Creation / Mise à jour du code produit et timestamp de l'evenement
-    //Si il n'y est pas
-    //	callback = erreur
+    /**
+     * Check if product exist in local data source
+     * If not exist, {@link AddEventCallback#onEventProductNotAvailable()} is called
+     * If exist, update or create associated event
+     */
     @Override
     public void addEvent(@NonNull String productId, @NonNull AddEventCallback callback){
         checkNotNull(productId);
         checkNotNull(callback);
 
+        Uri uriProduct = ProductPersistenceContract.ProductEntry.buildProductUriWith(productId);
+
+        Cursor cursorProduct = mContentResolver.query(
+                uriProduct,
+                null,
+                null,
+                null,
+                null);
+
+        if (cursorProduct == null || !cursorProduct.moveToFirst()) {
+            cursorProduct.close();
+            callback.onEventProductNotAvailable();
+            return;
+        }
+        cursorProduct.close();
+
+        Uri uriEvent = EventPersistenceContract.EventEntry.buildEventUri();
+
+        Cursor cursorEvent = mContentResolver.query(
+                uriEvent,
+                null,
+                EventPersistenceContract.EventEntry.COLUMN_NAME_PRODUCT_ID + " = ?",
+                new String[]{productId},
+                null);
+
+        Long tsLong = System.currentTimeMillis()/1000;
+        String timestamp = tsLong.toString();
+
+        if (cursorEvent != null && cursorEvent.moveToFirst()) {
+            Event event = Event.from(cursorEvent);
+
+            ContentValues values = new ContentValues();
+            values.put(EventPersistenceContract.EventEntry.COLUMN_NAME_UNIX_TIMESTAMP, timestamp);
+
+            mContentResolver.update(
+                    EventPersistenceContract.EventEntry.buildEventUri(),
+                    values,
+                    EventPersistenceContract.EventEntry._ID + " LIKE ?",
+                    new String[]{event.getId()});
+
+        } else {
+
+            ContentValues values = new ContentValues();
+            values.put(EventPersistenceContract.EventEntry.COLUMN_NAME_UNIX_TIMESTAMP, timestamp);
+            values.put(EventPersistenceContract.EventEntry.COLUMN_NAME_STATUS, Event.STATUS_OK);
+            values.put(EventPersistenceContract.EventEntry.COLUMN_NAME_PRODUCT_ID, productId);
+            values.put(EventPersistenceContract.EventEntry.COLUMN_NAME_FAVORITE, false);
+
+            mContentResolver.insert(EventPersistenceContract.EventEntry.buildEventUri(), values);
+        }
+        cursorEvent.close();
     }
 
-    //TODO COMPLETE
-    //###LOCAL
-    //J'ai un code
-    //Je cherche cet evenement dans ma base
-    //Si cet evenement est dans ma base
-    //	Mise à jour du champ favori de l'evenement
-    //Si cet evenement n'est pas dans ma base
-    //	(callback facultatif ?!?)
+    /**
+     * Check if event exist in local data source
+     * If exist, update favorite field
+     */
     @Override
     public void updateFavoriteFieldEvent(@NonNull String productId){
         checkNotNull(productId);
+
+        Uri uri = EventPersistenceContract.EventEntry.buildEventUri();
+
+        Cursor cursor = mContentResolver.query(
+                uri,
+                null,
+                EventPersistenceContract.EventEntry.COLUMN_NAME_PRODUCT_ID + " = ?",
+                new String[]{productId},
+                null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+
+            Event event = Event.from(cursor);
+
+            ContentValues values = new ContentValues();
+            values.put(EventPersistenceContract.EventEntry.COLUMN_NAME_FAVORITE, event.getFavorite() ? 0 : 1);
+
+            mContentResolver.update(
+                    EventPersistenceContract.EventEntry.buildEventUri(),
+                    values,
+                    EventPersistenceContract.EventEntry._ID + " LIKE ?",
+                    new String[]{event.getId()});
+
+        }
+        cursor.close();
     }
+
 }

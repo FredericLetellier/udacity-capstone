@@ -64,6 +64,8 @@ public final class ProductPersistenceContract {
                 ProductPersistenceContract.ProductEntry.COLUMN_NAME_QUANTITY,
                 ProductPersistenceContract.ProductEntry.COLUMN_NAME_NUTRITION_GRADE};
 
+        public static final String PRODUCTSINCATEGORY_JOIN_PRODUCT = "productsincategory_join_product";
+
         public static Uri buildProductUriWith(long id) {
             return ContentUris.withAppendedId(CONTENT_PRODUCT_URI, id);
         }
@@ -77,6 +79,9 @@ public final class ProductPersistenceContract {
             return CONTENT_PRODUCT_URI.buildUpon().build();
         }
 
+        public static Uri buildProductsincategoryJoinProductUri() {
+            return BASE_CONTENT_URI.buildUpon().appendPath(PRODUCTSINCATEGORY_JOIN_PRODUCT).build();
+        }
     }
 
 }

@@ -19,9 +19,14 @@
 package com.fredericletellier.foodinspector.data.source.local;
 
 import android.content.ContentResolver;
+import android.database.Cursor;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import com.fredericletellier.foodinspector.data.Product;
 import com.fredericletellier.foodinspector.data.source.ProductDataSource;
+import com.fredericletellier.foodinspector.data.source.local.db.ProductPersistenceContract;
+import com.fredericletellier.foodinspector.data.source.local.db.ProductsInCategoryPersistenceContract;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -47,20 +52,40 @@ public class ProductLocalDataSource implements ProductDataSource {
         return INSTANCE;
     }
 
-    //TODO COMPLETE
-    //###LOCAL
-    //J'ai un code categorie et un code pays
-    //Je cherche les x derniers produits avec une note nutritionnelle y
-    //Si ces produit existent dans ma base
-    //	(callback facultatif ?!?)
-    //Si ces produit n'existent pas dans ma base
-    //	(callback no data)
-
+    /**
+     * Get the limited list of products with an offset, for a specific categoryId and specific nutritionGradeValue
+     * If not exist, {@link GetXProductsInCategoryCallback#onProductsNotAvailable()} is called
+     */
     @Override
     public void getXProductsInCategory(@NonNull String categoryId, @NonNull String nutritionGradeValue, @NonNull Integer skipProducts, @NonNull GetXProductsInCategoryCallback callback) {
         checkNotNull(categoryId);
         checkNotNull(nutritionGradeValue);
         checkNotNull(skipProducts);
         checkNotNull(callback);
+
+        Uri uri = ProductPersistenceContract.ProductEntry.buildProductsincategoryJoinProductUri();
+
+        String selection =
+                ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.COLUMN_NAME_CATEGORY_ID + " LIKE ?" + " AND" +
+                ProductPersistenceContract.ProductEntry.COLUMN_NAME_NUTRITION_GRADE + " LIKE ?";
+        String[] selectionArgs = {categoryId, nutritionGradeValue};
+        String sortOrder =
+                ProductsInCategoryPersistenceContract.ProductsInCategoryEntry._ID + " DESC" +
+                " LIMIT " + Product.LOADING_LIMIT +
+                " OFFSET " + skipProducts;
+
+        Cursor cursor = mContentResolver.query(
+                uri,
+                null,
+                selection,
+                selectionArgs,
+                sortOrder);
+
+        if (cursor == null || !cursor.moveToFirst()) {
+            cursor.close();
+            callback.onProductsNotAvailable();
+            return;
+        }
+        cursor.close();
     }
 }

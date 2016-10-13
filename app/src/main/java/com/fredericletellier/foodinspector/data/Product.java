@@ -29,6 +29,8 @@ import com.google.common.base.Strings;
  */
 public final class Product {
 
+    public static final int LOADING_LIMIT = 20;
+
     @NonNull
     private final String mId;
 

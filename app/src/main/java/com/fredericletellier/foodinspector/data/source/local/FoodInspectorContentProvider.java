@@ -26,22 +26,26 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
+import com.fredericletellier.foodinspector.data.source.local.db.CategoriesInProductPersistenceContract;
 import com.fredericletellier.foodinspector.data.source.local.db.CategoryPersistenceContract;
 import com.fredericletellier.foodinspector.data.source.local.db.EventPersistenceContract;
 import com.fredericletellier.foodinspector.data.source.local.db.LocalDbHelper;
-import com.fredericletellier.foodinspector.data.source.local.db.ProductInCategoryPersistenceContract;
 import com.fredericletellier.foodinspector.data.source.local.db.ProductPersistenceContract;
+import com.fredericletellier.foodinspector.data.source.local.db.ProductsInCategoryPersistenceContract;
 
 public class FoodInspectorContentProvider extends ContentProvider {
 
     private static final int PRODUCT = 100;
     private static final int PRODUCT_ITEM = 101;
+    private static final int PRODUCTSINCATEGORY_JOIN_PRODUCT = 102;
     private static final int CATEGORY = 200;
     private static final int CATEGORY_ITEM = 201;
     private static final int EVENT = 300;
     private static final int EVENT_ITEM = 301;
-    private static final int PRODUCTINCATEGORY = 400;
-    private static final int PRODUCTINCATEGORY_ITEM = 401;
+    private static final int PRODUCTSINCATEGORY = 400;
+    private static final int PRODUCTSINCATEGORY_ITEM = 401;
+    private static final int CATEGORIESINPRODUCT = 500;
+    private static final int CATEGORIESINPRODUCT_ITEM = 501;
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private LocalDbHelper mLocalDbHelper;
 
@@ -51,12 +55,15 @@ public class FoodInspectorContentProvider extends ContentProvider {
 
         matcher.addURI(authority, ProductPersistenceContract.ProductEntry.TABLE_NAME, PRODUCT);
         matcher.addURI(authority, ProductPersistenceContract.ProductEntry.TABLE_NAME + "/*", PRODUCT_ITEM);
+        matcher.addURI(authority, ProductPersistenceContract.ProductEntry.PRODUCTSINCATEGORY_JOIN_PRODUCT, PRODUCTSINCATEGORY_JOIN_PRODUCT);
         matcher.addURI(authority, CategoryPersistenceContract.CategoryEntry.TABLE_NAME, CATEGORY);
         matcher.addURI(authority, CategoryPersistenceContract.CategoryEntry.TABLE_NAME + "/*", CATEGORY_ITEM);
         matcher.addURI(authority, EventPersistenceContract.EventEntry.TABLE_NAME, EVENT);
         matcher.addURI(authority, EventPersistenceContract.EventEntry.TABLE_NAME + "/*", EVENT_ITEM);
-        matcher.addURI(authority, ProductInCategoryPersistenceContract.ProductInCategoryEntry.TABLE_NAME, PRODUCTINCATEGORY);
-        matcher.addURI(authority, ProductInCategoryPersistenceContract.ProductInCategoryEntry.TABLE_NAME + "/*", PRODUCTINCATEGORY_ITEM);
+        matcher.addURI(authority, ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.TABLE_NAME, PRODUCTSINCATEGORY);
+        matcher.addURI(authority, ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.TABLE_NAME + "/*", PRODUCTSINCATEGORY_ITEM);
+        matcher.addURI(authority, CategoriesInProductPersistenceContract.CategoriesInProductEntry.TABLE_NAME, CATEGORIESINPRODUCT);
+        matcher.addURI(authority, CategoriesInProductPersistenceContract.CategoriesInProductEntry.TABLE_NAME + "/*", CATEGORIESINPRODUCT_ITEM);
 
         return matcher;
     }
@@ -84,10 +91,14 @@ public class FoodInspectorContentProvider extends ContentProvider {
                 return EventPersistenceContract.CONTENT_EVENT_TYPE;
             case EVENT_ITEM:
                 return EventPersistenceContract.CONTENT_EVENT_ITEM_TYPE;
-            case PRODUCTINCATEGORY:
-                return ProductInCategoryPersistenceContract.CONTENT_PRODUCTINCATEGORY_TYPE;
-            case PRODUCTINCATEGORY_ITEM:
-                return ProductInCategoryPersistenceContract.CONTENT_PRODUCTINCATEGORY_ITEM_TYPE;
+            case PRODUCTSINCATEGORY:
+                return ProductsInCategoryPersistenceContract.CONTENT_PRODUCTSINCATEGORY_TYPE;
+            case PRODUCTSINCATEGORY_ITEM:
+                return ProductsInCategoryPersistenceContract.CONTENT_PRODUCTSINCATEGORY_ITEM_TYPE;
+            case CATEGORIESINPRODUCT:
+                return CategoriesInProductPersistenceContract.CONTENT_CATEGORIESINPRODUCT_TYPE;
+            case CATEGORIESINPRODUCT_ITEM:
+                return CategoriesInProductPersistenceContract.CONTENT_CATEGORIESINPRODUCT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -120,6 +131,10 @@ public class FoodInspectorContentProvider extends ContentProvider {
                         null,
                         sortOrder
                 );
+                break;
+            case PRODUCTSINCATEGORY_JOIN_PRODUCT:
+                //TODO JOIN two tables ProductsInCategories and Product
+                retCursor = null;
                 break;
             case CATEGORY:
                 retCursor = mLocalDbHelper.getReadableDatabase().query(
@@ -167,9 +182,9 @@ public class FoodInspectorContentProvider extends ContentProvider {
                         sortOrder
                 );
                 break;
-            case PRODUCTINCATEGORY:
+            case PRODUCTSINCATEGORY:
                 retCursor = mLocalDbHelper.getReadableDatabase().query(
-                        ProductInCategoryPersistenceContract.ProductInCategoryEntry.TABLE_NAME,
+                        ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -178,13 +193,36 @@ public class FoodInspectorContentProvider extends ContentProvider {
                         sortOrder
                 );
                 break;
-            case PRODUCTINCATEGORY_ITEM:
-                String[] where_productincategory = {uri.getLastPathSegment()};
+            case PRODUCTSINCATEGORY_ITEM:
+                String[] where_productsincategory = {uri.getLastPathSegment()};
                 retCursor = mLocalDbHelper.getReadableDatabase().query(
-                        ProductInCategoryPersistenceContract.ProductInCategoryEntry.TABLE_NAME,
+                        ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.TABLE_NAME,
                         projection,
-                        ProductInCategoryPersistenceContract.ProductInCategoryEntry._ID + " = ?",
-                        where_productincategory,
+                        ProductsInCategoryPersistenceContract.ProductsInCategoryEntry._ID + " = ?",
+                        where_productsincategory,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case CATEGORIESINPRODUCT:
+                retCursor = mLocalDbHelper.getReadableDatabase().query(
+                        CategoriesInProductPersistenceContract.CategoriesInProductEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case CATEGORIESINPRODUCT_ITEM:
+                String[] where_categoriesinproduct = {uri.getLastPathSegment()};
+                retCursor = mLocalDbHelper.getReadableDatabase().query(
+                        CategoriesInProductPersistenceContract.CategoriesInProductEntry.TABLE_NAME,
+                        projection,
+                        CategoriesInProductPersistenceContract.CategoriesInProductEntry._ID + " = ?",
+                        where_categoriesinproduct,
                         null,
                         null,
                         sortOrder
@@ -299,31 +337,62 @@ public class FoodInspectorContentProvider extends ContentProvider {
                 }
                 exists.close();
                 break;
-            case PRODUCTINCATEGORY:
+            case PRODUCTSINCATEGORY:
                 exists = db.query(
-                        ProductInCategoryPersistenceContract.ProductInCategoryEntry.TABLE_NAME,
-                        new String[]{ProductInCategoryPersistenceContract.ProductInCategoryEntry._ID},
-                        ProductInCategoryPersistenceContract.ProductInCategoryEntry._ID + " = ?",
-                        new String[]{values.getAsString(ProductInCategoryPersistenceContract.ProductInCategoryEntry._ID)},
+                        ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.TABLE_NAME,
+                        new String[]{ProductsInCategoryPersistenceContract.ProductsInCategoryEntry._ID},
+                        ProductsInCategoryPersistenceContract.ProductsInCategoryEntry._ID + " = ?",
+                        new String[]{values.getAsString(ProductsInCategoryPersistenceContract.ProductsInCategoryEntry._ID)},
                         null,
                         null,
                         null
                 );
                 if (exists.moveToLast()) {
                     long _id = db.update(
-                            ProductInCategoryPersistenceContract.ProductInCategoryEntry.TABLE_NAME, values,
-                            ProductInCategoryPersistenceContract.ProductInCategoryEntry._ID + " = ?",
-                            new String[]{values.getAsString(ProductInCategoryPersistenceContract.ProductInCategoryEntry._ID)}
+                            ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.TABLE_NAME, values,
+                            ProductsInCategoryPersistenceContract.ProductsInCategoryEntry._ID + " = ?",
+                            new String[]{values.getAsString(ProductsInCategoryPersistenceContract.ProductsInCategoryEntry._ID)}
                     );
                     if (_id > 0) {
-                        returnUri = ProductInCategoryPersistenceContract.ProductInCategoryEntry.buildProductInCategoryUriWith(_id);
+                        returnUri = ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.buildProductsInCategoryUriWith(_id);
                     } else {
                         throw new android.database.SQLException("Failed to insert row into " + uri);
                     }
                 } else {
-                    long _id = db.insert(ProductInCategoryPersistenceContract.ProductInCategoryEntry.TABLE_NAME, null, values);
+                    long _id = db.insert(ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.TABLE_NAME, null, values);
                     if (_id > 0) {
-                        returnUri = ProductInCategoryPersistenceContract.ProductInCategoryEntry.buildProductInCategoryUriWith(_id);
+                        returnUri = ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.buildProductsInCategoryUriWith(_id);
+                    } else {
+                        throw new android.database.SQLException("Failed to insert row into " + uri);
+                    }
+                }
+                exists.close();
+                break;
+            case CATEGORIESINPRODUCT:
+                exists = db.query(
+                        CategoryPersistenceContract.CategoryEntry.TABLE_NAME,
+                        new String[]{CategoryPersistenceContract.CategoryEntry._ID},
+                        CategoryPersistenceContract.CategoryEntry._ID + " = ?",
+                        new String[]{values.getAsString(CategoryPersistenceContract.CategoryEntry._ID)},
+                        null,
+                        null,
+                        null
+                );
+                if (exists.moveToLast()) {
+                    long _id = db.update(
+                            CategoryPersistenceContract.CategoryEntry.TABLE_NAME, values,
+                            CategoryPersistenceContract.CategoryEntry._ID + " = ?",
+                            new String[]{values.getAsString(CategoryPersistenceContract.CategoryEntry._ID)}
+                    );
+                    if (_id > 0) {
+                        returnUri = CategoryPersistenceContract.CategoryEntry.buildCategoryUriWith(_id);
+                    } else {
+                        throw new android.database.SQLException("Failed to insert row into " + uri);
+                    }
+                } else {
+                    long _id = db.insert(CategoryPersistenceContract.CategoryEntry.TABLE_NAME, null, values);
+                    if (_id > 0) {
+                        returnUri = CategoryPersistenceContract.CategoryEntry.buildCategoryUriWith(_id);
                     } else {
                         throw new android.database.SQLException("Failed to insert row into " + uri);
                     }
@@ -357,9 +426,13 @@ public class FoodInspectorContentProvider extends ContentProvider {
                 rowsDeleted = db.delete(
                         EventPersistenceContract.EventEntry.TABLE_NAME, selection, selectionArgs);
                 break;
-            case PRODUCTINCATEGORY:
+            case PRODUCTSINCATEGORY:
                 rowsDeleted = db.delete(
-                        ProductInCategoryPersistenceContract.ProductInCategoryEntry.TABLE_NAME, selection, selectionArgs);
+                        ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case CATEGORIESINPRODUCT:
+                rowsDeleted = db.delete(
+                        CategoriesInProductPersistenceContract.CategoriesInProductEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -392,8 +465,13 @@ public class FoodInspectorContentProvider extends ContentProvider {
                         selectionArgs
                 );
                 break;
-            case PRODUCTINCATEGORY:
-                rowsUpdated = db.update(ProductInCategoryPersistenceContract.ProductInCategoryEntry.TABLE_NAME, values, selection,
+            case PRODUCTSINCATEGORY:
+                rowsUpdated = db.update(ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.TABLE_NAME, values, selection,
+                        selectionArgs
+                );
+                break;
+            case CATEGORIESINPRODUCT:
+                rowsUpdated = db.update(CategoriesInProductPersistenceContract.CategoriesInProductEntry.TABLE_NAME, values, selection,
                         selectionArgs
                 );
                 break;
