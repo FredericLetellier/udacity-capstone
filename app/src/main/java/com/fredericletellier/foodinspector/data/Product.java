@@ -47,9 +47,6 @@ public final class Product {
     @Nullable
     private final String mNutritionGrade;
 
-    @Nullable
-    private final String[] mCategories;
-
 
     /**
      * Use this constructor to create a new Product.
@@ -59,18 +56,16 @@ public final class Product {
      * @param mainBrand
      * @param quantity
      * @param nutritionGrade
-     * @param categories
      */
     public Product(String id, @Nullable String productName, @Nullable String genericName,
                    @Nullable String mainBrand, @Nullable String quantity,
-                   @Nullable String nutritionGrade, @Nullable String[] categories) {
+                   @Nullable String nutritionGrade) {
         mId = id;
         mProductName = productName;
         mGenericName = genericName;
         mMainBrand = mainBrand;
         mQuantity = quantity;
         mNutritionGrade = nutritionGrade;
-        mCategories = categories;
     }
 
     /**
@@ -115,11 +110,6 @@ public final class Product {
     }
 
     @Nullable
-    public String[] getCategories() {
-        return mCategories;
-    }
-
-    @Nullable
     public String getTitle() {
         return mProductName + " - " + mMainBrand + " - " + mQuantity;
     }
@@ -129,8 +119,7 @@ public final class Product {
                 Strings.isNullOrEmpty(mGenericName) &&
                 Strings.isNullOrEmpty(mMainBrand) &&
                 Strings.isNullOrEmpty(mQuantity) &&
-                Strings.isNullOrEmpty(mNutritionGrade) &&
-                (mCategories == null || mCategories.length == 0);
+                Strings.isNullOrEmpty(mNutritionGrade);
     }
 
     @Override
@@ -143,13 +132,12 @@ public final class Product {
                 Objects.equal(mGenericName, product.mGenericName) &&
                 Objects.equal(mMainBrand, product.mMainBrand) &&
                 Objects.equal(mQuantity, product.mQuantity) &&
-                Objects.equal(mNutritionGrade, product.mNutritionGrade) &&
-                Objects.equal(mCategories, product.mCategories);
+                Objects.equal(mNutritionGrade, product.mNutritionGrade);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(mId, mProductName, mGenericName, mMainBrand, mQuantity, mNutritionGrade, mCategories);
+        return Objects.hashCode(mId, mProductName, mGenericName, mMainBrand, mQuantity, mNutritionGrade);
     }
 
     @Override

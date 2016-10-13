@@ -19,8 +19,11 @@
 package com.fredericletellier.foodinspector.data.source;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.fredericletellier.foodinspector.data.Event;
+
+import java.util.Collection;
 
 /**
  * Main entry point for accessing events data.
@@ -29,56 +32,21 @@ public interface EventDataSource {
 
     interface GetEventsCallback {
 
-        void onEventsLoaded();
+        void onEventsPendingNetwork(Collection<Event> events);
 
-        void onDataNotAvailable();
     }
 
     interface AddEventCallback {
 
-        void onEventSaved();
+        void onEventProductNotAvailable();
 
-        void onEventNotSaved();
     }
 
-    interface UpdateEventCallback {
+    void getEvents(@Nullable Event event, @NonNull GetEventsCallback callback);
 
-        void onEventUpdated();
+    void addEvent(@NonNull String productId, @NonNull AddEventCallback callback);
 
-        void onEventNotUpdated();
-    }
+    void updateFavoriteFieldEvent(@NonNull String productId);
 
-    interface DeleteEventCallback {
-
-        void onEventDeleted();
-
-        void onEventNotDeleted();
-    }
-
-    interface FavoriteEventCallback {
-
-        void onEventFavorited();
-
-        void onEventNotFavorited();
-    }
-
-    interface UnfavoriteEventCallback {
-
-        void onEventUnfavorited();
-
-        void onEventNotUnfavorited();
-    }
-
-    void getEvents(@NonNull GetEventsCallback callback);
-
-    void addEvent(@NonNull Event event, @NonNull AddEventCallback callback);
-
-    void updateEvent(@NonNull String eventId, @NonNull UpdateEventCallback callback);
-
-    void deleteEvent(@NonNull String eventId, @NonNull DeleteEventCallback callback);
-
-    void favoriteEvent(@NonNull String eventId, @NonNull FavoriteEventCallback callback);
-
-    void unfavoriteEvent(@NonNull String eventId, @NonNull UnfavoriteEventCallback callback);
 
 }

@@ -19,35 +19,51 @@
 package com.fredericletellier.foodinspector.data.source.remote;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-import com.fredericletellier.foodinspector.data.source.CategoryDataSource;
+import com.fredericletellier.foodinspector.data.Event;
+import com.fredericletellier.foodinspector.data.source.EventDataSource;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Concrete implementation of a data source as a remote db
  */
-public class CategoryRemoteDataSource implements CategoryDataSource {
+public class EventRemoteDataSource implements EventDataSource {
 
-    private static CategoryRemoteDataSource INSTANCE;
+    private static EventRemoteDataSource INSTANCE;
 
     // Prevent direct instantiation.
-    private CategoryRemoteDataSource() {
+    private EventRemoteDataSource() {
     }
 
-    public static CategoryRemoteDataSource getInstance() {
+    public static EventRemoteDataSource getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new CategoryRemoteDataSource();
+            INSTANCE = new EventRemoteDataSource();
         }
         return INSTANCE;
     }
 
     //TODO COMPLETE
     @Override
-    public void getCategories(@NonNull String productId, @NonNull String countryCode, @NonNull GetCategoriesCallback callback) {
-        checkNotNull(productId);
-        checkNotNull(countryCode);
+    public void getEvents(@Nullable Event event, @NonNull GetEventsCallback callback){
+        checkNotNull(event);
         checkNotNull(callback);
+
+    }
+
+    //TODO COMPLETE
+    @Override
+    public void addEvent(@NonNull String productId, @NonNull AddEventCallback callback){
+        checkNotNull(productId);
+        checkNotNull(callback);
+
+    }
+
+    //TODO COMPLETE
+    @Override
+    public void updateFavoriteFieldEvent(@NonNull String productId){
+        checkNotNull(productId);
     }
 
 }

@@ -51,6 +51,16 @@ public class CategoryLocalDataSource implements CategoryDataSource {
         return INSTANCE;
     }
 
+    //TODO COMPLETE
+    @Override
+    public void getCategories(@NonNull String productId, @NonNull String countryCode, @NonNull GetCategoriesCallback callback) {
+        checkNotNull(productId);
+        checkNotNull(countryCode);
+        checkNotNull(callback);
+    }
+
+
+    //TODO DELETE
     @Override
     public void getCategories(@NonNull String productId, @NonNull String countryCode, @NonNull GetCategoriesCallback callback) {
         checkNotNull(productId);

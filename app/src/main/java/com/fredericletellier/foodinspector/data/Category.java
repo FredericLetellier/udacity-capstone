@@ -39,37 +39,21 @@ public final class Category {
     private final String mWorldId;
 
     @Nullable
-    private final String mCountryId;
-
-    @Nullable
-    private final String mName;
-
-    @Nullable
-    private final Integer mSumOfProducts;
-
-    @Nullable
-    private final String mUrl;
+    private final Boolean mHaveData;
 
     /**
      * Use this constructor to create a new Product.
      * @param id
      * @param country
      * @param worldId
-     * @param countryId
-     * @param name
-     * @param sumOfProducts
-     * @param url
+     * @param haveData
      */
     public Category(String id, @Nullable String country, @Nullable String worldId,
-                   @Nullable String countryId, @Nullable String name,
-                   @Nullable Integer sumOfProducts, @Nullable String url) {
+                   @Nullable Boolean haveData) {
         mId = id;
         mCountry = country;
         mWorldId = worldId;
-        mCountryId = countryId;
-        mName = name;
-        mSumOfProducts = sumOfProducts;
-        mUrl = url;
+        mHaveData = haveData;
     }
 
     /**
@@ -99,32 +83,14 @@ public final class Category {
     }
 
     @Nullable
-    public String getCountryId() {
-        return mCountryId;
-    }
-
-    @Nullable
-    public String getName() {
-        return mName;
-    }
-
-    @Nullable
-    public Integer getSumOfProducts() {
-        return mSumOfProducts;
-    }
-
-    @Nullable
-    public String getUrl() {
-        return mUrl;
+    public Boolean getHaveData() {
+        return mHaveData;
     }
 
     public boolean isEmpty() {
         return Strings.isNullOrEmpty(mCountry) &&
                 Strings.isNullOrEmpty(mWorldId) &&
-                Strings.isNullOrEmpty(mCountryId) &&
-                Strings.isNullOrEmpty(mName) &&
-                (mSumOfProducts == null) &&
-                Strings.isNullOrEmpty(mUrl);
+                (mHaveData == null);
     }
 
     @Override
@@ -135,19 +101,16 @@ public final class Category {
         return Objects.equal(mId, category.mId) &&
                 Objects.equal(mCountry, category.mCountry) &&
                 Objects.equal(mWorldId, category.mWorldId) &&
-                Objects.equal(mCountryId, category.mCountryId) &&
-                Objects.equal(mName, category.mName) &&
-                Objects.equal(mSumOfProducts, category.mSumOfProducts) &&
-                Objects.equal(mUrl, category.mUrl);
+                Objects.equal(mHaveData, category.mHaveData);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(mId, mCountry, mWorldId, mCountryId, mName, mSumOfProducts, mUrl);
+        return Objects.hashCode(mId, mCountry, mWorldId, mHaveData);
     }
 
     @Override
     public String toString() {
-        return "Category with title " + getName();
+        return "Category with title " + getCountry() + getWorldId();
     }
 }

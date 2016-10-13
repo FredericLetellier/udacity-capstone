@@ -39,6 +39,8 @@ public class FoodInspectorRepository implements ProductDataSource, CategoryDataS
 
     private final CategoryDataSource mCategoryLocalDataSource;
 
+    private final EventRemoteSource mEventRemoteDataSource;
+
     private final EventDataSource mEventLocalDataSource;
 
     // Prevent direct instantiation.
@@ -46,11 +48,13 @@ public class FoodInspectorRepository implements ProductDataSource, CategoryDataS
                                     @NonNull ProductDataSource productLocalDataSource,
                                     @NonNull CategoryDataSource categoryRemoteDataSource,
                                     @NonNull CategoryDataSource categoryLocalDataSource,
-                                    @NonNull EventDataSource eventLocalDataSource) {
+                                    @NonNull EventRemoteSource eventRemoteDataSource,
+                                    @NonNull EventDataSource eventLocalDataSource,) {
         mProductRemoteDataSource = checkNotNull(productRemoteDataSource);
         mProductLocalDataSource = checkNotNull(productLocalDataSource);
         mCategoryRemoteDataSource = checkNotNull(categoryRemoteDataSource);
         mCategoryLocalDataSource = checkNotNull(categoryLocalDataSource);
+        mEventRemoteDataSource = checkNotNull(eventRemoteDataSource);
         mEventLocalDataSource = checkNotNull(eventLocalDataSource);
     }
 
@@ -61,6 +65,7 @@ public class FoodInspectorRepository implements ProductDataSource, CategoryDataS
      * @param productLocalDataSource  the device storage product data source
      * @param categoryRemoteDataSource the backend category data source
      * @param categoryLocalDataSource  the device storage category data source
+     * @param eventRemoteDataSource  the backend category data source
      * @param eventLocalDataSource  the device storage event data source
      * @return the {@link FoodInspectorRepository} instance
      */
@@ -68,16 +73,18 @@ public class FoodInspectorRepository implements ProductDataSource, CategoryDataS
                                                       ProductDataSource productLocalDataSource,
                                                       CategoryDataSource categoryRemoteDataSource,
                                                       CategoryDataSource categoryLocalDataSource,
+                                                      EventRemoteSource eventRemoteDataSource,
                                                       EventDataSource eventLocalDataSource) {
         if (INSTANCE == null) {
             INSTANCE = new FoodInspectorRepository(productRemoteDataSource, productLocalDataSource,
-                    categoryRemoteDataSource, categoryLocalDataSource, eventLocalDataSource);
+                    categoryRemoteDataSource, categoryLocalDataSource, eventRemoteDataSource,
+                    eventLocalDataSource);
         }
         return INSTANCE;
     }
 
     /**
-     * Used to force {@link #getInstance(ProductDataSource, ProductDataSource, CategoryDataSource, CategoryDataSource, EventDataSource)}
+     * Used to force {@link #getInstance(ProductDataSource, ProductDataSource, CategoryDataSource, CategoryDataSource, EventRemoteSource, EventDataSource)}
      * to create a new instance next time it's called.
      */
     public static void destroyInstance() {

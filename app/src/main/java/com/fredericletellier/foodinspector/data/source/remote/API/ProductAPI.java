@@ -16,24 +16,17 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.fredericletellier.foodinspector.data.source;
+package com.fredericletellier.foodinspector.data.source.remote.API;
 
-import android.support.annotation.NonNull;
+import com.fredericletellier.foodinspector.data.source.remote.model.ProductModel;
 
-import com.fredericletellier.foodinspector.data.Category;
+import retrofit2.Callback;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
 
-import java.util.Collection;
+public interface ProductAPI {
 
-/**
- * Main entry point for accessing categories data.
- */
-public interface CategoryDataSource {
-
-    interface GetCategoriesCallback {
-
-        void onCategoriesNotAvailable(Collection<Category> categories);
-    }
-
-    void getCategories(@NonNull String productId, @NonNull String countryCode, @NonNull GetCategoriesCallback callback);
+    @GET("/users/{user}")
+    public void getFeed(@Path("user") String user, Callback<ProductModel> response);
 
 }

@@ -42,6 +42,17 @@ public class ProductRemoteDataSource implements ProductDataSource {
         return INSTANCE;
     }
 
+    //TODO COMPLETE
+    @Override
+    public void getXProductsInCategory(@NonNull String categoryId, @NonNull String nutritionGradeValue, @NonNull Integer skipProducts, @NonNull GetXProductsInCategoryCallback callback) {
+        checkNotNull(categoryId);
+        checkNotNull(nutritionGradeValue);
+        checkNotNull(skipProducts);
+        checkNotNull(callback);
+    }
+
+
+    //TODO DELETE
     @Override
     public void getProducts(@NonNull String categoryId, @NonNull GetProductsCallback callback) {
         checkNotNull(categoryId);
@@ -49,6 +60,7 @@ public class ProductRemoteDataSource implements ProductDataSource {
 
     }
 
+    //TODO DELETE
     @Override
     public void getProduct(@NonNull String productId, @NonNull GetProductCallback callback) {
         checkNotNull(productId);

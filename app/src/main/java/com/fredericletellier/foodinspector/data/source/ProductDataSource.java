@@ -25,24 +25,12 @@ import android.support.annotation.NonNull;
  */
 public interface ProductDataSource {
 
-    interface GetProductsCallback {
+    interface GetXProductsInCategoryCallback {
 
-        void onProductsLoaded();
+        void onProductsNotAvailable();
 
-        void onDataNotAvailable();
-
-        void onErrorCategoryNotAvailable();
     }
 
-    interface GetProductCallback {
-
-        void onProductLoaded();
-
-        void onDataNotAvailable();
-    }
-
-    void getProducts(@NonNull String categoryId, @NonNull GetProductsCallback callback);
-
-    void getProduct(@NonNull String productId, @NonNull GetProductCallback callback);
+    void getXProductsInCategory(@NonNull String categoryId, @NonNull String nutritionGradeValue, @NonNull Integer skipProducts, @NonNull GetXProductsInCategoryCallback callback);
 
 }

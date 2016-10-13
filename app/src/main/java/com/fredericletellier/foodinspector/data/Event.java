@@ -36,7 +36,7 @@ public final class Event {
     private final Long mUnixTimestamp;
 
     @Nullable
-    private final String mBarcode;
+    private final String mStatus;
 
     @Nullable
     private final String mProductId;
@@ -48,15 +48,15 @@ public final class Event {
      * Use this constructor to create a new Product.
      * @param id
      * @param unixTimestamp
-     * @param barcode
+     * @param status
      * @param productId
      * @param favorite
      */
-    public Event(String id, @Nullable Long unixTimestamp, @Nullable String barcode,
+    public Event(String id, @Nullable Long unixTimestamp, @Nullable String status,
                     @Nullable String productId, @Nullable Boolean favorite) {
         mId = id;
         mUnixTimestamp = unixTimestamp;
-        mBarcode = barcode;
+        mStatus = status;
         mProductId = productId;
         mFavorite = favorite;
     }
@@ -83,8 +83,8 @@ public final class Event {
     }
 
     @Nullable
-    public String getBarcode() {
-        return mBarcode;
+    public String getStatus() {
+        return mStatus;
     }
 
     @Nullable
@@ -99,12 +99,12 @@ public final class Event {
 
     @Nullable
     public String getTitle() {
-        return mUnixTimestamp + " - " + mBarcode + " - " + mProductId;
+        return mUnixTimestamp + " - " + mStatus + " - " + mProductId;
     }
 
     public boolean isEmpty() {
         return (mUnixTimestamp == null) &&
-                Strings.isNullOrEmpty(mBarcode) &&
+                Strings.isNullOrEmpty(mStatus) &&
                 Strings.isNullOrEmpty(mProductId) &&
                 (mFavorite == null);
     }
@@ -116,14 +116,14 @@ public final class Event {
         Event event = (Event) o;
         return Objects.equal(mId, event.mId) &&
                 Objects.equal(mUnixTimestamp, event.mUnixTimestamp) &&
-                Objects.equal(mBarcode, event.mBarcode) &&
+                Objects.equal(mStatus, event.mStatus) &&
                 Objects.equal(mProductId, event.mProductId) &&
                 Objects.equal(mFavorite, event.mFavorite);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(mId, mUnixTimestamp, mBarcode, mProductId, mFavorite);
+        return Objects.hashCode(mId, mUnixTimestamp, mStatus, mProductId, mFavorite);
     }
 
     @Override

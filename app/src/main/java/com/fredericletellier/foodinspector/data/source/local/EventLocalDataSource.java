@@ -21,6 +21,7 @@ package com.fredericletellier.foodinspector.data.source.local;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.fredericletellier.foodinspector.data.Event;
 import com.fredericletellier.foodinspector.data.source.EventDataSource;
@@ -50,11 +51,36 @@ public class EventLocalDataSource implements EventDataSource {
         return INSTANCE;
     }
 
+    //TODO COMPLETE
+    @Override
+    public void getEvents(@Nullable Event event, @NonNull GetEventsCallback callback){
+        checkNotNull(event);
+        checkNotNull(callback);
+
+    }
+
+    //TODO COMPLETE
+    @Override
+    public void addEvent(@NonNull String productId, @NonNull AddEventCallback callback){
+        checkNotNull(productId);
+        checkNotNull(callback);
+
+    }
+
+    //TODO COMPLETE
+    @Override
+    public void updateFavoriteFieldEvent(@NonNull String productId){
+        checkNotNull(productId);
+    }
+
+
+    //TODO DELETE
     @Override
     public void getEvents(@NonNull GetEventsCallback callback){
         // no-op the data is loaded via Cursor Loader
     }
 
+    //TODO DELETE
     public void addEvent(@NonNull Event event, @NonNull AddEventCallback callback){
         checkNotNull(event);
         checkNotNull(callback);
@@ -72,6 +98,7 @@ public class EventLocalDataSource implements EventDataSource {
         mContentResolver.insert(EventPersistenceContract.EventEntry.buildEventUri(), values);
     }
 
+    //TODO DELETE
     public void updateEvent(@NonNull String eventId, @NonNull UpdateEventCallback callback){
         checkNotNull(eventId);
         checkNotNull(callback);
@@ -94,6 +121,7 @@ public class EventLocalDataSource implements EventDataSource {
         }
     }
 
+    //TODO DELETE
     public void deleteEvent(@NonNull String eventId, @NonNull DeleteEventCallback callback){
         checkNotNull(eventId);
         checkNotNull(callback);
@@ -110,6 +138,7 @@ public class EventLocalDataSource implements EventDataSource {
         }
     }
 
+    //TODO DELETE
     public void favoriteEvent(@NonNull String eventId, @NonNull FavoriteEventCallback callback){
         checkNotNull(eventId);
         checkNotNull(callback);
@@ -129,6 +158,7 @@ public class EventLocalDataSource implements EventDataSource {
         }
     }
 
+    //TODO DELETE
     public void unfavoriteEvent(@NonNull String eventId, @NonNull UnfavoriteEventCallback callback){
         checkNotNull(eventId);
         checkNotNull(callback);
