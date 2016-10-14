@@ -23,6 +23,7 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
@@ -48,6 +49,21 @@ public class FoodInspectorContentProvider extends ContentProvider {
     private static final int CATEGORIESINPRODUCT_ITEM = 501;
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private LocalDbHelper mLocalDbHelper;
+
+    private static final SQLiteQueryBuilder sProductsInCategoryQueryBuilder;
+
+    static{
+        sProductsInCategoryQueryBuilder = new SQLiteQueryBuilder();
+
+        sProductsInCategoryQueryBuilder.setTables(
+                ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.TABLE_NAME + " INNER JOIN " +
+                        ProductPersistenceContract.ProductEntry.TABLE_NAME +
+                        " ON " + ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.TABLE_NAME +
+                        "." + ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.COLUMN_NAME_PRODUCT_ID +
+                        " = " + ProductPersistenceContract.ProductEntry.TABLE_NAME +
+                        "." + ProductPersistenceContract.ProductEntry._ID);
+    }
+
 
     private static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -133,8 +149,14 @@ public class FoodInspectorContentProvider extends ContentProvider {
                 );
                 break;
             case PRODUCTSINCATEGORY_JOIN_PRODUCT:
-                //TODO JOIN two tables ProductsInCategories and Product
-                retCursor = null;
+                retCursor = sProductsInCategoryQueryBuilder.query(mLocalDbHelper.getReadableDatabase(),
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
                 break;
             case CATEGORY:
                 retCursor = mLocalDbHelper.getReadableDatabase().query(
