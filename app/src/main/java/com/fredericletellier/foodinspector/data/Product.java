@@ -55,9 +55,6 @@ public final class Product {
     @Nullable
     private final String mParsableCategories;
 
-    @Nullable
-    private final String mParsableNameCategories;
-
 
     /**
      * Use this constructor to create a new Product.
@@ -68,12 +65,10 @@ public final class Product {
      * @param quantity
      * @param nutritionGrade
      * @param parsableCategories
-     * @param parsableNameCategories
      */
     public Product(String id, @Nullable String productName, @Nullable String genericName,
                    @Nullable String mainBrand, @Nullable String quantity,
-                   @Nullable String nutritionGrade, @Nullable String parsableCategories,
-                   @Nullable String parsableNameCategories) {
+                   @Nullable String nutritionGrade, @Nullable String parsableCategories) {
         mId = id;
         mProductName = productName;
         mGenericName = genericName;
@@ -81,7 +76,6 @@ public final class Product {
         mQuantity = quantity;
         mNutritionGrade = nutritionGrade;
         mParsableCategories = parsableCategories;
-        mParsableNameCategories = parsableNameCategories;
     }
 
     /**
@@ -104,9 +98,7 @@ public final class Product {
                 ProductPersistenceContract.ProductEntry.COLUMN_NAME_NUTRITION_GRADE));
         String parsableCategories = cursor.getString(cursor.getColumnIndexOrThrow(
                 ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSABLE_CATEGORIES));
-        String parsableNameCategories = cursor.getString(cursor.getColumnIndexOrThrow(
-                ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSABLE_NAME_CATEGORIES));
-        return new Product(id, productName, genericName, mainBrand, quantity, nutritionGrade, parsableCategories, parsableNameCategories);
+        return new Product(id, productName, genericName, mainBrand, quantity, nutritionGrade, parsableCategories);
     }
 
     //TODO public static Product from(ContentValues values)
@@ -148,11 +140,6 @@ public final class Product {
     }
 
     @Nullable
-    public String getParsableNameCategories() {
-        return mParsableNameCategories;
-    }
-
-    @Nullable
     public String getTitle() {
         return mProductName + " - " + mMainBrand + " - " + mQuantity;
     }
@@ -163,8 +150,7 @@ public final class Product {
                 Strings.isNullOrEmpty(mMainBrand) &&
                 Strings.isNullOrEmpty(mQuantity) &&
                 Strings.isNullOrEmpty(mNutritionGrade) &&
-                Strings.isNullOrEmpty(mParsableCategories) &&
-                Strings.isNullOrEmpty(mParsableNameCategories);
+                Strings.isNullOrEmpty(mParsableCategories);
     }
 
     @Override
@@ -178,13 +164,12 @@ public final class Product {
                 Objects.equal(mMainBrand, product.mMainBrand) &&
                 Objects.equal(mQuantity, product.mQuantity) &&
                 Objects.equal(mNutritionGrade, product.mNutritionGrade) &&
-                Objects.equal(mParsableCategories, product.mParsableCategories) &&
-                Objects.equal(mParsableNameCategories, product.mParsableNameCategories);
+                Objects.equal(mParsableCategories, product.mParsableCategories);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(mId, mProductName, mGenericName, mMainBrand, mQuantity, mNutritionGrade, mParsableCategories, mParsableNameCategories);
+        return Objects.hashCode(mId, mProductName, mGenericName, mMainBrand, mQuantity, mNutritionGrade, mParsableCategories);
     }
 
     @Override

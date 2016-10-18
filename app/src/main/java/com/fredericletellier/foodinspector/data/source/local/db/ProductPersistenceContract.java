@@ -65,8 +65,7 @@ public final class ProductPersistenceContract {
                 ProductPersistenceContract.ProductEntry.COLUMN_NAME_MAIN_BRAND,
                 ProductPersistenceContract.ProductEntry.COLUMN_NAME_QUANTITY,
                 ProductPersistenceContract.ProductEntry.COLUMN_NAME_NUTRITION_GRADE,
-                ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSABLE_CATEGORIES,
-                ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSABLE_NAME_CATEGORIES};
+                ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSABLE_CATEGORIES};
 
         public static final String PRODUCTSINCATEGORY_JOIN_PRODUCT = "productsincategory_join_product";
 

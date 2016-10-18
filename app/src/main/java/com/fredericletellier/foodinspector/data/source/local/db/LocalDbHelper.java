@@ -55,8 +55,7 @@ public class LocalDbHelper extends SQLiteOpenHelper {
                     ProductPersistenceContract.ProductEntry.COLUMN_NAME_MAIN_BRAND + TEXT_TYPE + COMMA_SEP +
                     ProductPersistenceContract.ProductEntry.COLUMN_NAME_QUANTITY + TEXT_TYPE + COMMA_SEP +
                     ProductPersistenceContract.ProductEntry.COLUMN_NAME_NUTRITION_GRADE + TEXT_TYPE + COMMA_SEP +
-                    ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSABLE_CATEGORIES + TEXT_TYPE + COMMA_SEP +
-                    ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSABLE_NAME_CATEGORIES + TEXT_TYPE +
+                    ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSABLE_CATEGORIES + TEXT_TYPE +
                     CLOSE_PARENTHESIS;
 
     private static final String SQL_CREATE_CATEGORY =
