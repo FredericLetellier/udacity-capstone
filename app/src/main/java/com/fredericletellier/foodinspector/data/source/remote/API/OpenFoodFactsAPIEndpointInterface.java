@@ -18,15 +18,29 @@
 
 package com.fredericletellier.foodinspector.data.source.remote.API;
 
-import com.fredericletellier.foodinspector.data.source.remote.model.ProductModel;
+import com.fredericletellier.foodinspector.data.source.remote.model.Search;
+import com.google.android.gms.vision.barcode.Barcode;
 
 import retrofit2.Callback;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
-public interface ProductAPI {
+public interface OpenFoodFactsAPIEndpointInterface {
 
-    @GET("/users/{user}")
-    public void getFeed(@Path("user") String user, Callback<ProductModel> response);
+    @GET("/api/v0/product/{idproduct}.json")
+    void getResultOfBarcode(
+            @Path("idproduct") String idproduct,
+            Callback<Barcode> callback
+    );
+
+    @GET("/cgi/search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tag_0={idCategory}&tagtype_1=nutrition_grades&tag_contains_1={tagNutritionGrade}&tag_1={nutritionGrade}&sort_by=unique_scans_n&page_size={pageSize}&page={page}&json=1")
+    void getResultOfSearch(
+            @Path("idCategory") String idCategory,
+            @Path("tagNutritionGrade") String tagNutritionGrade,
+            @Path("nutritionGrade") String nutritionGrade,
+            @Path("pageSize") String pageSize,
+            @Path("page") String page,
+            Callback<Search> callback
+    );
 
 }

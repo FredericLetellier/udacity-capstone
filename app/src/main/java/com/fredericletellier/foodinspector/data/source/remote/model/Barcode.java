@@ -18,18 +18,20 @@
 
 package com.fredericletellier.foodinspector.data.source.remote.model;
 
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ProductModel {
+import java.util.ArrayList;
+import java.util.List;
+
+public class Barcode {
 
     @SerializedName("status_verbose")
     @Expose
-    private String statusVerbose;
+    private String status_verbose;
     @SerializedName("product")
     @Expose
-    private Product product;
+    private List<Product> products = new ArrayList<Product>();
     @SerializedName("status")
     @Expose
     private Integer status;
@@ -38,43 +40,25 @@ public class ProductModel {
     private String code;
 
     /**
-     *
+     * 
      * @return
-     *     The statusVerbose
-     */
-    public String getStatusVerbose() {
-        return statusVerbose;
-    }
-
-    /**
-     *
-     * @param statusVerbose
      *     The status_verbose
      */
-    public void setStatusVerbose(String statusVerbose) {
-        this.statusVerbose = statusVerbose;
+    public String getStatus_verbose() {
+        return status_verbose;
     }
 
     /**
      *
      * @return
-     *     The product
+     *     The products
      */
-    public Product getProduct() {
-        return product;
+    public List<Product> getProducts() {
+        return products;
     }
 
     /**
-     *
-     * @param product
-     *     The product
-     */
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    /**
-     *
+     * 
      * @return
      *     The status
      */
@@ -83,30 +67,12 @@ public class ProductModel {
     }
 
     /**
-     *
-     * @param status
-     *     The status
-     */
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    /**
-     *
+     * 
      * @return
      *     The code
      */
     public String getCode() {
         return code;
-    }
-
-    /**
-     *
-     * @param code
-     *     The code
-     */
-    public void setCode(String code) {
-        this.code = code;
     }
 
 }
