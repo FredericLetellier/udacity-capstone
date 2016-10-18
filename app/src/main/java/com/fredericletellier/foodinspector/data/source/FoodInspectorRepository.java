@@ -21,9 +21,9 @@ package com.fredericletellier.foodinspector.data.source;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.fredericletellier.foodinspector.data.Category;
 import com.fredericletellier.foodinspector.data.Event;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -143,18 +143,18 @@ public class FoodInspectorRepository implements ProductDataSource, CategoryDataS
 
     /**
      * Check if categories for this product and this country code exist in local data source (SQLite),
-     * If not, {@link GetCategoriesCallback#onCategoriesNotAvailable(List)} is called
+     * If not, {@link GetCategoriesCallback#onCategoriesNotAvailable(ArrayList)} is called
      * Get data in remote source for each categories in the callback
      */
     @Override
-    public void getCategories(@NonNull final String productId, @Nullable List<Category> categories, @NonNull final String countryCode, @NonNull final GetCategoriesCallback callback) {
+    public void getCategories(@NonNull final String productId, @Nullable ArrayList<String> categories, @NonNull final String countryCode, @NonNull final GetCategoriesCallback callback) {
         checkNotNull(productId);
         checkNotNull(countryCode);
         checkNotNull(callback);
 
         mCategoryLocalDataSource.getCategories(productId, null, countryCode, new GetCategoriesCallback() {
             @Override
-            public void onCategoriesNotAvailable(List<Category> categories) {
+            public void onCategoriesNotAvailable(ArrayList<String> categories) {
                 mCategoryRemoteDataSource.getCategories(null, categories, countryCode, callback);
             }
         });
