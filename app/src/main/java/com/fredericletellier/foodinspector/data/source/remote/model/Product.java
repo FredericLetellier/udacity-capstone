@@ -18,6 +18,7 @@
 
 package com.fredericletellier.foodinspector.data.source.remote.model;
 
+import com.google.common.base.Joiner;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -56,6 +57,9 @@ public class Product {
     @SerializedName("image_thumb_url")
     @Expose
     private String image_thumb_url;
+    @SerializedName("brands")
+    @Expose
+    private String brands;
 
 
     /**
@@ -81,8 +85,8 @@ public class Product {
      * @return
      *     The categories_tags
      */
-    public List<String> getCategories_tags() {
-        return categories_tags;
+    public String getCategories_tags() {
+        return Joiner.on(";").join(categories_tags);
     }
 
     /**
@@ -146,5 +150,14 @@ public class Product {
      */
     public String getId() {
         return id;
+    }
+
+    /**
+     *
+     * @return
+     *     The brands
+     */
+    public String getBrands() {
+        return brands;
     }
 }
