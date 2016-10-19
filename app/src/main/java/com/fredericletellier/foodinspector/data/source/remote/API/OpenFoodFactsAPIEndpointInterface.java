@@ -19,7 +19,7 @@
 package com.fredericletellier.foodinspector.data.source.remote.API;
 
 import com.fredericletellier.foodinspector.data.source.remote.model.Search;
-import com.google.android.gms.vision.barcode.Barcode;
+import com.fredericletellier.foodinspector.data.source.remote.model.Barcode;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -30,12 +30,13 @@ public interface OpenFoodFactsAPIEndpointInterface {
     public static final String ENDPOINT_BARCODE = "http://world.openfoodfacts.org/api/v0/product";
     public static final String ENDPOINT_SEARCH = "http://world.openfoodfacts.org/cgi";
 
-    @GET("/{idproduct}.json")
+    @GET("{idproduct}.json")
     Call<Barcode> getResultOfBarcode(
             @Path("idproduct") String idproduct
     );
 
-    @GET("/search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tag_0={idCategory}&tagtype_1=nutrition_grades&tag_contains_1={tagNutritionGrade}&tag_1={nutritionGrade}&sort_by=unique_scans_n&page_size={pageSize}&page={page}&json=1")
+    //TODO Probably buggy : http://stackoverflow.com/questions/24100372/retrofit-and-get-using-parameters
+    @GET("search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tag_0={idCategory}&tagtype_1=nutrition_grades&tag_contains_1={tagNutritionGrade}&tag_1={nutritionGrade}&sort_by=unique_scans_n&page_size={pageSize}&page={page}&json=1")
     Call<Search> getResultOfSearch(
             @Path("idCategory") String idCategory,
             @Path("tagNutritionGrade") String tagNutritionGrade,

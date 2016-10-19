@@ -27,8 +27,8 @@ import java.util.Locale;
 public class EndpointBaseUrl {
 
     public static final String URL_BASE = "http://";
-    public static final String URL_BARCODE = ".openfoodfacts.org/api/v0/product";
-    public static final String URL_SEARCH = ".openfoodfacts.org/cgi";
+    public static final String URL_BARCODE = ".openfoodfacts.org/api/v0/product/";
+    public static final String URL_SEARCH = ".openfoodfacts.org/cgi/";
 
     private static String language_code;
     private static String country_code;

@@ -52,7 +52,7 @@ public final class Event {
     private final Boolean mFavorite;
 
     /**
-     * Use this constructor to create a new Product.
+     * Use this constructor to create a new Event.
      * @param id
      * @param unixTimestamp
      * @param status
@@ -69,7 +69,7 @@ public final class Event {
     }
 
     /**
-     * Use this constructor to return a Task from a Cursor
+     * Use this constructor to return a Event from a Cursor
      *
      * @return
      */
