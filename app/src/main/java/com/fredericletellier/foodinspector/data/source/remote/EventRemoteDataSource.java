@@ -161,6 +161,73 @@ public class EventRemoteDataSource implements EventDataSource {
         checkNotNull(productId);
         checkNotNull(callback);
 
+        Context c = FoodInspector.getContext();
+
+        //No-op if no network connectivity
+        if (!Connectivity.isConnected(c)){
+            return;
+        }
+
+        String baseUrl = EndpointBaseUrl.getEndpointBaseUrlBarcode();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        OpenFoodFactsAPIEndpointInterface apiService = retrofit.create(OpenFoodFactsAPIEndpointInterface.class);
+
+        Call<Barcode> call = apiService.getResultOfBarcode(productId);
+
+        call.enqueue(new Callback<Barcode>() {
+            @Override
+            public void onResponse(Call<Barcode> call, Response<Barcode> response) {
+
+                if (response.code() == 200) {
+
+                    List<Product> products = response.body().getProducts();
+                    Product product = products.get(0);
+
+                    ContentValues valuesProduct = new ContentValues();
+                    valuesProduct.put(ProductPersistenceContract.ProductEntry.COLUMN_NAME_PRODUCT_NAME, product.getProduct_name());
+                    valuesProduct.put(ProductPersistenceContract.ProductEntry.COLUMN_NAME_GENERIC_NAME, product.getGeneric_name());
+                    valuesProduct.put(ProductPersistenceContract.ProductEntry.COLUMN_NAME_MAIN_BRAND, product.getBrands());
+                    valuesProduct.put(ProductPersistenceContract.ProductEntry.COLUMN_NAME_QUANTITY, product.getQuantity());
+                    valuesProduct.put(ProductPersistenceContract.ProductEntry.COLUMN_NAME_NUTRITION_GRADE, product.getNutrition_grades());
+                    valuesProduct.put(ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSABLE_CATEGORIES, product.getCategories_tags());
+
+                    mContentResolver.insert(ProductPersistenceContract.ProductEntry.buildProductUri(), valuesProduct);
+
+                    Long tsLong = System.currentTimeMillis()/1000;
+                    String timestamp = tsLong.toString();
+
+                    ContentValues valuesEvent = new ContentValues();
+                    valuesEvent.put(EventPersistenceContract.EventEntry._ID, product.getId());
+                    valuesEvent.put(EventPersistenceContract.EventEntry.COLUMN_NAME_UNIX_TIMESTAMP, timestamp);
+                    valuesEvent.put(EventPersistenceContract.EventEntry.COLUMN_NAME_STATUS, Event.STATUS_OK);
+                    // TODO Get the id of event for this callback
+                    valuesEvent.put(EventPersistenceContract.EventEntry.COLUMN_NAME_PRODUCT_ID, product.getId());
+                    valuesEvent.put(EventPersistenceContract.EventEntry.COLUMN_NAME_FAVORITE, false);
+
+                    mContentResolver.insert(
+                            EventPersistenceContract.EventEntry.buildEventUri(),
+                            valuesEvent);
+
+                } else {
+
+                    // TODO Get the id of event for this callback
+                    // Need a custom callback
+                    // http://stackoverflow.com/questions/28814283/receiving-custom-parameter-in-retrofit-callback
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Barcode> call, Throwable t) {
+                //no-op
+            }
+        });
+
     }
 
     @Override
