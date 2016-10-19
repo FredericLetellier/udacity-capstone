@@ -65,11 +65,9 @@ public class ProductRemoteDataSource implements ProductDataSource {
         return INSTANCE;
     }
 
-    //TODO COMPLETE
-    //###REMOTE
-	//Je recupere l'information via l'API
-	//J'ajoute les produits récupérés
-	//(pas de callback si le nombre de produits récupérés est nul ou inférieur à ce qui a été demandé)
+    /**
+     * Get the limited list of products with an offset, for a specific categoryId and specific nutritionGradeValue
+     */
     @Override
     public void getXProductsInCategory(@NonNull final String categoryId, @NonNull String nutritionGradeValue, @NonNull Integer offsetProducts, @NonNull GetXProductsInCategoryCallback callback) {
         checkNotNull(categoryId);
