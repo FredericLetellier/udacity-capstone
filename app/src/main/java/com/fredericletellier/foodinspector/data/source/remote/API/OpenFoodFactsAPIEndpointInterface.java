@@ -24,25 +24,36 @@ import com.fredericletellier.foodinspector.data.Barcode;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface OpenFoodFactsAPIEndpointInterface {
 
     public static final String ENDPOINT_BARCODE = "http://world.openfoodfacts.org/api/v0/product";
     public static final String ENDPOINT_SEARCH = "http://world.openfoodfacts.org/cgi";
 
-    @GET("{idproduct}.json")
-    Call<Barcode> getResultOfBarcode(
-            @Path("idproduct") String idproduct
+    //Example : http://world.openfoodfacts.org/api/v0/product/3046920029759.json
+    @GET("{barcode}.json")
+    Call<Barcode> getProduct(
+            @Path("barcode") String barcode
     );
 
-    //TODO Probably buggy : http://stackoverflow.com/questions/24100372/retrofit-and-get-using-parameters
-    @GET("search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tag_0={idCategory}&tagtype_1=nutrition_grades&tag_contains_1={tagNutritionGrade}&tag_1={nutritionGrade}&sort_by=unique_scans_n&page_size={pageSize}&page={page}&json=1")
-    Call<Search> getResultOfSearch(
-            @Path("idCategory") String idCategory,
-            @Path("tagNutritionGrade") String tagNutritionGrade,
-            @Path("nutritionGrade") String nutritionGrade,
-            @Path("pageSize") String pageSize,
-            @Path("page") String page
+
+    //Example : http://world.openfoodfacts.org/cgi/search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tag_0=cheese&tagtype_1=countries&tag_contains_1=contains&tag_1=france&tagtype_2=nutrition_grades&tag_contains_2=contains&tag_2=a&sort_by=unique_scans_n&page_size=20&page=1&json=1
+    @GET("search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tagtype_1=countries&tag_contains_1=contains&tagtype_2=nutrition_grades&tag_contains_2=contains&sort_by=unique_scans_n&json=1")
+    Call<Search> getProducts(
+            @Query("tag_0") String categoryKey,
+            @Query("tag_1") String countryKey,
+            @Query("tag_2") String nutritionGrade,
+            @Query("page_size") String pageSize,
+            @Query("page") String page
+    );
+
+
+    //Example : http://world.openfoodfacts.org/cgi/search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tag_0=cheese&tagtype_1=countries&tag_contains_1=contains&tag_1=france&tagtype_2=nutrition_grades&tag_contains_2=does_not_contain&tag_2=unknown&sort_by=unique_scans_n&page_size=5&page=1&json=1
+    @GET("search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tagtype_1=countries&tag_contains_1=contains&tagtype_2=nutrition_grades&tag_contains_2=does_not_contain&tag_2=unknown&sort_by=unique_scans_n&page_size=5&page=1&json=1")
+    Call<Search> getCountryCategory(
+            @Query("tag_0") String categoryKey,
+            @Query("tag_1") String countryKey,
     );
 
 }

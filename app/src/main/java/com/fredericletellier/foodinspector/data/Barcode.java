@@ -31,7 +31,7 @@ public class Barcode {
     private String status_verbose;
     @SerializedName("product")
     @Expose
-    private List<com.fredericletellier.foodinspector.data.source.remote.model.Product> products = new ArrayList<com.fredericletellier.foodinspector.data.source.remote.model.Product>();
+    private List<Product> products = new ArrayList<Product>();
     @SerializedName("status")
     @Expose
     private Integer status;
@@ -53,7 +53,7 @@ public class Barcode {
      * @return
      *     The products
      */
-    public List<com.fredericletellier.foodinspector.data.source.remote.model.Product> getProducts() {
+    public List<Product> getProducts() {
         return products;
     }
 
