@@ -19,34 +19,84 @@
 package com.fredericletellier.foodinspector.data.source;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.fredericletellier.foodinspector.data.Event;
 
 import java.util.List;
 
 /**
- * Main entry point for accessing events data.
+ * Main entry point for accessing event data.
  */
 public interface EventDataSource {
+    
+    interface GetEventCallback {
 
-    interface GetEventsCallback {
+        void onEventLoaded(Event event);
 
-        void onEventsPendingNetwork(List<Event> events);
+        void onError(Exception exception);
 
     }
 
     interface AddEventCallback {
 
-        void onEventProductNotAvailable();
+        void onEventAdded(Event event);
+
+        void onError(Exception exception);
 
     }
 
-    void getEvents(@Nullable List<Event> events, @NonNull GetEventsCallback callback);
+    interface UpdateEventCallback {
 
-    void addEvent(@NonNull String productId, @NonNull AddEventCallback callback);
+        void onEventUpdated(Event event);
 
-    void updateFavoriteFieldEvent(@NonNull String productId);
+        void onError(Exception exception);
 
+    }
+
+    interface SaveEventCallback {
+
+        void onEventSaved(Event event);
+
+        void onError(Exception exception);
+
+    }
+
+    interface SaveScanCallback {
+
+        void onScanSaved(Event event);
+
+        void onError(Exception exception);
+
+    }
+
+    interface RefreshEventsOnErrorCallback {
+
+        void onEventsOnErrorRefreshed(List<Event> events);
+
+        void onError(Exception exception);
+
+    }
+
+    interface GetEventsOnErrorCallback {
+
+        void onEventsOnErrorLoaded(List<Event> events);
+
+        void onError(Exception exception);
+
+    }
+
+    void getEvent(@NonNull Event event, @NonNull GetEventCallback getEventCallback);
+
+    void addEvent(@NonNull Event event, @NonNull AddEventCallback addEventCallback);
+
+    void updateEvent(@NonNull Event event, @NonNull UpdateEventCallback updateEventCallback);
+
+    void saveEvent(@NonNull Event event, @NonNull SaveEventCallback saveEventCallback);
+
+    void saveScan(@NonNull String barcode, @NonNull SaveScanCallback saveScanCallback);
+
+    void refreshEventsOnError(@NonNull RefreshEventsOnErrorCallback refreshEventsOnErrorCallback);
+
+    void getEventsOnError(@NonNull GetEventsOnErrorCallback getEventsOnErrorCallback);
 
 }

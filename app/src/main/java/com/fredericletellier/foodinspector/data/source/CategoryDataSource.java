@@ -19,20 +19,64 @@
 package com.fredericletellier.foodinspector.data.source;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-import java.util.ArrayList;
+import com.fredericletellier.foodinspector.data.Category;
+
+import java.util.List;
 
 /**
- * Main entry point for accessing categories data.
+ * Main entry point for accessing category data.
  */
 public interface CategoryDataSource {
 
-    interface GetCategoriesCallback {
+    interface GetCategoryCallback {
 
-        void onCategoriesNotAvailable(ArrayList<String> categories);
+        void onCategoryLoaded(Category category);
+
+        void onError(Exception exception);
+
     }
 
-    void getCategories(@Nullable String productId, @Nullable ArrayList<String> categories, @NonNull String countryCode, @NonNull GetCategoriesCallback callback);
+    interface AddCategoryCallback {
+
+        void onCategoryAdded(Category category);
+
+        void onError(Exception exception);
+
+    }
+
+    interface UpdateCategoryCallback {
+
+        void onCategoryUpdated(Category category);
+
+        void onError(Exception exception);
+
+    }
+
+    interface SaveCategoryCallback {
+
+        void onCategorySaved(Category category);
+
+        void onError(Exception exception);
+
+    }
+
+    interface GetCategoryOfProductCallback {
+
+        void onCategoryOfProductLoaded(List<Category> categories);
+
+        void onError(Exception exception);
+
+    }
+
+    void getCategory(@NonNull Category category, @NonNull GetCategoryCallback getCategoryCallback);
+
+    void addCategory(@NonNull Category category, @NonNull AddCategoryCallback addCategoryCallback);
+
+    void updateCategory(@NonNull Category category, @NonNull UpdateCategoryCallback updateCategoryCallback);
+
+    void saveCategory(@NonNull Category category, @NonNull SaveCategoryCallback saveCategoryCallback);
+
+    void getCategoryOfProduct(@NonNull String barcode, @NonNull GetCategoryOfProductCallback getCategoryOfProductCallback);
 
 }

@@ -20,17 +20,73 @@ package com.fredericletellier.foodinspector.data.source;
 
 import android.support.annotation.NonNull;
 
+import com.fredericletellier.foodinspector.data.Product;
+
+import java.util.List;
+
 /**
- * Main entry point for accessing products data.
+ * Main entry point for accessing product data.
  */
 public interface ProductDataSource {
 
-    interface GetXProductsInCategoryCallback {
+    interface GetProductCallback {
 
-        void onProductsNotAvailable();
+        void onProductLoaded(Product product);
+
+        void onError(Exception exception);
 
     }
 
-    void getXProductsInCategory(@NonNull String categoryId, @NonNull String nutritionGradeValue, @NonNull Integer offsetProducts, @NonNull GetXProductsInCategoryCallback callback);
+    interface GetProductsCallback {
+
+        void onProductsLoaded(List<Product> products);
+
+        void onError(Exception exception);
+
+    }
+
+    interface AddProductCallback {
+
+        void onProductAdded(Product product);
+
+        void onError(Exception exception);
+
+    }
+
+    interface UpdateProductCallback {
+
+        void onProductUpdated(Product product);
+
+        void onError(Exception exception);
+
+    }
+
+    interface SaveProductCallback {
+
+        void onProductSaved(Product product);
+
+        void onError(Exception exception);
+
+    }
+
+    interface ParseProductCallback {
+
+        void onProductParsed(Product product);
+
+        void onError(Exception exception);
+
+    }
+
+    void getProduct(@NonNull String barcode, @NonNull GetProductCallback getProductCallback);
+
+    void getProducts(@NonNull String categoryKey, @NonNull String countryKey, @NonNull String nutritionGradeValue, @NonNull Integer offsetProducts, @NonNull Integer numberOfProducts, @NonNull GetProductsCallback getProductsCallback);
+
+    void addProduct(@NonNull Product product, @NonNull AddProductCallback addProductCallback);
+
+    void updateProduct(@NonNull Product product, @NonNull UpdateProductCallback updateProductCallback);
+
+    void saveProduct(@NonNull Product product, @NonNull SaveProductCallback saveProductCallback);
+
+    void parseProduct(@NonNull String barcode, @NonNull ParseProductCallback parseProductCallback);
 
 }
