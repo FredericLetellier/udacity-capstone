@@ -31,7 +31,7 @@ import com.fredericletellier.foodinspector.data.source.local.db.EventPersistence
 import com.fredericletellier.foodinspector.data.source.local.db.ProductPersistenceContract;
 import com.fredericletellier.foodinspector.data.source.remote.API.EndpointBaseUrl;
 import com.fredericletellier.foodinspector.data.source.remote.API.OpenFoodFactsAPIEndpointInterface;
-import com.fredericletellier.foodinspector.data.source.remote.model.Barcode;
+import com.fredericletellier.foodinspector.data.Barcode;
 import com.fredericletellier.foodinspector.data.source.remote.model.Product;
 import com.fredericletellier.foodinspector.util.Connectivity;
 

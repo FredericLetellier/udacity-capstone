@@ -23,18 +23,13 @@ import android.content.ContentValues;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.fredericletellier.foodinspector.data.Category;
 import com.fredericletellier.foodinspector.data.source.CategoryDataSource;
 import com.fredericletellier.foodinspector.data.source.local.db.CategoryPersistenceContract;
-import com.fredericletellier.foodinspector.data.source.local.db.ProductPersistenceContract;
-import com.fredericletellier.foodinspector.data.source.local.db.ProductsInCategoryPersistenceContract;
 import com.fredericletellier.foodinspector.data.source.remote.API.EndpointBaseUrl;
 import com.fredericletellier.foodinspector.data.source.remote.API.OpenFoodFactsAPIEndpointInterface;
-import com.fredericletellier.foodinspector.data.source.remote.model.Product;
-import com.fredericletellier.foodinspector.data.source.remote.model.Search;
+import com.fredericletellier.foodinspector.data.Search;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;

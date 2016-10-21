@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.fredericletellier.foodinspector.data.source.remote.model;
+package com.fredericletellier.foodinspector.data;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -31,7 +31,7 @@ public class Barcode {
     private String status_verbose;
     @SerializedName("product")
     @Expose
-    private List<Product> products = new ArrayList<Product>();
+    private List<com.fredericletellier.foodinspector.data.source.remote.model.Product> products = new ArrayList<com.fredericletellier.foodinspector.data.source.remote.model.Product>();
     @SerializedName("status")
     @Expose
     private Integer status;
@@ -53,7 +53,7 @@ public class Barcode {
      * @return
      *     The products
      */
-    public List<Product> getProducts() {
+    public List<com.fredericletellier.foodinspector.data.source.remote.model.Product> getProducts() {
         return products;
     }
 

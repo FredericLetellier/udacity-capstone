@@ -22,42 +22,38 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Event {
-
-    public static final String STATUS_OK = "OK";
-    public static final String STATUS_NOT_A_PRODUCT = "BARCODE_NOT_DESCRIBE_A_PRODUCT";
-    public static final String STATUS_NOT_IN_OFF_DATABASE = "PRODUCT_IS_NOT_IN_OPENFOODFACTS_DATABASE";
-    public static final String STATUS_NO_NETWORK = "NO_NETWORK";
+public class CategoryTag {
 
     private long id;
-    private long timestamp;
     private String barcode;
-    private String status;
+    private String categoryKey;
+    private int rank;
 
     /**
      * No args constructor for use in serialization
      *
      */
-    public Event() {
+    public CategoryTag() {
     }
 
     /**
      *
-     * @param timestamp
      * @param id
-     * @param status
+     * @param rank
+     * @param categoryKey
      * @param barcode
      */
-    public Event(long id, long timestamp, String barcode, String status) {
+    public CategoryTag(long id, String barcode, String categoryKey, int rank) {
         this.id = id;
-        this.timestamp = timestamp;
         this.barcode = barcode;
-        this.status = status;
+        this.categoryKey = categoryKey;
+        this.rank = rank;
     }
 
-    //TODO public static Event from(Cursor cursor)
 
-    //TODO public static Event from(ContentValues values)
+    //TODO public static CategoryTag from(Cursor cursor)
+
+    //TODO public static CategoryTag from(ContentValues values)
 
     /**
      *
@@ -77,31 +73,8 @@ public class Event {
         this.id = id;
     }
 
-    public Event withId(long id) {
+    public CategoryTag withId(long id) {
         this.id = id;
-        return this;
-    }
-
-    /**
-     *
-     * @return
-     * The timestamp
-     */
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    /**
-     *
-     * @param timestamp
-     * The timestamp
-     */
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public Event withTimestamp(long timestamp) {
-        this.timestamp = timestamp;
         return this;
     }
 
@@ -123,7 +96,7 @@ public class Event {
         this.barcode = barcode;
     }
 
-    public Event withBarcode(String barcode) {
+    public CategoryTag withBarcode(String barcode) {
         this.barcode = barcode;
         return this;
     }
@@ -131,23 +104,46 @@ public class Event {
     /**
      *
      * @return
-     * The status
+     * The categoryKey
      */
-    public String getStatus() {
-        return status;
+    public String getCategoryKey() {
+        return categoryKey;
     }
 
     /**
      *
-     * @param status
-     * The status
+     * @param categoryKey
+     * The category-key
      */
-    public void setStatus(String status) {
-        this.status = status;
+    public void setCategoryKey(String categoryKey) {
+        this.categoryKey = categoryKey;
     }
 
-    public Event withStatus(String status) {
-        this.status = status;
+    public CategoryTag withCategoryKey(String categoryKey) {
+        this.categoryKey = categoryKey;
+        return this;
+    }
+
+    /**
+     *
+     * @return
+     * The rank
+     */
+    public long getRank() {
+        return rank;
+    }
+
+    /**
+     *
+     * @param rank
+     * The rank
+     */
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
+
+    public CategoryTag withRank(int rank) {
+        this.rank = rank;
         return this;
     }
 
@@ -158,7 +154,7 @@ public class Event {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(id).append(timestamp).append(barcode).append(status).toHashCode();
+        return new HashCodeBuilder().append(id).append(barcode).append(categoryKey).append(rank).toHashCode();
     }
 
     @Override
@@ -166,11 +162,11 @@ public class Event {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Event) == false) {
+        if ((other instanceof CategoryTag) == false) {
             return false;
         }
-        Event rhs = ((Event) other);
-        return new EqualsBuilder().append(id, rhs.id).append(timestamp, rhs.timestamp).append(barcode, rhs.barcode).append(status, rhs.status).isEquals();
+        CategoryTag rhs = ((CategoryTag) other);
+        return new EqualsBuilder().append(id, rhs.id).append(barcode, rhs.barcode).append(categoryKey, rhs.categoryKey).append(rank, rhs.rank).isEquals();
     }
 
 }

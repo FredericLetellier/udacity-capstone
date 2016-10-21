@@ -47,6 +47,8 @@ dependencies {
 
     compile 'com.google.guava:guava:19.0'
 
+    compile 'org.apache.commons:commons-lang3:3.4'
+
     // Picasso - A powerful image downloading and caching library
     compile 'com.squareup.picasso:picasso:2.5.2'
 

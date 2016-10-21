@@ -22,42 +22,37 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Event {
-
-    public static final String STATUS_OK = "OK";
-    public static final String STATUS_NOT_A_PRODUCT = "BARCODE_NOT_DESCRIBE_A_PRODUCT";
-    public static final String STATUS_NOT_IN_OFF_DATABASE = "PRODUCT_IS_NOT_IN_OPENFOODFACTS_DATABASE";
-    public static final String STATUS_NO_NETWORK = "NO_NETWORK";
+public class Suggestion {
 
     private long id;
-    private long timestamp;
     private String barcode;
-    private String status;
+    private String categoryKey;
+    private String countryKey;
 
     /**
      * No args constructor for use in serialization
      *
      */
-    public Event() {
+    public Suggestion() {
     }
 
     /**
      *
-     * @param timestamp
      * @param id
-     * @param status
+     * @param categoryKey
      * @param barcode
+     * @param countryKey
      */
-    public Event(long id, long timestamp, String barcode, String status) {
+    public Suggestion(long id, String barcode, String categoryKey, String countryKey) {
         this.id = id;
-        this.timestamp = timestamp;
         this.barcode = barcode;
-        this.status = status;
+        this.categoryKey = categoryKey;
+        this.countryKey = countryKey;
     }
 
-    //TODO public static Event from(Cursor cursor)
+    //TODO public static Suggestion from(Cursor cursor)
 
-    //TODO public static Event from(ContentValues values)
+    //TODO public static Suggestion from(ContentValues values)
 
     /**
      *
@@ -77,31 +72,8 @@ public class Event {
         this.id = id;
     }
 
-    public Event withId(long id) {
+    public Suggestion withId(long id) {
         this.id = id;
-        return this;
-    }
-
-    /**
-     *
-     * @return
-     * The timestamp
-     */
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    /**
-     *
-     * @param timestamp
-     * The timestamp
-     */
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public Event withTimestamp(long timestamp) {
-        this.timestamp = timestamp;
         return this;
     }
 
@@ -123,7 +95,7 @@ public class Event {
         this.barcode = barcode;
     }
 
-    public Event withBarcode(String barcode) {
+    public Suggestion withBarcode(String barcode) {
         this.barcode = barcode;
         return this;
     }
@@ -131,23 +103,46 @@ public class Event {
     /**
      *
      * @return
-     * The status
+     * The categoryKey
      */
-    public String getStatus() {
-        return status;
+    public String getCategoryKey() {
+        return categoryKey;
     }
 
     /**
      *
-     * @param status
-     * The status
+     * @param categoryKey
+     * The category-key
      */
-    public void setStatus(String status) {
-        this.status = status;
+    public void setCategoryKey(String categoryKey) {
+        this.categoryKey = categoryKey;
     }
 
-    public Event withStatus(String status) {
-        this.status = status;
+    public Suggestion withCategoryKey(String categoryKey) {
+        this.categoryKey = categoryKey;
+        return this;
+    }
+
+    /**
+     *
+     * @return
+     * The countryKey
+     */
+    public String getCountryKey() {
+        return countryKey;
+    }
+
+    /**
+     *
+     * @param countryKey
+     * The country-key
+     */
+    public void setCountryKey(String countryKey) {
+        this.countryKey = countryKey;
+    }
+
+    public Suggestion withCountryKey(String countryKey) {
+        this.countryKey = countryKey;
         return this;
     }
 
@@ -158,7 +153,7 @@ public class Event {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(id).append(timestamp).append(barcode).append(status).toHashCode();
+        return new HashCodeBuilder().append(id).append(barcode).append(categoryKey).append(countryKey).toHashCode();
     }
 
     @Override
@@ -166,11 +161,11 @@ public class Event {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Event) == false) {
+        if ((other instanceof Suggestion) == false) {
             return false;
         }
-        Event rhs = ((Event) other);
-        return new EqualsBuilder().append(id, rhs.id).append(timestamp, rhs.timestamp).append(barcode, rhs.barcode).append(status, rhs.status).isEquals();
+        Suggestion rhs = ((Suggestion) other);
+        return new EqualsBuilder().append(id, rhs.id).append(barcode, rhs.barcode).append(categoryKey, rhs.categoryKey).append(countryKey, rhs.countryKey).isEquals();
     }
 
 }

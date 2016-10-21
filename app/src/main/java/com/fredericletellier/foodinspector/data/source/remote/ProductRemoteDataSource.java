@@ -28,7 +28,7 @@ import com.fredericletellier.foodinspector.data.source.local.db.ProductsInCatego
 import com.fredericletellier.foodinspector.data.source.remote.API.EndpointBaseUrl;
 import com.fredericletellier.foodinspector.data.source.remote.API.OpenFoodFactsAPIEndpointInterface;
 import com.fredericletellier.foodinspector.data.source.remote.model.Product;
-import com.fredericletellier.foodinspector.data.source.remote.model.Search;
+import com.fredericletellier.foodinspector.data.Search;
 
 import java.util.List;
 

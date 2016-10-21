@@ -18,8 +18,8 @@
 
 package com.fredericletellier.foodinspector.data.source.remote.API;
 
-import com.fredericletellier.foodinspector.data.source.remote.model.Search;
-import com.fredericletellier.foodinspector.data.source.remote.model.Barcode;
+import com.fredericletellier.foodinspector.data.Search;
+import com.fredericletellier.foodinspector.data.Barcode;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

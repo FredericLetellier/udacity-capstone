@@ -22,42 +22,37 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Event {
-
-    public static final String STATUS_OK = "OK";
-    public static final String STATUS_NOT_A_PRODUCT = "BARCODE_NOT_DESCRIBE_A_PRODUCT";
-    public static final String STATUS_NOT_IN_OFF_DATABASE = "PRODUCT_IS_NOT_IN_OPENFOODFACTS_DATABASE";
-    public static final String STATUS_NO_NETWORK = "NO_NETWORK";
+public class CountryCategory {
 
     private long id;
-    private long timestamp;
-    private String barcode;
-    private String status;
+    private String categoryKey;
+    private String countryKey;
+    private int sumOfProducts;
 
     /**
      * No args constructor for use in serialization
      *
      */
-    public Event() {
+    public CountryCategory() {
     }
 
     /**
      *
-     * @param timestamp
      * @param id
-     * @param status
-     * @param barcode
+     * @param categoryKey
+     * @param sumOfProducts
+     * @param countryKey
      */
-    public Event(long id, long timestamp, String barcode, String status) {
+    public CountryCategory(long id, String categoryKey, String countryKey, int sumOfProducts) {
         this.id = id;
-        this.timestamp = timestamp;
-        this.barcode = barcode;
-        this.status = status;
+        this.categoryKey = categoryKey;
+        this.countryKey = countryKey;
+        this.sumOfProducts = sumOfProducts;
     }
 
-    //TODO public static Event from(Cursor cursor)
+    //TODO public static CountryCategory from(Cursor cursor)
 
-    //TODO public static Event from(ContentValues values)
+    //TODO public static CountryCategory from(ContentValues values)
 
     /**
      *
@@ -77,7 +72,7 @@ public class Event {
         this.id = id;
     }
 
-    public Event withId(long id) {
+    public CountryCategory withId(long id) {
         this.id = id;
         return this;
     }
@@ -85,69 +80,69 @@ public class Event {
     /**
      *
      * @return
-     * The timestamp
+     * The categoryKey
      */
-    public long getTimestamp() {
-        return timestamp;
+    public String getCategoryKey() {
+        return categoryKey;
     }
 
     /**
      *
-     * @param timestamp
-     * The timestamp
+     * @param categoryKey
+     * The category-key
      */
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+    public void setCategoryKey(String categoryKey) {
+        this.categoryKey = categoryKey;
     }
 
-    public Event withTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+    public CountryCategory withCategoryKey(String categoryKey) {
+        this.categoryKey = categoryKey;
         return this;
     }
 
     /**
      *
      * @return
-     * The barcode
+     * The countryKey
      */
-    public String getBarcode() {
-        return barcode;
+    public String getCountryKey() {
+        return countryKey;
     }
 
     /**
      *
-     * @param barcode
-     * The barcode
+     * @param countryKey
+     * The country-key
      */
-    public void setBarcode(String barcode) {
-        this.barcode = barcode;
+    public void setCountryKey(String countryKey) {
+        this.countryKey = countryKey;
     }
 
-    public Event withBarcode(String barcode) {
-        this.barcode = barcode;
+    public CountryCategory withCountryKey(String countryKey) {
+        this.countryKey = countryKey;
         return this;
     }
 
     /**
      *
      * @return
-     * The status
+     * The sumOfProducts
      */
-    public String getStatus() {
-        return status;
+    public long getSumOfProducts() {
+        return sumOfProducts;
     }
 
     /**
      *
-     * @param status
-     * The status
+     * @param sumOfProducts
+     * The sum-of-products
      */
-    public void setStatus(String status) {
-        this.status = status;
+    public void setSumOfProducts(int sumOfProducts) {
+        this.sumOfProducts = sumOfProducts;
     }
 
-    public Event withStatus(String status) {
-        this.status = status;
+    public CountryCategory withSumOfProducts(int sumOfProducts) {
+        this.sumOfProducts = sumOfProducts;
         return this;
     }
 
@@ -158,7 +153,7 @@ public class Event {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(id).append(timestamp).append(barcode).append(status).toHashCode();
+        return new HashCodeBuilder().append(id).append(categoryKey).append(countryKey).append(sumOfProducts).toHashCode();
     }
 
     @Override
@@ -166,11 +161,11 @@ public class Event {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Event) == false) {
+        if ((other instanceof CountryCategory) == false) {
             return false;
         }
-        Event rhs = ((Event) other);
-        return new EqualsBuilder().append(id, rhs.id).append(timestamp, rhs.timestamp).append(barcode, rhs.barcode).append(status, rhs.status).isEquals();
+        CountryCategory rhs = ((CountryCategory) other);
+        return new EqualsBuilder().append(id, rhs.id).append(categoryKey, rhs.categoryKey).append(countryKey, rhs.countryKey).append(sumOfProducts, rhs.sumOfProducts).isEquals();
     }
 
 }

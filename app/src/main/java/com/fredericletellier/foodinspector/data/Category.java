@@ -18,110 +18,129 @@
 
 package com.fredericletellier.foodinspector.data;
 
-import android.database.Cursor;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.fredericletellier.foodinspector.data.source.local.db.CategoryPersistenceContract;
-import com.google.common.base.Objects;
-import com.google.common.base.Strings;
+public class Category {
 
-/**
- * Immutable model class for a Category.
- */
-public final class Category {
-
-    @NonNull
-    private final String mId;
-
-    @Nullable
-    private final String mCountryId;
-
-    @Nullable
-    private final String mWorldCategoryId;
-
-    @Nullable
-    private final Boolean mHaveData;
+    private long id;
+    private String categoryKey;
+    private String categoryName;
 
     /**
-     * Use this constructor to create a new Product.
-     * @param id
-     * @param countryId
-     * @param worldCategoryId
-     * @param haveData
-     */
-    public Category(String id, @Nullable String countryId, @Nullable String worldCategoryId,
-                   @Nullable Boolean haveData) {
-        mId = id;
-        mCountryId = countryId;
-        mWorldCategoryId = worldCategoryId;
-        mHaveData = haveData;
-    }
-
-    /**
-     * Use this constructor to return a Task from a Cursor
+     * No args constructor for use in serialization
      *
-     * @return
      */
-    public static Category from(Cursor cursor) {
-        String id = cursor.getString(cursor.getColumnIndexOrThrow(
-                CategoryPersistenceContract.CategoryEntry._ID));
-        String countryId = cursor.getString(cursor.getColumnIndexOrThrow(
-                CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_COUNTRY_ID));
-        String worldCategoryId = cursor.getString(cursor.getColumnIndexOrThrow(
-                CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_WORLD_CATEGORY_ID));
-        Boolean haveData = cursor.getInt(cursor.getColumnIndexOrThrow(
-                CategoryPersistenceContract.CategoryEntry.COLUMN_HAVE_DATA)) == 1;
-        return new Category(id, countryId, worldCategoryId, haveData);
+    public Category() {
     }
+
+    /**
+     *
+     * @param id
+     * @param categoryName
+     * @param categoryKey
+     */
+    public Category(long id, String categoryKey, String categoryName) {
+        this.id = id;
+        this.categoryKey = categoryKey;
+        this.categoryName = categoryName;
+    }
+
+
+    //TODO public static Category from(Cursor cursor)
 
     //TODO public static Category from(ContentValues values)
 
-
-    @NonNull
-    public String getId() {
-        return mId;
+    /**
+     *
+     * @return
+     * The id
+     */
+    public long getId() {
+        return id;
     }
 
-    @Nullable
-    public String getCountry() {
-        return mCountryId;
+    /**
+     *
+     * @param id
+     * The id
+     */
+    public void setId(long id) {
+        this.id = id;
     }
 
-    @Nullable
-    public String getWorldId() {
-        return mWorldCategoryId;
+    public Category withId(long id) {
+        this.id = id;
+        return this;
     }
 
-    @Nullable
-    public Boolean getHaveData() {
-        return mHaveData;
+    /**
+     *
+     * @return
+     * The categoryKey
+     */
+    public String getCategoryKey() {
+        return categoryKey;
     }
 
-    public boolean isEmpty() {
-        return Strings.isNullOrEmpty(mCountryId) &&
-                Strings.isNullOrEmpty(mWorldCategoryId) &&
-                (mHaveData == null);
+    /**
+     *
+     * @param categoryKey
+     * The category-key
+     */
+    public void setCategoryKey(String categoryKey) {
+        this.categoryKey = categoryKey;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Category category = (Category) o;
-        return Objects.equal(mId, category.mId) &&
-                Objects.equal(mCountryId, category.mCountryId) &&
-                Objects.equal(mWorldCategoryId, category.mWorldCategoryId) &&
-                Objects.equal(mHaveData, category.mHaveData);
+    public Category withCategoryKey(String categoryKey) {
+        this.categoryKey = categoryKey;
+        return this;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(mId, mCountryId, mWorldCategoryId, mHaveData);
+    /**
+     *
+     * @return
+     * The categoryName
+     */
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    /**
+     *
+     * @param categoryName
+     * The category-name
+     */
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public Category withCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+        return this;
     }
 
     @Override
     public String toString() {
-        return "Category with title " + getCountry() + getWorldId();
+        return ToStringBuilder.reflectionToString(this);
     }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(id).append(categoryKey).append(categoryName).toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+        if ((other instanceof Category) == false) {
+            return false;
+        }
+        Category rhs = ((Category) other);
+        return new EqualsBuilder().append(id, rhs.id).append(categoryKey, rhs.categoryKey).append(categoryName, rhs.categoryName).isEquals();
+    }
+
 }
