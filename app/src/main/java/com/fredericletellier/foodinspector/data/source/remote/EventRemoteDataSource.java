@@ -55,12 +55,14 @@ public class EventRemoteDataSource implements EventDataSource {
     private ContentResolver mContentResolver;
 
     // Prevent direct instantiation.
-    private EventRemoteDataSource() {
+    private EventRemoteDataSource(@NonNull ContentResolver contentResolver) {
+        checkNotNull(contentResolver);
+        mContentResolver = contentResolver;
     }
 
-    public static EventRemoteDataSource getInstance() {
+    public static EventRemoteDataSource getInstance(@NonNull ContentResolver contentResolver) {
         if (INSTANCE == null) {
-            INSTANCE = new EventRemoteDataSource();
+            INSTANCE = new EventRemoteDataSource(contentResolver);
         }
         return INSTANCE;
     }
@@ -97,7 +99,7 @@ public class EventRemoteDataSource implements EventDataSource {
 
             Call<Barcode> call = apiService.getResultOfBarcode(productId);
 
-            call.enqueue(new Callback<Barcode>() {
+            call.enqueue(new CallBackWithArgument<Barcode>(event.getId()) {
                 @Override
                 public void onResponse(Call<Barcode> call, Response<Barcode> response) {
 
@@ -124,14 +126,18 @@ public class EventRemoteDataSource implements EventDataSource {
                                 EventPersistenceContract.EventEntry.buildEventUri(),
                                 valuesEvent,
                                 EventPersistenceContract.EventEntry._ID + " LIKE ?",
-                                // TODO Get the id of event for this callback
-                                new String[]{product.getId()});
+                                new String[]{mEventId});
 
                     } else {
 
-                        // TODO Get the id of event for this callback
-                        // Need a custom callback
-                        // http://stackoverflow.com/questions/28814283/receiving-custom-parameter-in-retrofit-callback
+                        ContentValues valuesEvent = new ContentValues();
+                        valuesEvent.put(EventPersistenceContract.EventEntry.COLUMN_NAME_STATUS, Event.STATUS_NOT_IN_OFF_DATABASE);
+
+                        mContentResolver.update(
+                                EventPersistenceContract.EventEntry.buildEventUri(),
+                                valuesEvent,
+                                EventPersistenceContract.EventEntry._ID + " LIKE ?",
+                                new String[]{mEventId});
 
                     }
                 }
@@ -179,7 +185,7 @@ public class EventRemoteDataSource implements EventDataSource {
 
         Call<Barcode> call = apiService.getResultOfBarcode(productId);
 
-        call.enqueue(new Callback<Barcode>() {
+        call.enqueue(new CallBackWithArgument<Barcode>(productId) {
             @Override
             public void onResponse(Call<Barcode> call, Response<Barcode> response) {
 
@@ -205,7 +211,6 @@ public class EventRemoteDataSource implements EventDataSource {
                     valuesEvent.put(EventPersistenceContract.EventEntry._ID, product.getId());
                     valuesEvent.put(EventPersistenceContract.EventEntry.COLUMN_NAME_UNIX_TIMESTAMP, timestamp);
                     valuesEvent.put(EventPersistenceContract.EventEntry.COLUMN_NAME_STATUS, Event.STATUS_OK);
-                    // TODO Get the id of event for this callback
                     valuesEvent.put(EventPersistenceContract.EventEntry.COLUMN_NAME_PRODUCT_ID, product.getId());
                     valuesEvent.put(EventPersistenceContract.EventEntry.COLUMN_NAME_FAVORITE, false);
 
@@ -234,6 +239,16 @@ public class EventRemoteDataSource implements EventDataSource {
     public void updateFavoriteFieldEvent(@NonNull String productId){
         checkNotNull(productId);
         //no-op in remote
+    }
+
+    private abstract class CallBackWithArgument<Barcode> implements Callback<Barcode> {
+
+        String mEventId;
+
+        private CallBackWithArgument(String eventId) {
+            this.mEventId = eventId;
+        }
+
     }
 
 }
