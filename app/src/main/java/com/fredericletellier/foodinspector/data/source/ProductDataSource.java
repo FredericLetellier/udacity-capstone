@@ -33,7 +33,7 @@ public interface ProductDataSource {
 
         void onProductLoaded(Product product);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -41,7 +41,7 @@ public interface ProductDataSource {
 
         void onProductsLoaded(List<Product> products);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -49,7 +49,7 @@ public interface ProductDataSource {
 
         void onProductAdded(Product product);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -57,7 +57,7 @@ public interface ProductDataSource {
 
         void onProductUpdated(Product product);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -65,7 +65,7 @@ public interface ProductDataSource {
 
         void onProductSaved(Product product);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -73,7 +73,7 @@ public interface ProductDataSource {
 
         void onProductParsed(Product product);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 

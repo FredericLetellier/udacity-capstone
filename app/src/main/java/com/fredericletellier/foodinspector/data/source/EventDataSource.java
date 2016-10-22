@@ -33,7 +33,7 @@ public interface EventDataSource {
 
         void onEventLoaded(Event event);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -41,7 +41,7 @@ public interface EventDataSource {
 
         void onEventAdded(Event event);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -49,7 +49,7 @@ public interface EventDataSource {
 
         void onEventUpdated(Event event);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -57,7 +57,7 @@ public interface EventDataSource {
 
         void onEventSaved(Event event);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -65,7 +65,7 @@ public interface EventDataSource {
 
         void onScanSaved(Event event);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -73,7 +73,7 @@ public interface EventDataSource {
 
         void onEventsOnErrorRefreshed(List<Event> events);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -81,7 +81,7 @@ public interface EventDataSource {
 
         void onEventsOnErrorLoaded(List<Event> events);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 

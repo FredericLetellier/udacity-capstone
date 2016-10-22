@@ -18,8 +18,8 @@
 
 package com.fredericletellier.foodinspector.data.source.remote.API;
 
+import com.fredericletellier.foodinspector.data.ProductBarcode;
 import com.fredericletellier.foodinspector.data.Search;
-import com.fredericletellier.foodinspector.data.Barcode;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -33,7 +33,7 @@ public interface OpenFoodFactsAPIEndpointInterface {
 
     //Example : http://world.openfoodfacts.org/api/v0/product/3046920029759.json
     @GET("{barcode}.json")
-    Call<Barcode> getProduct(
+    Call<ProductBarcode> getProduct(
             @Path("barcode") String barcode
     );
 
@@ -53,7 +53,7 @@ public interface OpenFoodFactsAPIEndpointInterface {
     @GET("search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tagtype_1=countries&tag_contains_1=contains&tagtype_2=nutrition_grades&tag_contains_2=does_not_contain&tag_2=unknown&sort_by=unique_scans_n&page_size=5&page=1&json=1")
     Call<Search> getCountryCategory(
             @Query("tag_0") String categoryKey,
-            @Query("tag_1") String countryKey,
+            @Query("tag_1") String countryKey
     );
 
 }

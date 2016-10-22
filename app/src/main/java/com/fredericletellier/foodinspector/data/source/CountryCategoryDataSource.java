@@ -27,13 +27,13 @@ import java.util.List;
 /**
  * Main entry point for accessing countryCategory data.
  */
-public interface CountryCategorieDataSource {
+public interface CountryCategoryDataSource {
 
     interface GetCountryCategoryCallback {
 
         void onCountryCategoryLoaded(CountryCategory countryCategory);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -41,7 +41,7 @@ public interface CountryCategorieDataSource {
 
         void onCountryCategoryAdded(CountryCategory countryCategory);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -49,7 +49,7 @@ public interface CountryCategorieDataSource {
 
         void onCountryCategoryUpdated(CountryCategory countryCategory);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -57,7 +57,7 @@ public interface CountryCategorieDataSource {
 
         void onCountryCategorySaved(CountryCategory countryCategory);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -65,7 +65,7 @@ public interface CountryCategorieDataSource {
 
         void onCountryCategoryOfProductLoaded(List<CountryCategory> countryCategories);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 

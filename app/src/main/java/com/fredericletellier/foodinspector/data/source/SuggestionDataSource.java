@@ -32,7 +32,7 @@ public interface SuggestionDataSource {
 
         void onSuggestionLoaded(Suggestion suggestion);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -40,7 +40,7 @@ public interface SuggestionDataSource {
 
         void onSuggestionAdded(Suggestion suggestion);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -48,7 +48,7 @@ public interface SuggestionDataSource {
 
         void onSuggestionUpdated(Suggestion suggestion);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -56,7 +56,7 @@ public interface SuggestionDataSource {
 
         void onSuggestionSaved(Suggestion suggestion);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 

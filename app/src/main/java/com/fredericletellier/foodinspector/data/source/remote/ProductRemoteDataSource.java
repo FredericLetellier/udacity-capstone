@@ -18,19 +18,14 @@
 
 package com.fredericletellier.foodinspector.data.source.remote;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.support.annotation.NonNull;
 
+import com.fredericletellier.foodinspector.data.Product;
+import com.fredericletellier.foodinspector.data.ProductBarcode;
 import com.fredericletellier.foodinspector.data.source.ProductDataSource;
-import com.fredericletellier.foodinspector.data.source.local.db.ProductPersistenceContract;
-import com.fredericletellier.foodinspector.data.source.local.db.ProductsInCategoryPersistenceContract;
-import com.fredericletellier.foodinspector.data.source.remote.API.EndpointBaseUrl;
+import com.fredericletellier.foodinspector.data.source.remote.API.APIError;
+import com.fredericletellier.foodinspector.data.source.remote.API.ErrorUtils;
 import com.fredericletellier.foodinspector.data.source.remote.API.OpenFoodFactsAPIEndpointInterface;
-import com.fredericletellier.foodinspector.data.source.remote.model.Product;
-import com.fredericletellier.foodinspector.data.Search;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,88 +40,82 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ProductRemoteDataSource implements ProductDataSource {
 
-    public static final int PAGE_SIZE = 20;
-    public static final String TAG_NUTRITION_GRADE = "contain";
-
     private static ProductRemoteDataSource INSTANCE;
 
-    private ContentResolver mContentResolver;
-
     // Prevent direct instantiation.
-    private ProductRemoteDataSource(@NonNull ContentResolver contentResolver) {
-        checkNotNull(contentResolver);
-        mContentResolver = contentResolver;
+    private ProductRemoteDataSource() {
     }
 
-    public static ProductRemoteDataSource getInstance(@NonNull ContentResolver contentResolver) {
+    public static ProductRemoteDataSource getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new ProductRemoteDataSource(contentResolver);
+            INSTANCE = new ProductRemoteDataSource();
         }
         return INSTANCE;
     }
 
     /**
-     * Get the limited list of products with an offset, for a specific categoryId and specific nutritionGradeValue
+     * Gets the product from remote data source
+     * <p/>
+     * Note: {@link GetProductCallback#onError(Throwable)} is fired if remote data sources fail to
+     * get the data (HTTP error, IOException, IllegalStateException, ...)
      */
     @Override
-    public void getXProductsInCategory(@NonNull final String categoryId, @NonNull String nutritionGradeValue, @NonNull Integer offsetProducts, @NonNull GetXProductsInCategoryCallback callback) {
-        checkNotNull(categoryId);
-        checkNotNull(nutritionGradeValue);
-        checkNotNull(offsetProducts);
-        checkNotNull(callback);
-
-        int page;
-        if (offsetProducts == 0){
-            page = 1;
-        }else{
-            page = offsetProducts / PAGE_SIZE;
-        }
-
-        String baseUrl = EndpointBaseUrl.getEndpointBaseUrlSearch();
+    public void getProduct(@NonNull String barcode, @NonNull final GetProductCallback getProductCallback) {
+        checkNotNull(barcode);
+        checkNotNull(getProductCallback);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(baseUrl)
+                .baseUrl(OpenFoodFactsAPIEndpointInterface.ENDPOINT_BARCODE)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         OpenFoodFactsAPIEndpointInterface apiService = retrofit.create(OpenFoodFactsAPIEndpointInterface.class);
 
-        Call<Search> call = apiService.getResultOfSearch(
-                categoryId,
-                TAG_NUTRITION_GRADE,
-                nutritionGradeValue,
-                String.valueOf(PAGE_SIZE),
-                String.valueOf(page));
+        Call<ProductBarcode> call = apiService.getProduct(barcode);
 
-        call.enqueue(new Callback<Search>() {
+        call.enqueue(new Callback<ProductBarcode>() {
             @Override
-            public void onResponse(Call<Search> call, Response<Search> response) {
-                List<Product> products = response.body().getProducts();
-                for (Product product : products){
-
-                    ContentValues valuesProduct = new ContentValues();
-                    valuesProduct.put(ProductPersistenceContract.ProductEntry.COLUMN_NAME_PRODUCT_NAME, product.getProduct_name());
-                    valuesProduct.put(ProductPersistenceContract.ProductEntry.COLUMN_NAME_GENERIC_NAME, product.getGeneric_name());
-                    valuesProduct.put(ProductPersistenceContract.ProductEntry.COLUMN_NAME_MAIN_BRAND, product.getBrands());
-                    valuesProduct.put(ProductPersistenceContract.ProductEntry.COLUMN_NAME_QUANTITY, product.getQuantity());
-                    valuesProduct.put(ProductPersistenceContract.ProductEntry.COLUMN_NAME_NUTRITION_GRADE, product.getNutrition_grades());
-                    valuesProduct.put(ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSABLE_CATEGORIES, product.getCategories_tags());
-
-                    mContentResolver.insert(ProductPersistenceContract.ProductEntry.buildProductUri(), valuesProduct);
-
-                    ContentValues valuesProductsInCategory = new ContentValues();
-                    valuesProduct.put(ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.COLUMN_NAME_CATEGORY_ID, categoryId);
-                    valuesProduct.put(ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.COLUMN_NAME_PRODUCT_ID, product.getId());
-
-                    mContentResolver.insert(ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.buildProductsInCategoryUri(), valuesProductsInCategory);
+            public void onResponse(Call<ProductBarcode> call, Response<ProductBarcode> response) {
+                if (response.isSuccessful()) {
+                    ProductBarcode mProductBarcode = response.body();
+                    Product mProduct = mProductBarcode.getProducts().get(0);
+                    getProductCallback.onProductLoaded(mProduct);
+                } else {
+                    APIError e = ErrorUtils.parseError(response);
+                    Throwable t = new Throwable(e.message(), new Throwable(String.valueOf(e.status())));
+                    getProductCallback.onError(t);
                 }
             }
 
             @Override
-            public void onFailure(Call<Search> call, Throwable t) {
-                //no-op
+            public void onFailure(Call<ProductBarcode> call, Throwable t) {
+                getProductCallback.onError(t);
             }
         });
+    }
 
+    @Override
+    public void getProducts(@NonNull String categoryKey, @NonNull String countryKey, @NonNull String nutritionGradeValue, @NonNull Integer offsetProducts, @NonNull Integer numberOfProducts, @NonNull GetProductsCallback getProductsCallback) {
+        //TODO Intégrer la partie remote de la procédure globale du repository
+    }
+
+    @Override
+    public void addProduct(@NonNull Product product, @NonNull AddProductCallback addProductCallback) {
+        //no-op in remote
+    }
+
+    @Override
+    public void updateProduct(@NonNull Product product, @NonNull UpdateProductCallback updateProductCallback) {
+        //no-op in remote
+    }
+
+    @Override
+    public void saveProduct(@NonNull Product product, @NonNull SaveProductCallback saveProductCallback) {
+        //no-op in remote
+    }
+
+    @Override
+    public void parseProduct(@NonNull String barcode, @NonNull ParseProductCallback parseProductCallback) {
+        //no-op in remote
     }
 }

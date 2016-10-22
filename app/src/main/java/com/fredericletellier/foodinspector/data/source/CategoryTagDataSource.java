@@ -32,7 +32,7 @@ public interface CategoryTagDataSource {
 
         void onCategoryTagLoaded(CategoryTag categoryTag);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -40,7 +40,7 @@ public interface CategoryTagDataSource {
 
         void onCategoryTagAdded(CategoryTag categoryTag);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -48,7 +48,7 @@ public interface CategoryTagDataSource {
 
         void onCategoryTagUpdated(CategoryTag categoryTag);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -56,7 +56,7 @@ public interface CategoryTagDataSource {
 
         void onCategoryTagSaved(CategoryTag categoryTag);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 

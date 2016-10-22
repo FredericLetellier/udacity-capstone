@@ -33,7 +33,7 @@ public interface CategoryDataSource {
 
         void onCategoryLoaded(Category category);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -41,7 +41,7 @@ public interface CategoryDataSource {
 
         void onCategoryAdded(Category category);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -49,7 +49,7 @@ public interface CategoryDataSource {
 
         void onCategoryUpdated(Category category);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -57,7 +57,7 @@ public interface CategoryDataSource {
 
         void onCategorySaved(Category category);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
@@ -65,7 +65,7 @@ public interface CategoryDataSource {
 
         void onCategoryOfProductLoaded(List<Category> categories);
 
-        void onError(Exception exception);
+        void onError(Throwable throwable);
 
     }
 
