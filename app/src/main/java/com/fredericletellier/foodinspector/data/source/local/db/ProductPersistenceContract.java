@@ -50,24 +50,31 @@ public final class ProductPersistenceContract {
     public static abstract class ProductEntry implements BaseColumns {
 
         public static final String TABLE_NAME = "product";
-        public static final String COLUMN_NAME_PRODUCT_NAME = "productname";
-        public static final String COLUMN_NAME_GENERIC_NAME = "genericname";
-        public static final String COLUMN_NAME_MAIN_BRAND = "mainbrand";
+        public static final String COLUMN_NAME_BARCODE = "barcode";
+        public static final String COLUMN_NAME_PARSED = "parsed";
+        public static final String COLUMN_NAME_BOOKMARKED = "bookmarked";
+        public static final String COLUMN_NAME_GENERIC_NAME = "genericName";
+        public static final String COLUMN_NAME_PRODUCT_NAME = "productName";
         public static final String COLUMN_NAME_QUANTITY = "quantity";
-        public static final String COLUMN_NAME_NUTRITION_GRADE = "nutritiongrade";
-        public static final String COLUMN_NAME_PARSABLE_CATEGORIES = "parsablecategories";
-        public static final String COLUMN_NAME_PARSABLE_NAME_CATEGORIES = "parsablenamecategories";
+        public static final String COLUMN_NAME_NUTRITION_GRADES = "nutritionGrades";
+        public static final String COLUMN_NAME_PARSABLE_CATEGORIES = "parsableCategories";
+        public static final String COLUMN_NAME_BRANDS = "brands";
+        public static final String COLUMN_NAME_IMAGE_FRONT_SMALL_URL = "imageFrontSmallUrl";
+        public static final String COLUMN_NAME_IMAGE_FRONT_URL = "imageFrontUrl";
         public static final Uri CONTENT_PRODUCT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
         public static String[] PRODUCT_COLUMNS = new String[]{
                 ProductPersistenceContract.ProductEntry._ID,
-                ProductPersistenceContract.ProductEntry.COLUMN_NAME_PRODUCT_NAME,
+                ProductPersistenceContract.ProductEntry.COLUMN_NAME_BARCODE,
+                ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSED,
+                ProductPersistenceContract.ProductEntry.COLUMN_NAME_BOOKMARKED,
                 ProductPersistenceContract.ProductEntry.COLUMN_NAME_GENERIC_NAME,
-                ProductPersistenceContract.ProductEntry.COLUMN_NAME_MAIN_BRAND,
+                ProductPersistenceContract.ProductEntry.COLUMN_NAME_PRODUCT_NAME,
                 ProductPersistenceContract.ProductEntry.COLUMN_NAME_QUANTITY,
-                ProductPersistenceContract.ProductEntry.COLUMN_NAME_NUTRITION_GRADE,
-                ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSABLE_CATEGORIES};
-
-        public static final String PRODUCTSINCATEGORY_JOIN_PRODUCT = "productsincategory_join_product";
+                ProductPersistenceContract.ProductEntry.COLUMN_NAME_NUTRITION_GRADES,
+                ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSABLE_CATEGORIES,
+                ProductPersistenceContract.ProductEntry.COLUMN_NAME_BRANDS,
+                ProductPersistenceContract.ProductEntry.COLUMN_NAME_IMAGE_FRONT_SMALL_URL,
+                ProductPersistenceContract.ProductEntry.COLUMN_NAME_IMAGE_FRONT_URL};
 
         public static Uri buildProductUriWith(long id) {
             return ContentUris.withAppendedId(CONTENT_PRODUCT_URI, id);
@@ -82,9 +89,6 @@ public final class ProductPersistenceContract {
             return CONTENT_PRODUCT_URI.buildUpon().build();
         }
 
-        public static Uri buildProductsincategoryJoinProductUri() {
-            return BASE_CONTENT_URI.buildUpon().appendPath(PRODUCTSINCATEGORY_JOIN_PRODUCT).build();
-        }
     }
 
 }

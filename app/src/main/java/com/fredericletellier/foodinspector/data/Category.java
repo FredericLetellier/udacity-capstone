@@ -18,15 +18,20 @@
 
 package com.fredericletellier.foodinspector.data;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+
+import com.fredericletellier.foodinspector.data.source.local.db.CategoryPersistenceContract;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class Category {
 
-    private long id;
-    private String categoryKey;
-    private String categoryName;
+    private long mId;
+    private String mCategoryKey;
+    private String mCategoryName;
 
     /**
      * No args constructor for use in serialization
@@ -42,15 +47,37 @@ public class Category {
      * @param categoryKey
      */
     public Category(long id, String categoryKey, String categoryName) {
-        this.id = id;
-        this.categoryKey = categoryKey;
-        this.categoryName = categoryName;
+        this.mId = id;
+        this.mCategoryKey = categoryKey;
+        this.mCategoryName = categoryName;
     }
 
+    /**
+     * Use this constructor to return a Category from a Cursor
+     *
+     * @return
+     */
+    public static Category from(Cursor cursor) {
+        long id = cursor.getLong(cursor.getColumnIndexOrThrow(
+                CategoryPersistenceContract.CategoryEntry._ID));
+        String categoryKey = cursor.getString(cursor.getColumnIndexOrThrow(
+                CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_CATEGORY_KEY));
+        String categoryName = cursor.getString(cursor.getColumnIndexOrThrow(
+                CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_CATEGORY_NAME));
+        return new Category(id, categoryKey, categoryName);
+    }
 
-    //TODO public static Category from(Cursor cursor)
-
-    //TODO public static Category from(ContentValues values)
+    /**
+     * Use this constructor to return a Category from ContentValues
+     *
+     * @return
+     */
+    public static Category from(ContentValues values) {
+        long id = values.getAsLong(CategoryPersistenceContract.CategoryEntry._ID);
+        String categoryKey = values.getAsString(CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_CATEGORY_KEY);
+        String categoryName = values.getAsString(CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_CATEGORY_NAME);
+        return new Category(id, categoryKey, categoryName);
+    }
 
     /**
      *
@@ -58,7 +85,7 @@ public class Category {
      * The id
      */
     public long getId() {
-        return id;
+        return mId;
     }
 
     /**
@@ -67,11 +94,11 @@ public class Category {
      * The id
      */
     public void setId(long id) {
-        this.id = id;
+        this.mId = id;
     }
 
     public Category withId(long id) {
-        this.id = id;
+        this.mId = id;
         return this;
     }
 
@@ -81,7 +108,7 @@ public class Category {
      * The categoryKey
      */
     public String getCategoryKey() {
-        return categoryKey;
+        return mCategoryKey;
     }
 
     /**
@@ -90,11 +117,11 @@ public class Category {
      * The category-key
      */
     public void setCategoryKey(String categoryKey) {
-        this.categoryKey = categoryKey;
+        this.mCategoryKey = categoryKey;
     }
 
     public Category withCategoryKey(String categoryKey) {
-        this.categoryKey = categoryKey;
+        this.mCategoryKey = categoryKey;
         return this;
     }
 
@@ -104,7 +131,7 @@ public class Category {
      * The categoryName
      */
     public String getCategoryName() {
-        return categoryName;
+        return mCategoryName;
     }
 
     /**
@@ -113,11 +140,11 @@ public class Category {
      * The category-name
      */
     public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+        this.mCategoryName = categoryName;
     }
 
     public Category withCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+        this.mCategoryName = categoryName;
         return this;
     }
 
@@ -128,7 +155,7 @@ public class Category {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(id).append(categoryKey).append(categoryName).toHashCode();
+        return new HashCodeBuilder().append(mId).append(mCategoryKey).append(mCategoryName).toHashCode();
     }
 
     @Override
@@ -140,7 +167,7 @@ public class Category {
             return false;
         }
         Category rhs = ((Category) other);
-        return new EqualsBuilder().append(id, rhs.id).append(categoryKey, rhs.categoryKey).append(categoryName, rhs.categoryName).isEquals();
+        return new EqualsBuilder().append(mId, rhs.mId).append(mCategoryKey, rhs.mCategoryKey).append(mCategoryName, rhs.mCategoryName).isEquals();
     }
 
 }

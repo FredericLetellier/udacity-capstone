@@ -50,65 +50,56 @@ public class LocalDbHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_PRODUCT =
             CREATE_TABLE + ProductPersistenceContract.ProductEntry.TABLE_NAME + OPEN_PARENTHESIS +
                     ProductPersistenceContract.ProductEntry._ID + INTEGER_TYPE + PRIMARY_KEY + COMMA_SEP +
-                    ProductPersistenceContract.ProductEntry.COLUMN_NAME_PRODUCT_NAME + TEXT_TYPE + COMMA_SEP +
+                    ProductPersistenceContract.ProductEntry.COLUMN_NAME_BARCODE + TEXT_TYPE + COMMA_SEP +
+                    ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSED + BOOLEAN_TYPE + COMMA_SEP +
+                    ProductPersistenceContract.ProductEntry.COLUMN_NAME_BOOKMARKED + BOOLEAN_TYPE + COMMA_SEP +
                     ProductPersistenceContract.ProductEntry.COLUMN_NAME_GENERIC_NAME + TEXT_TYPE + COMMA_SEP +
-                    ProductPersistenceContract.ProductEntry.COLUMN_NAME_MAIN_BRAND + TEXT_TYPE + COMMA_SEP +
+                    ProductPersistenceContract.ProductEntry.COLUMN_NAME_PRODUCT_NAME + TEXT_TYPE + COMMA_SEP +
                     ProductPersistenceContract.ProductEntry.COLUMN_NAME_QUANTITY + TEXT_TYPE + COMMA_SEP +
-                    ProductPersistenceContract.ProductEntry.COLUMN_NAME_NUTRITION_GRADE + TEXT_TYPE + COMMA_SEP +
-                    ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSABLE_CATEGORIES + TEXT_TYPE +
-                    CLOSE_PARENTHESIS;
-
-    private static final String SQL_CREATE_CATEGORY =
-            CREATE_TABLE + CategoryPersistenceContract.CategoryEntry.TABLE_NAME + OPEN_PARENTHESIS +
-                    CategoryPersistenceContract.CategoryEntry._ID + INTEGER_TYPE + PRIMARY_KEY + COMMA_SEP +
-                    CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_COUNTRY_ID + TEXT_TYPE + COMMA_SEP +
-                    CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_WORLD_CATEGORY_ID + TEXT_TYPE + COMMA_SEP +
-                    CategoryPersistenceContract.CategoryEntry.COLUMN_HAVE_DATA + BOOLEAN_TYPE +
+                    ProductPersistenceContract.ProductEntry.COLUMN_NAME_NUTRITION_GRADES + TEXT_TYPE + COMMA_SEP +
+                    ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSABLE_CATEGORIES + TEXT_TYPE + COMMA_SEP +
+                    ProductPersistenceContract.ProductEntry.COLUMN_NAME_BRANDS + TEXT_TYPE + COMMA_SEP +
+                    ProductPersistenceContract.ProductEntry.COLUMN_NAME_IMAGE_FRONT_SMALL_URL + TEXT_TYPE + COMMA_SEP +
+                    ProductPersistenceContract.ProductEntry.COLUMN_NAME_IMAGE_FRONT_URL + TEXT_TYPE +
                     CLOSE_PARENTHESIS;
 
     private static final String SQL_CREATE_EVENT =
             CREATE_TABLE + EventPersistenceContract.EventEntry.TABLE_NAME + OPEN_PARENTHESIS +
                     EventPersistenceContract.EventEntry._ID + INTEGER_TYPE + PRIMARY_KEY + COMMA_SEP +
-                    EventPersistenceContract.EventEntry.COLUMN_NAME_UNIX_TIMESTAMP + TEXT_TYPE + COMMA_SEP +
-                    EventPersistenceContract.EventEntry.COLUMN_NAME_STATUS + TEXT_TYPE + COMMA_SEP +
-                    EventPersistenceContract.EventEntry.COLUMN_NAME_PRODUCT_ID + TEXT_TYPE + COMMA_SEP +
-                    EventPersistenceContract.EventEntry.COLUMN_NAME_FAVORITE + BOOLEAN_TYPE + COMMA_SEP +
-
-                    FOREIGN_KEY + OPEN_PARENTHESIS + EventPersistenceContract.EventEntry.COLUMN_NAME_PRODUCT_ID +
-                    CLOSE_PARENTHESIS + REFERENCES + ProductPersistenceContract.ProductEntry.TABLE_NAME +
-                    OPEN_PARENTHESIS + ProductPersistenceContract.ProductEntry._ID + CLOSE_PARENTHESIS +
+                    EventPersistenceContract.EventEntry.COLUMN_NAME_TIMESTAMP + TEXT_TYPE + COMMA_SEP +
+                    EventPersistenceContract.EventEntry.COLUMN_NAME_BARCODE + TEXT_TYPE + COMMA_SEP +
+                    EventPersistenceContract.EventEntry.COLUMN_NAME_STATUS + TEXT_TYPE +
                     CLOSE_PARENTHESIS;
 
-    private static final String SQL_CREATE_PRODUCTSINCATEGORY =
-            CREATE_TABLE + ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.TABLE_NAME + OPEN_PARENTHESIS +
-                    ProductsInCategoryPersistenceContract.ProductsInCategoryEntry._ID + INTEGER_TYPE + PRIMARY_KEY + COMMA_SEP +
-                    ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.COLUMN_NAME_CATEGORY_ID + TEXT_TYPE + COMMA_SEP +
-                    ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.COLUMN_NAME_PRODUCT_ID + TEXT_TYPE + COMMA_SEP +
-
-                    FOREIGN_KEY + OPEN_PARENTHESIS + ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.COLUMN_NAME_CATEGORY_ID +
-                    CLOSE_PARENTHESIS + REFERENCES + CategoryPersistenceContract.CategoryEntry.TABLE_NAME +
-                    OPEN_PARENTHESIS + CategoryPersistenceContract.CategoryEntry._ID + CLOSE_PARENTHESIS + COMMA_SEP +
-
-                    FOREIGN_KEY + OPEN_PARENTHESIS + ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.COLUMN_NAME_PRODUCT_ID +
-                    CLOSE_PARENTHESIS + REFERENCES + ProductPersistenceContract.ProductEntry.TABLE_NAME +
-                    OPEN_PARENTHESIS + ProductPersistenceContract.ProductEntry._ID + CLOSE_PARENTHESIS +
+    private static final String SQL_CREATE_CATEGORY =
+            CREATE_TABLE + CategoryPersistenceContract.CategoryEntry.TABLE_NAME + OPEN_PARENTHESIS +
+                    CategoryPersistenceContract.CategoryEntry._ID + INTEGER_TYPE + PRIMARY_KEY + COMMA_SEP +
+                    CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_CATEGORY_KEY + TEXT_TYPE + COMMA_SEP +
+                    CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_CATEGORY_NAME + TEXT_TYPE +
                     CLOSE_PARENTHESIS;
 
-    private static final String SQL_CREATE_CATEGORIESINPRODUCT =
-            CREATE_TABLE + CategoriesInProductPersistenceContract.CategoriesInProductEntry.TABLE_NAME + OPEN_PARENTHESIS +
-                    CategoriesInProductPersistenceContract.CategoriesInProductEntry._ID + INTEGER_TYPE + PRIMARY_KEY + COMMA_SEP +
-                    CategoriesInProductPersistenceContract.CategoriesInProductEntry.COLUMN_NAME_CATEGORY_ID + TEXT_TYPE + COMMA_SEP +
-                    CategoriesInProductPersistenceContract.CategoriesInProductEntry.COLUMN_NAME_PRODUCT_ID + TEXT_TYPE + COMMA_SEP +
-                    CategoriesInProductPersistenceContract.CategoriesInProductEntry.COLUMN_NAME_RANK + INTEGER_TYPE + COMMA_SEP +
-                    CategoriesInProductPersistenceContract.CategoriesInProductEntry.COLUMN_NAME_CATEGORY_NAME + TEXT_TYPE + COMMA_SEP +
+    private static final String SQL_CREATE_CATEGORYTAG =
+            CREATE_TABLE + CategoryTagPersistenceContract.CategoryTagEntry.TABLE_NAME + OPEN_PARENTHESIS +
+                    CategoryTagPersistenceContract.CategoryTagEntry._ID + INTEGER_TYPE + PRIMARY_KEY + COMMA_SEP +
+                    CategoryTagPersistenceContract.CategoryTagEntry.COLUMN_NAME_BARCODE + TEXT_TYPE + COMMA_SEP +
+                    CategoryTagPersistenceContract.CategoryTagEntry.COLUMN_NAME_CATEGORY_KEY + TEXT_TYPE + COMMA_SEP +
+                    CategoryTagPersistenceContract.CategoryTagEntry.COLUMN_NAME_RANK + INTEGER_TYPE +
+                    CLOSE_PARENTHESIS;
 
-                    FOREIGN_KEY + OPEN_PARENTHESIS + CategoriesInProductPersistenceContract.CategoriesInProductEntry.COLUMN_NAME_CATEGORY_ID +
-                    CLOSE_PARENTHESIS + REFERENCES + CategoryPersistenceContract.CategoryEntry.TABLE_NAME +
-                    OPEN_PARENTHESIS + CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_WORLD_CATEGORY_ID + CLOSE_PARENTHESIS + COMMA_SEP +
+    private static final String SQL_CREATE_COUNTRYCATEGORY =
+            CREATE_TABLE + CountryCategoryPersistenceContract.CountryCategoryEntry.TABLE_NAME + OPEN_PARENTHESIS +
+                    CountryCategoryPersistenceContract.CountryCategoryEntry._ID + INTEGER_TYPE + PRIMARY_KEY + COMMA_SEP +
+                    CountryCategoryPersistenceContract.CountryCategoryEntry.COLUMN_NAME_CATEGORY_KEY + TEXT_TYPE + COMMA_SEP +
+                    CountryCategoryPersistenceContract.CountryCategoryEntry.COLUMN_NAME_COUNTRY_KEY + TEXT_TYPE + COMMA_SEP +
+                    CountryCategoryPersistenceContract.CountryCategoryEntry.COLUMN_NAME_SUM_OF_PRODUCTS + INTEGER_TYPE +
+                    CLOSE_PARENTHESIS;
 
-                    FOREIGN_KEY + OPEN_PARENTHESIS + CategoriesInProductPersistenceContract.CategoriesInProductEntry.COLUMN_NAME_PRODUCT_ID +
-                    CLOSE_PARENTHESIS + REFERENCES + ProductPersistenceContract.ProductEntry.TABLE_NAME +
-                    OPEN_PARENTHESIS + ProductPersistenceContract.ProductEntry._ID + CLOSE_PARENTHESIS +
+    private static final String SQL_CREATE_SUGGESTION =
+            CREATE_TABLE + SuggestionPersistenceContract.SuggestionEntry.TABLE_NAME + OPEN_PARENTHESIS +
+                    SuggestionPersistenceContract.SuggestionEntry._ID + INTEGER_TYPE + PRIMARY_KEY + COMMA_SEP +
+                    SuggestionPersistenceContract.SuggestionEntry.COLUMN_NAME_BARCODE + TEXT_TYPE + COMMA_SEP +
+                    SuggestionPersistenceContract.SuggestionEntry.COLUMN_NAME_CATEGORY_KEY + TEXT_TYPE + COMMA_SEP +
+                    SuggestionPersistenceContract.SuggestionEntry.COLUMN_NAME_COUNTRY_KEY + TEXT_TYPE +
                     CLOSE_PARENTHESIS;
 
     public LocalDbHelper(Context context) {
@@ -117,10 +108,11 @@ public class LocalDbHelper extends SQLiteOpenHelper {
 
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_PRODUCT);
-        db.execSQL(SQL_CREATE_CATEGORY);
         db.execSQL(SQL_CREATE_EVENT);
-        db.execSQL(SQL_CREATE_PRODUCTSINCATEGORY);
-        db.execSQL(SQL_CREATE_CATEGORIESINPRODUCT);
+        db.execSQL(SQL_CREATE_CATEGORY);
+        db.execSQL(SQL_CREATE_CATEGORYTAG);
+        db.execSQL(SQL_CREATE_COUNTRYCATEGORY);
+        db.execSQL(SQL_CREATE_SUGGESTION);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

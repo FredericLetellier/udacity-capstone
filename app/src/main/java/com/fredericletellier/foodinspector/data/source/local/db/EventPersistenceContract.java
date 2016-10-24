@@ -50,17 +50,15 @@ public final class EventPersistenceContract {
     public static abstract class EventEntry implements BaseColumns {
 
         public static final String TABLE_NAME = "event";
-        public static final String COLUMN_NAME_UNIX_TIMESTAMP = "unixtimestamp";
+        public static final String COLUMN_NAME_TIMESTAMP = "timestamp";
+        public static final String COLUMN_NAME_BARCODE = "barcode";
         public static final String COLUMN_NAME_STATUS = "status";
-        public static final String COLUMN_NAME_PRODUCT_ID = "productid";
-        public static final String COLUMN_NAME_FAVORITE = "favorite";
         public static final Uri CONTENT_EVENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
         public static String[] EVENT_COLUMNS = new String[]{
                 EventPersistenceContract.EventEntry._ID,
-                EventPersistenceContract.EventEntry.COLUMN_NAME_UNIX_TIMESTAMP,
-                EventPersistenceContract.EventEntry.COLUMN_NAME_STATUS,
-                EventPersistenceContract.EventEntry.COLUMN_NAME_PRODUCT_ID,
-                EventPersistenceContract.EventEntry.COLUMN_NAME_FAVORITE};
+                EventPersistenceContract.EventEntry.COLUMN_NAME_TIMESTAMP,
+                EventPersistenceContract.EventEntry.COLUMN_NAME_BARCODE,
+                EventPersistenceContract.EventEntry.COLUMN_NAME_STATUS};
 
         public static Uri buildEventUriWith(long id) {
             return ContentUris.withAppendedId(CONTENT_EVENT_URI, id);

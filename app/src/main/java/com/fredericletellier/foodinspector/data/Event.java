@@ -18,6 +18,11 @@
 
 package com.fredericletellier.foodinspector.data;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+
+import com.fredericletellier.foodinspector.data.source.local.db.EventPersistenceContract;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -29,10 +34,10 @@ public class Event {
     public static final String STATUS_NOT_IN_OFF_DATABASE = "PRODUCT_IS_NOT_IN_OPENFOODFACTS_DATABASE";
     public static final String STATUS_NO_NETWORK = "NO_NETWORK";
 
-    private long id;
-    private long timestamp;
-    private String barcode;
-    private String status;
+    private long mId;
+    private long mTimestamp;
+    private String mBarcode;
+    private String mStatus;
 
     /**
      * No args constructor for use in serialization
@@ -49,15 +54,41 @@ public class Event {
      * @param barcode
      */
     public Event(long id, long timestamp, String barcode, String status) {
-        this.id = id;
-        this.timestamp = timestamp;
-        this.barcode = barcode;
-        this.status = status;
+        this.mId = id;
+        this.mTimestamp = timestamp;
+        this.mBarcode = barcode;
+        this.mStatus = status;
     }
 
-    //TODO public static Event from(Cursor cursor)
+    /**
+     * Use this constructor to return a Event from a Cursor
+     *
+     * @return
+     */
+    public static Event from(Cursor cursor) {
+        long id = cursor.getLong(cursor.getColumnIndexOrThrow(
+                EventPersistenceContract.EventEntry._ID));
+        long timestamp = cursor.getLong(cursor.getColumnIndexOrThrow(
+                EventPersistenceContract.EventEntry.COLUMN_NAME_TIMESTAMP));
+        String barcode = cursor.getString(cursor.getColumnIndexOrThrow(
+                EventPersistenceContract.EventEntry.COLUMN_NAME_BARCODE));
+        String status = cursor.getString(cursor.getColumnIndexOrThrow(
+                EventPersistenceContract.EventEntry.COLUMN_NAME_STATUS));
+        return new Event(id, timestamp, barcode, status);
+    }
 
-    //TODO public static Event from(ContentValues values)
+    /**
+     * Use this constructor to return a Event from ContentValues
+     *
+     * @return
+     */
+    public static Event from(ContentValues values) {
+        long id = values.getAsLong(EventPersistenceContract.EventEntry._ID);
+        long timestamp = values.getAsLong(EventPersistenceContract.EventEntry.COLUMN_NAME_TIMESTAMP);
+        String barcode = values.getAsString(EventPersistenceContract.EventEntry.COLUMN_NAME_BARCODE);
+        String status = values.getAsString(EventPersistenceContract.EventEntry.COLUMN_NAME_STATUS);
+        return new Event(id, timestamp, barcode, status);
+    }
 
     /**
      *
@@ -65,7 +96,7 @@ public class Event {
      * The id
      */
     public long getId() {
-        return id;
+        return mId;
     }
 
     /**
@@ -74,11 +105,11 @@ public class Event {
      * The id
      */
     public void setId(long id) {
-        this.id = id;
+        this.mId = id;
     }
 
     public Event withId(long id) {
-        this.id = id;
+        this.mId = id;
         return this;
     }
 
@@ -88,7 +119,7 @@ public class Event {
      * The timestamp
      */
     public long getTimestamp() {
-        return timestamp;
+        return mTimestamp;
     }
 
     /**
@@ -97,11 +128,11 @@ public class Event {
      * The timestamp
      */
     public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+        this.mTimestamp = timestamp;
     }
 
     public Event withTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+        this.mTimestamp = timestamp;
         return this;
     }
 
@@ -111,7 +142,7 @@ public class Event {
      * The barcode
      */
     public String getBarcode() {
-        return barcode;
+        return mBarcode;
     }
 
     /**
@@ -120,11 +151,11 @@ public class Event {
      * The barcode
      */
     public void setBarcode(String barcode) {
-        this.barcode = barcode;
+        this.mBarcode = barcode;
     }
 
     public Event withBarcode(String barcode) {
-        this.barcode = barcode;
+        this.mBarcode = barcode;
         return this;
     }
 
@@ -134,7 +165,7 @@ public class Event {
      * The status
      */
     public String getStatus() {
-        return status;
+        return mStatus;
     }
 
     /**
@@ -143,11 +174,11 @@ public class Event {
      * The status
      */
     public void setStatus(String status) {
-        this.status = status;
+        this.mStatus = status;
     }
 
     public Event withStatus(String status) {
-        this.status = status;
+        this.mStatus = status;
         return this;
     }
 
@@ -158,7 +189,7 @@ public class Event {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(id).append(timestamp).append(barcode).append(status).toHashCode();
+        return new HashCodeBuilder().append(mId).append(mTimestamp).append(mBarcode).append(mStatus).toHashCode();
     }
 
     @Override
@@ -170,7 +201,7 @@ public class Event {
             return false;
         }
         Event rhs = ((Event) other);
-        return new EqualsBuilder().append(id, rhs.id).append(timestamp, rhs.timestamp).append(barcode, rhs.barcode).append(status, rhs.status).isEquals();
+        return new EqualsBuilder().append(mId, rhs.mId).append(mTimestamp, rhs.mTimestamp).append(mBarcode, rhs.mBarcode).append(mStatus, rhs.mStatus).isEquals();
     }
 
 }

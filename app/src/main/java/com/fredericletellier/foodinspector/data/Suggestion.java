@@ -18,16 +18,21 @@
 
 package com.fredericletellier.foodinspector.data;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+
+import com.fredericletellier.foodinspector.data.source.local.db.SuggestionPersistenceContract;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class Suggestion {
 
-    private long id;
-    private String barcode;
-    private String categoryKey;
-    private String countryKey;
+    private long mId;
+    private String mBarcode;
+    private String mCategoryKey;
+    private String mCountryKey;
 
     /**
      * No args constructor for use in serialization
@@ -44,15 +49,41 @@ public class Suggestion {
      * @param countryKey
      */
     public Suggestion(long id, String barcode, String categoryKey, String countryKey) {
-        this.id = id;
-        this.barcode = barcode;
-        this.categoryKey = categoryKey;
-        this.countryKey = countryKey;
+        this.mId = id;
+        this.mBarcode = barcode;
+        this.mCategoryKey = categoryKey;
+        this.mCountryKey = countryKey;
     }
 
-    //TODO public static Suggestion from(Cursor cursor)
+    /**
+     * Use this constructor to return a Suggestion from a Cursor
+     *
+     * @return
+     */
+    public static Suggestion from(Cursor cursor) {
+        long id = cursor.getLong(cursor.getColumnIndexOrThrow(
+                SuggestionPersistenceContract.SuggestionEntry._ID));
+        String barcode = cursor.getString(cursor.getColumnIndexOrThrow(
+                SuggestionPersistenceContract.SuggestionEntry.COLUMN_NAME_BARCODE));
+        String categoryKey = cursor.getString(cursor.getColumnIndexOrThrow(
+                SuggestionPersistenceContract.SuggestionEntry.COLUMN_NAME_CATEGORY_KEY));
+        String countryKey = cursor.getString(cursor.getColumnIndexOrThrow(
+                SuggestionPersistenceContract.SuggestionEntry.COLUMN_NAME_COUNTRY_KEY));
+        return new Suggestion(id, barcode, categoryKey, countryKey);
+    }
 
-    //TODO public static Suggestion from(ContentValues values)
+    /**
+     * Use this constructor to return a Suggestion from ContentValues
+     *
+     * @return
+     */
+    public static Suggestion from(ContentValues values) {
+        long id = values.getAsLong(SuggestionPersistenceContract.SuggestionEntry._ID);
+        String barcode = values.getAsString(SuggestionPersistenceContract.SuggestionEntry.COLUMN_NAME_BARCODE);
+        String categoryKey = values.getAsString(SuggestionPersistenceContract.SuggestionEntry.COLUMN_NAME_CATEGORY_KEY);
+        String countryKey = values.getAsString(SuggestionPersistenceContract.SuggestionEntry.COLUMN_NAME_COUNTRY_KEY);
+        return new Suggestion(id, barcode, categoryKey, countryKey);
+    }
 
     /**
      *
@@ -60,7 +91,7 @@ public class Suggestion {
      * The id
      */
     public long getId() {
-        return id;
+        return mId;
     }
 
     /**
@@ -69,11 +100,11 @@ public class Suggestion {
      * The id
      */
     public void setId(long id) {
-        this.id = id;
+        this.mId = id;
     }
 
     public Suggestion withId(long id) {
-        this.id = id;
+        this.mId = id;
         return this;
     }
 
@@ -83,7 +114,7 @@ public class Suggestion {
      * The barcode
      */
     public String getBarcode() {
-        return barcode;
+        return mBarcode;
     }
 
     /**
@@ -92,11 +123,11 @@ public class Suggestion {
      * The barcode
      */
     public void setBarcode(String barcode) {
-        this.barcode = barcode;
+        this.mBarcode = barcode;
     }
 
     public Suggestion withBarcode(String barcode) {
-        this.barcode = barcode;
+        this.mBarcode = barcode;
         return this;
     }
 
@@ -106,7 +137,7 @@ public class Suggestion {
      * The categoryKey
      */
     public String getCategoryKey() {
-        return categoryKey;
+        return mCategoryKey;
     }
 
     /**
@@ -115,11 +146,11 @@ public class Suggestion {
      * The category-key
      */
     public void setCategoryKey(String categoryKey) {
-        this.categoryKey = categoryKey;
+        this.mCategoryKey = categoryKey;
     }
 
     public Suggestion withCategoryKey(String categoryKey) {
-        this.categoryKey = categoryKey;
+        this.mCategoryKey = categoryKey;
         return this;
     }
 
@@ -129,7 +160,7 @@ public class Suggestion {
      * The countryKey
      */
     public String getCountryKey() {
-        return countryKey;
+        return mCountryKey;
     }
 
     /**
@@ -138,11 +169,11 @@ public class Suggestion {
      * The country-key
      */
     public void setCountryKey(String countryKey) {
-        this.countryKey = countryKey;
+        this.mCountryKey = countryKey;
     }
 
     public Suggestion withCountryKey(String countryKey) {
-        this.countryKey = countryKey;
+        this.mCountryKey = countryKey;
         return this;
     }
 
@@ -153,7 +184,7 @@ public class Suggestion {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(id).append(barcode).append(categoryKey).append(countryKey).toHashCode();
+        return new HashCodeBuilder().append(mId).append(mBarcode).append(mCategoryKey).append(mCountryKey).toHashCode();
     }
 
     @Override
@@ -165,7 +196,7 @@ public class Suggestion {
             return false;
         }
         Suggestion rhs = ((Suggestion) other);
-        return new EqualsBuilder().append(id, rhs.id).append(barcode, rhs.barcode).append(categoryKey, rhs.categoryKey).append(countryKey, rhs.countryKey).isEquals();
+        return new EqualsBuilder().append(mId, rhs.mId).append(mBarcode, rhs.mBarcode).append(mCategoryKey, rhs.mCategoryKey).append(mCountryKey, rhs.mCountryKey).isEquals();
     }
 
 }

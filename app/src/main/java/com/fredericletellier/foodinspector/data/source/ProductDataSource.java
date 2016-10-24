@@ -77,6 +77,14 @@ public interface ProductDataSource {
 
     }
 
+    interface UpdateProductBookmarkCallback {
+
+        void onProductBookmarkUpdated(Product product);
+
+        void onError(Throwable throwable);
+
+    }
+
     void getProduct(@NonNull String barcode, @NonNull GetProductCallback getProductCallback);
 
     void getProducts(@NonNull String categoryKey, @NonNull String countryKey, @NonNull String nutritionGradeValue, @NonNull Integer offsetProducts, @NonNull Integer numberOfProducts, @NonNull GetProductsCallback getProductsCallback);
@@ -88,5 +96,7 @@ public interface ProductDataSource {
     void saveProduct(@NonNull Product product, @NonNull SaveProductCallback saveProductCallback);
 
     void parseProduct(@NonNull String barcode, @NonNull ParseProductCallback parseProductCallback);
+
+    void updateProductBookmark(@NonNull String barcode, @NonNull UpdateProductBookmarkCallback updateProductBookmarkCallback);
 
 }

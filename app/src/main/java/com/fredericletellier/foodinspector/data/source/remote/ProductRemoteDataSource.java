@@ -118,4 +118,9 @@ public class ProductRemoteDataSource implements ProductDataSource {
     public void parseProduct(@NonNull String barcode, @NonNull ParseProductCallback parseProductCallback) {
         //no-op in remote
     }
+
+    @Override
+    public void updateProductBookmark(@NonNull String barcode, @NonNull UpdateProductBookmarkCallback updateProductBookmarkCallback) {
+        //no-op in remote
+    }
 }

@@ -18,7 +18,6 @@
 
 package com.fredericletellier.foodinspector.data.source.local.db;
 
-
 import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -26,13 +25,13 @@ import android.provider.BaseColumns;
 import com.fredericletellier.foodinspector.BuildConfig;
 
 /**
- * The contract used for the db to save the category locally.
+ * The contract used for the db to save the link between one product and multiple categories locally.
  */
-public final class CategoryPersistenceContract {
+public class CategoryTagPersistenceContract {
 
     public static final String CONTENT_AUTHORITY = BuildConfig.APPLICATION_ID;
-    public static final String CONTENT_CATEGORY_TYPE = "vnd.android.cursor.dir/" + CONTENT_AUTHORITY + "/" + CategoryEntry.TABLE_NAME;
-    public static final String CONTENT_CATEGORY_ITEM_TYPE = "vnd.android.cursor.item/" + CONTENT_AUTHORITY + "/" + CategoryEntry.TABLE_NAME;
+    public static final String CONTENT_CATEGORYTAG_TYPE = "vnd.android.cursor.dir/" + CONTENT_AUTHORITY + "/" + CategoryTagEntry.TABLE_NAME;
+    public static final String CONTENT_CATEGORYTAG_ITEM_TYPE = "vnd.android.cursor.item/" + CONTENT_AUTHORITY + "/" + CategoryTagEntry.TABLE_NAME;
     public static final String VND_ANDROID_CURSOR_ITEM_VND = "vnd.android.cursor.item/vnd." + CONTENT_AUTHORITY + ".";
     private static final String CONTENT_SCHEME = "content://";
     public static final Uri BASE_CONTENT_URI = Uri.parse(CONTENT_SCHEME + CONTENT_AUTHORITY);
@@ -41,38 +40,38 @@ public final class CategoryPersistenceContract {
 
     // To prevent someone from accidentally instantiating the contract class,
     // give it an empty constructor.
-    private CategoryPersistenceContract() {}
+    private CategoryTagPersistenceContract() {}
 
-    public static Uri getBaseCategoryUri(String categoryId) {
-        return Uri.parse(CONTENT_SCHEME + CONTENT_CATEGORY_ITEM_TYPE + SEPARATOR + categoryId);
+    public static Uri getBaseCategoryTagUri(String eventId) {
+        return Uri.parse(CONTENT_SCHEME + CONTENT_CATEGORYTAG_ITEM_TYPE + SEPARATOR + eventId);
     }
 
     /* Inner class that defines the table contents */
-    public static abstract class CategoryEntry implements BaseColumns {
+    public static abstract class CategoryTagEntry implements BaseColumns {
 
-        public static final String TABLE_NAME = "category";
+        public static final String TABLE_NAME = "categorytag";
+        public static final String COLUMN_NAME_BARCODE = "barcode";
         public static final String COLUMN_NAME_CATEGORY_KEY = "categoryKey";
-        public static final String COLUMN_NAME_CATEGORY_NAME = "categoryName";
-        public static final Uri CONTENT_CATEGORY_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
-        public static String[] CATEGORY_COLUMNS = new String[]{
-                CategoryPersistenceContract.CategoryEntry._ID,
-                CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_CATEGORY_KEY,
-                CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_CATEGORY_NAME};
+        public static final String COLUMN_NAME_RANK = "rank";
+        public static final Uri CONTENT_CATEGORYTAG_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
+        public static String[] CATEGORYTAG_COLUMNS = new String[]{
+                CategoryTagPersistenceContract.CategoryTagEntry._ID,
+                CategoryTagPersistenceContract.CategoryTagEntry.COLUMN_NAME_BARCODE,
+                CategoryTagPersistenceContract.CategoryTagEntry.COLUMN_NAME_CATEGORY_KEY,
+                CategoryTagPersistenceContract.CategoryTagEntry.COLUMN_NAME_RANK};
 
-        public static Uri buildCategoryUriWith(long id) {
-            return ContentUris.withAppendedId(CONTENT_CATEGORY_URI, id);
+        public static Uri buildCategoryTagUriWith(long id) {
+            return ContentUris.withAppendedId(CONTENT_CATEGORYTAG_URI, id);
         }
 
-        public static Uri buildCategoryUriWith(String id) {
-            Uri uri = CONTENT_CATEGORY_URI.buildUpon().appendPath(id).build();
+        public static Uri buildCategoryTagUriWith(String id) {
+            Uri uri = CONTENT_CATEGORYTAG_URI.buildUpon().appendPath(id).build();
             return uri;
         }
 
-        public static Uri buildCategoryUri() {
-            return CONTENT_CATEGORY_URI.buildUpon().build();
+        public static Uri buildCategoryTagUri() {
+            return CONTENT_CATEGORYTAG_URI.buildUpon().build();
         }
 
     }
-
 }
-

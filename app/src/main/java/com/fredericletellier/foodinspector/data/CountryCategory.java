@@ -18,16 +18,21 @@
 
 package com.fredericletellier.foodinspector.data;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+
+import com.fredericletellier.foodinspector.data.source.local.db.CountryCategoryPersistenceContract;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class CountryCategory {
 
-    private long id;
-    private String categoryKey;
-    private String countryKey;
-    private int sumOfProducts;
+    private long mId;
+    private String mCategoryKey;
+    private String mCountryKey;
+    private int mSumOfProducts;
 
     /**
      * No args constructor for use in serialization
@@ -44,15 +49,41 @@ public class CountryCategory {
      * @param countryKey
      */
     public CountryCategory(long id, String categoryKey, String countryKey, int sumOfProducts) {
-        this.id = id;
-        this.categoryKey = categoryKey;
-        this.countryKey = countryKey;
-        this.sumOfProducts = sumOfProducts;
+        this.mId = id;
+        this.mCategoryKey = categoryKey;
+        this.mCountryKey = countryKey;
+        this.mSumOfProducts = sumOfProducts;
     }
 
-    //TODO public static CountryCategory from(Cursor cursor)
+    /**
+     * Use this constructor to return a CountryCategory from a Cursor
+     *
+     * @return
+     */
+    public static CountryCategory from(Cursor cursor) {
+        long id = cursor.getLong(cursor.getColumnIndexOrThrow(
+                CountryCategoryPersistenceContract.CountryCategoryEntry._ID));
+        String categoryKey = cursor.getString(cursor.getColumnIndexOrThrow(
+                CountryCategoryPersistenceContract.CountryCategoryEntry.COLUMN_NAME_CATEGORY_KEY));
+        String countryKey = cursor.getString(cursor.getColumnIndexOrThrow(
+                CountryCategoryPersistenceContract.CountryCategoryEntry.COLUMN_NAME_COUNTRY_KEY));
+        int sumOfProducts = cursor.getInt(cursor.getColumnIndexOrThrow(
+                CountryCategoryPersistenceContract.CountryCategoryEntry.COLUMN_NAME_SUM_OF_PRODUCTS));
+        return new CountryCategory(id, categoryKey, countryKey, sumOfProducts);
+    }
 
-    //TODO public static CountryCategory from(ContentValues values)
+    /**
+     * Use this constructor to return a CountryCategory from ContentValues
+     *
+     * @return
+     */
+    public static CountryCategory from(ContentValues values) {
+        long id = values.getAsLong(CountryCategoryPersistenceContract.CountryCategoryEntry._ID);
+        String categoryKey = values.getAsString(CountryCategoryPersistenceContract.CountryCategoryEntry.COLUMN_NAME_CATEGORY_KEY);
+        String countryKey = values.getAsString(CountryCategoryPersistenceContract.CountryCategoryEntry.COLUMN_NAME_COUNTRY_KEY);
+        int sumOfProducts = values.getAsInteger(CountryCategoryPersistenceContract.CountryCategoryEntry.COLUMN_NAME_SUM_OF_PRODUCTS);
+        return new CountryCategory(id, categoryKey, countryKey, sumOfProducts);
+    }
 
     /**
      *
@@ -60,7 +91,7 @@ public class CountryCategory {
      * The id
      */
     public long getId() {
-        return id;
+        return mId;
     }
 
     /**
@@ -69,11 +100,11 @@ public class CountryCategory {
      * The id
      */
     public void setId(long id) {
-        this.id = id;
+        this.mId = id;
     }
 
     public CountryCategory withId(long id) {
-        this.id = id;
+        this.mId = id;
         return this;
     }
 
@@ -83,7 +114,7 @@ public class CountryCategory {
      * The categoryKey
      */
     public String getCategoryKey() {
-        return categoryKey;
+        return mCategoryKey;
     }
 
     /**
@@ -92,11 +123,11 @@ public class CountryCategory {
      * The category-key
      */
     public void setCategoryKey(String categoryKey) {
-        this.categoryKey = categoryKey;
+        this.mCategoryKey = categoryKey;
     }
 
     public CountryCategory withCategoryKey(String categoryKey) {
-        this.categoryKey = categoryKey;
+        this.mCategoryKey = categoryKey;
         return this;
     }
 
@@ -106,7 +137,7 @@ public class CountryCategory {
      * The countryKey
      */
     public String getCountryKey() {
-        return countryKey;
+        return mCountryKey;
     }
 
     /**
@@ -115,11 +146,11 @@ public class CountryCategory {
      * The country-key
      */
     public void setCountryKey(String countryKey) {
-        this.countryKey = countryKey;
+        this.mCountryKey = countryKey;
     }
 
     public CountryCategory withCountryKey(String countryKey) {
-        this.countryKey = countryKey;
+        this.mCountryKey = countryKey;
         return this;
     }
 
@@ -129,7 +160,7 @@ public class CountryCategory {
      * The sumOfProducts
      */
     public long getSumOfProducts() {
-        return sumOfProducts;
+        return mSumOfProducts;
     }
 
     /**
@@ -138,11 +169,11 @@ public class CountryCategory {
      * The sum-of-products
      */
     public void setSumOfProducts(int sumOfProducts) {
-        this.sumOfProducts = sumOfProducts;
+        this.mSumOfProducts = sumOfProducts;
     }
 
     public CountryCategory withSumOfProducts(int sumOfProducts) {
-        this.sumOfProducts = sumOfProducts;
+        this.mSumOfProducts = sumOfProducts;
         return this;
     }
 
@@ -153,7 +184,7 @@ public class CountryCategory {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(id).append(categoryKey).append(countryKey).append(sumOfProducts).toHashCode();
+        return new HashCodeBuilder().append(mId).append(mCategoryKey).append(mCountryKey).append(mSumOfProducts).toHashCode();
     }
 
     @Override
@@ -165,7 +196,7 @@ public class CountryCategory {
             return false;
         }
         CountryCategory rhs = ((CountryCategory) other);
-        return new EqualsBuilder().append(id, rhs.id).append(categoryKey, rhs.categoryKey).append(countryKey, rhs.countryKey).append(sumOfProducts, rhs.sumOfProducts).isEquals();
+        return new EqualsBuilder().append(mId, rhs.mId).append(mCategoryKey, rhs.mCategoryKey).append(mCountryKey, rhs.mCountryKey).append(mSumOfProducts, rhs.mSumOfProducts).isEquals();
     }
 
 }

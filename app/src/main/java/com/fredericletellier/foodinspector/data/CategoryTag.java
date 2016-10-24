@@ -18,16 +18,21 @@
 
 package com.fredericletellier.foodinspector.data;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+
+import com.fredericletellier.foodinspector.data.source.local.db.CategoryTagPersistenceContract;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class CategoryTag {
 
-    private long id;
-    private String barcode;
-    private String categoryKey;
-    private int rank;
+    private long mId;
+    private String mBarcode;
+    private String mCategoryKey;
+    private int mRank;
 
     /**
      * No args constructor for use in serialization
@@ -44,16 +49,41 @@ public class CategoryTag {
      * @param barcode
      */
     public CategoryTag(long id, String barcode, String categoryKey, int rank) {
-        this.id = id;
-        this.barcode = barcode;
-        this.categoryKey = categoryKey;
-        this.rank = rank;
+        this.mId = id;
+        this.mBarcode = barcode;
+        this.mCategoryKey = categoryKey;
+        this.mRank = rank;
     }
 
+    /**
+     * Use this constructor to return a CategoryTag from a Cursor
+     *
+     * @return
+     */
+    public static CategoryTag from(Cursor cursor) {
+        long id = cursor.getLong(cursor.getColumnIndexOrThrow(
+                CategoryTagPersistenceContract.CategoryTagEntry._ID));
+        String barcode = cursor.getString(cursor.getColumnIndexOrThrow(
+                CategoryTagPersistenceContract.CategoryTagEntry.COLUMN_NAME_BARCODE));
+        String categoryKey = cursor.getString(cursor.getColumnIndexOrThrow(
+                CategoryTagPersistenceContract.CategoryTagEntry.COLUMN_NAME_CATEGORY_KEY));
+        int rank = cursor.getInt(cursor.getColumnIndexOrThrow(
+                CategoryTagPersistenceContract.CategoryTagEntry.COLUMN_NAME_RANK));
+        return new CategoryTag(id, barcode, categoryKey, rank);
+    }
 
-    //TODO public static CategoryTag from(Cursor cursor)
-
-    //TODO public static CategoryTag from(ContentValues values)
+    /**
+     * Use this constructor to return a CategoryTag from ContentValues
+     *
+     * @return
+     */
+    public static CategoryTag from(ContentValues values) {
+        long id = values.getAsLong(CategoryTagPersistenceContract.CategoryTagEntry._ID);
+        String barcode = values.getAsString(CategoryTagPersistenceContract.CategoryTagEntry.COLUMN_NAME_BARCODE);
+        String categoryKey = values.getAsString(CategoryTagPersistenceContract.CategoryTagEntry.COLUMN_NAME_CATEGORY_KEY);
+        int rank = values.getAsInteger(CategoryTagPersistenceContract.CategoryTagEntry.COLUMN_NAME_RANK);
+        return new CategoryTag(id, barcode, categoryKey, rank);
+    }
 
     /**
      *
@@ -61,7 +91,7 @@ public class CategoryTag {
      * The id
      */
     public long getId() {
-        return id;
+        return mId;
     }
 
     /**
@@ -70,11 +100,11 @@ public class CategoryTag {
      * The id
      */
     public void setId(long id) {
-        this.id = id;
+        this.mId = id;
     }
 
     public CategoryTag withId(long id) {
-        this.id = id;
+        this.mId = id;
         return this;
     }
 
@@ -84,7 +114,7 @@ public class CategoryTag {
      * The barcode
      */
     public String getBarcode() {
-        return barcode;
+        return mBarcode;
     }
 
     /**
@@ -93,11 +123,11 @@ public class CategoryTag {
      * The barcode
      */
     public void setBarcode(String barcode) {
-        this.barcode = barcode;
+        this.mBarcode = barcode;
     }
 
     public CategoryTag withBarcode(String barcode) {
-        this.barcode = barcode;
+        this.mBarcode = barcode;
         return this;
     }
 
@@ -107,7 +137,7 @@ public class CategoryTag {
      * The categoryKey
      */
     public String getCategoryKey() {
-        return categoryKey;
+        return mCategoryKey;
     }
 
     /**
@@ -116,11 +146,11 @@ public class CategoryTag {
      * The category-key
      */
     public void setCategoryKey(String categoryKey) {
-        this.categoryKey = categoryKey;
+        this.mCategoryKey = categoryKey;
     }
 
     public CategoryTag withCategoryKey(String categoryKey) {
-        this.categoryKey = categoryKey;
+        this.mCategoryKey = categoryKey;
         return this;
     }
 
@@ -130,7 +160,7 @@ public class CategoryTag {
      * The rank
      */
     public long getRank() {
-        return rank;
+        return mRank;
     }
 
     /**
@@ -139,11 +169,11 @@ public class CategoryTag {
      * The rank
      */
     public void setRank(int rank) {
-        this.rank = rank;
+        this.mRank = rank;
     }
 
     public CategoryTag withRank(int rank) {
-        this.rank = rank;
+        this.mRank = rank;
         return this;
     }
 
@@ -154,7 +184,7 @@ public class CategoryTag {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(id).append(barcode).append(categoryKey).append(rank).toHashCode();
+        return new HashCodeBuilder().append(mId).append(mBarcode).append(mCategoryKey).append(mRank).toHashCode();
     }
 
     @Override
@@ -166,7 +196,7 @@ public class CategoryTag {
             return false;
         }
         CategoryTag rhs = ((CategoryTag) other);
-        return new EqualsBuilder().append(id, rhs.id).append(barcode, rhs.barcode).append(categoryKey, rhs.categoryKey).append(rank, rhs.rank).isEquals();
+        return new EqualsBuilder().append(mId, rhs.mId).append(mBarcode, rhs.mBarcode).append(mCategoryKey, rhs.mCategoryKey).append(mRank, rhs.mRank).isEquals();
     }
 
 }
