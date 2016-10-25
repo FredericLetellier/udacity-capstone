@@ -87,6 +87,6 @@ public interface CountryCategoryDataSource {
 
     void saveCountryCategory(@NonNull CountryCategory countryCategory, @NonNull SaveCountryCategoryCallback saveCountryCategoryCallback);
 
-    void getCountryCategoryOfProduct(@NonNull String barcode, @NonNull GetCountryCategoryOfProductCallback getCountryCategoryOfProductCallback);
+    void getCountryCategoryOfProduct(@NonNull String barcode, @NonNull String countryKey, @NonNull GetCountryCategoryOfProductCallback getCountryCategoryOfProductCallback);
 
 }

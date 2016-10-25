@@ -23,6 +23,7 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
@@ -38,6 +39,7 @@ public class FoodInspectorContentProvider extends ContentProvider {
 
     private static final int PRODUCT = 100;
     private static final int PRODUCT_ITEM = 101;
+    private static final int SUGGESTION_OF_PRODUCTS = 102;
     private static final int EVENT = 200;
     private static final int EVENT_ITEM = 201;
     private static final int CATEGORY = 300;
@@ -49,30 +51,22 @@ public class FoodInspectorContentProvider extends ContentProvider {
     private static final int SUGGESTION = 600;
     private static final int SUGGESTION_ITEM = 601;
 
-    //TODO Reuse
-    // private static final int PRODUCTSINCATEGORY_JOIN_PRODUCT = 102;
-
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private LocalDbHelper mLocalDbHelper;
 
-    //TODO Reuse
-    // private static final SQLiteQueryBuilder sProductsInCategoryQueryBuilder;
+    private static final SQLiteQueryBuilder sSuggestionOfProductsBuilder;
 
-    //TODO Reuse
-    //static{
-    //    sProductsInCategoryQueryBuilder = new SQLiteQueryBuilder();
-    //
-    //    sProductsInCategoryQueryBuilder.setTables(
-    //            ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.TABLE_NAME + " INNER JOIN " +
-    //                    ProductPersistenceContract.ProductEntry.TABLE_NAME +
-    //                    " ON " + ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.TABLE_NAME +
-    //                    "." + ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.COLUMN_NAME_PRODUCT_ID +
-    //                    " = " + ProductPersistenceContract.ProductEntry.TABLE_NAME +
-    //                    "." + ProductPersistenceContract.ProductEntry._ID);
-    //}
+    static{
+        sSuggestionOfProductsBuilder = new SQLiteQueryBuilder();
 
-    //        matcher.addURI(authority, ProductPersistenceContract.ProductEntry.PRODUCTSINCATEGORY_JOIN_PRODUCT, PRODUCTSINCATEGORY_JOIN_PRODUCT);
-
+        sSuggestionOfProductsBuilder.setTables(
+                ProductPersistenceContract.ProductEntry.TABLE_NAME + " INNER JOIN " +
+                        SuggestionPersistenceContract.SuggestionEntry.TABLE_NAME +
+                        " ON " + ProductPersistenceContract.ProductEntry.TABLE_NAME +
+                        "." + ProductPersistenceContract.ProductEntry.COLUMN_NAME_BARCODE +
+                        " = " + SuggestionPersistenceContract.SuggestionEntry.TABLE_NAME +
+                        "." + SuggestionPersistenceContract.SuggestionEntry.COLUMN_NAME_BARCODE);
+    }
 
     private static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -80,6 +74,7 @@ public class FoodInspectorContentProvider extends ContentProvider {
 
         matcher.addURI(authority, ProductPersistenceContract.ProductEntry.TABLE_NAME, PRODUCT);
         matcher.addURI(authority, ProductPersistenceContract.ProductEntry.TABLE_NAME + "/*", PRODUCT_ITEM);
+        matcher.addURI(authority, ProductPersistenceContract.ProductEntry.SUGGESTION_OF_PRODUCTS, SUGGESTION_OF_PRODUCTS);
 
         matcher.addURI(authority, EventPersistenceContract.EventEntry.TABLE_NAME, EVENT);
         matcher.addURI(authority, EventPersistenceContract.EventEntry.TABLE_NAME + "/*", EVENT_ITEM);
@@ -167,17 +162,16 @@ public class FoodInspectorContentProvider extends ContentProvider {
                         sortOrder
                 );
                 break;
-            // TODO Reuse
-            //case PRODUCTSINCATEGORY_JOIN_PRODUCT:
-            //    retCursor = sProductsInCategoryQueryBuilder.query(mLocalDbHelper.getReadableDatabase(),
-            //            projection,
-            //            selection,
-            //            selectionArgs,
-            //            null,
-            //            null,
-            //            sortOrder
-            //    );
-            //    break;
+            case SUGGESTION_OF_PRODUCTS:
+                retCursor = sSuggestionOfProductsBuilder.query(mLocalDbHelper.getReadableDatabase(),
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
             case EVENT:
                 retCursor = mLocalDbHelper.getReadableDatabase().query(
                         EventPersistenceContract.EventEntry.TABLE_NAME,

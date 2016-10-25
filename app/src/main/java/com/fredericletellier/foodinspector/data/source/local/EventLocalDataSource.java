@@ -29,6 +29,9 @@ import com.fredericletellier.foodinspector.data.source.EventDataSource;
 import com.fredericletellier.foodinspector.data.source.EventValues;
 import com.fredericletellier.foodinspector.data.source.local.db.EventPersistenceContract;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -57,7 +60,7 @@ public class EventLocalDataSource implements EventDataSource {
     public void checkExistEvent(@NonNull String barcode, @NonNull CheckExistEventCallback checkExistEventCallback) {
         Cursor cursor = mContentResolver.query(
                 EventPersistenceContract.EventEntry.buildEventUri(),
-                new String[]{EventPersistenceContract.EventEntry._ID},
+                null,
                 EventPersistenceContract.EventEntry.COLUMN_NAME_BARCODE + " = ?",
                 new String[]{barcode},
                 null);
@@ -146,16 +149,36 @@ public class EventLocalDataSource implements EventDataSource {
 
     @Override
     public void saveScan(@NonNull String barcode, @NonNull SaveScanCallback saveScanCallback) {
-        // TODO
+        // no-op in local
     }
 
     @Override
     public void refreshEventsOnError(@NonNull RefreshEventsOnErrorCallback refreshEventsOnErrorCallback) {
-        // TODO
+        // no-op in local
     }
 
     @Override
     public void getEventsOnError(@NonNull GetEventsOnErrorCallback getEventsOnErrorCallback) {
-        // TODO
+
+        Cursor cursor = mContentResolver.query(
+                EventPersistenceContract.EventEntry.buildEventUri(),
+                null,
+                EventPersistenceContract.EventEntry.COLUMN_NAME_STATUS + " = ?",
+                new String[]{Event.STATUS_NO_NETWORK},
+                null);
+
+        if (cursor.moveToFirst()) {
+
+            List<String> eventsOnError = new ArrayList<String>();
+            do {
+                Event event = Event.from(cursor);
+                eventsOnError.add(event.getAsStringId());
+            } while (cursor.moveToNext());
+
+            getEventsOnErrorCallback.onEventsOnErrorLoaded(eventsOnError);
+        } else {
+            getEventsOnErrorCallback.onError();
+        }
+        cursor.close();
     }
 }

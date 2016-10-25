@@ -23,10 +23,20 @@ import android.support.annotation.NonNull;
 
 import com.fredericletellier.foodinspector.data.CategoryTag;
 
+import java.util.List;
+
 /**
  * Main entry point for accessing categoryTag data.
  */
 public interface CategoryTagDataSource {
+
+    interface GetCategoryTagsCallback {
+
+        void onCategoryTagsLoaded(List<String> categoriesKey);
+
+        void onCategoryTagsNotExist();
+
+    }
 
     interface CheckExistCategoryTagCallback {
 
@@ -59,6 +69,8 @@ public interface CategoryTagDataSource {
         void onError();
 
     }
+
+    void getCategoryTags(@NonNull String barcode, @NonNull GetCategoryTagsCallback getCategoryTagsCallback);
 
     void checkExistCategoryTag(@NonNull String barcode, @NonNull String categoryKey, @NonNull CheckExistCategoryTagCallback checkExistCategoryTagCallback);
 

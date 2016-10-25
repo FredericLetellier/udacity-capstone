@@ -56,7 +56,7 @@ public class SuggestionLocalDataSource implements SuggestionDataSource {
                                      @NonNull CheckExistSuggestionCallback checkExistSuggestionCallback) {
         Cursor cursor = mContentResolver.query(
                 SuggestionPersistenceContract.SuggestionEntry.buildSuggestionUri(),
-                new String[]{SuggestionPersistenceContract.SuggestionEntry._ID},
+                null,
                 SuggestionPersistenceContract.SuggestionEntry.COLUMN_NAME_BARCODE + " = ? AND " +
                         SuggestionPersistenceContract.SuggestionEntry.COLUMN_NAME_CATEGORY_KEY + " = ? AND" +
                         SuggestionPersistenceContract.SuggestionEntry.COLUMN_NAME_COUNTRY_KEY + " = ? AND",

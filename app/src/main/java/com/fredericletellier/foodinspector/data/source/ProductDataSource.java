@@ -41,6 +41,8 @@ public interface ProductDataSource {
 
         void onProductsLoaded(List<Product> products);
 
+        void onProductsUnfilled();
+
         void onError(Throwable throwable);
 
     }
@@ -79,7 +81,9 @@ public interface ProductDataSource {
 
     interface ParseProductCallback {
 
-        void onProductParsed(Product product);
+        void onProductParsed();
+
+        void onProductMustBeParsed(String parsableCategories);
 
         void onError();
 
@@ -87,7 +91,7 @@ public interface ProductDataSource {
 
     interface UpdateProductBookmarkCallback {
 
-        void onProductBookmarkUpdated(Product product);
+        void onProductBookmarkUpdated();
 
         void onError();
 

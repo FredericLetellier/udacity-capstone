@@ -28,6 +28,7 @@ import com.fredericletellier.foodinspector.data.Product;
 import com.fredericletellier.foodinspector.data.source.ProductDataSource;
 import com.fredericletellier.foodinspector.data.source.ProductValues;
 import com.fredericletellier.foodinspector.data.source.local.db.ProductPersistenceContract;
+import com.fredericletellier.foodinspector.data.source.local.db.SuggestionPersistenceContract;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -55,19 +56,51 @@ public class ProductLocalDataSource implements ProductDataSource {
 
     @Override
     public void getProduct(@NonNull String barcode, @NonNull GetProductCallback getProductCallback) {
-        // TODO
+        Cursor cursor = mContentResolver.query(
+                ProductPersistenceContract.ProductEntry.buildProductUri(),
+                null,
+                ProductPersistenceContract.ProductEntry.COLUMN_NAME_BARCODE + " = ?",
+                new String[]{barcode},
+                null);
+
+        if (cursor.moveToLast()) {
+            Product product = Product.from(cursor);
+            getProductCallback.onProductLoaded(product);
+        } else {
+            getProductCallback.onError(null);
+        }
+        cursor.close();
     }
 
     @Override
     public void getProducts(@NonNull String categoryKey, @NonNull String countryKey, @NonNull String nutritionGradeValue, @NonNull Integer offsetProducts, @NonNull Integer numberOfProducts, @NonNull GetProductsCallback getProductsCallback) {
-        // TODO
+        Cursor cursor = mContentResolver.query(
+                ProductPersistenceContract.ProductEntry.buildProductUri(),
+                new String[] {"count(*)"},
+                SuggestionPersistenceContract.SuggestionEntry.COLUMN_NAME_CATEGORY_KEY + " = ? AND " +
+                        SuggestionPersistenceContract.SuggestionEntry.COLUMN_NAME_COUNTRY_KEY + " = ? AND " +
+                        ProductPersistenceContract.ProductEntry.COLUMN_NAME_NUTRITION_GRADES + " = ?",
+                new String[]{categoryKey, countryKey, nutritionGradeValue},
+                null);
+
+        if (cursor.moveToFirst()){
+            int nbLocalProducts = cursor.getInt(0);
+            int nbWishedProducts = numberOfProducts + offsetProducts;
+            if (nbWishedProducts > nbLocalProducts){
+                getProductsCallback.onProductsUnfilled();
+            } else {
+                // TODO Optimize : public void checkExistProducts(... ?!?
+                getProductsCallback.onProductsLoaded(null);
+            }
+        }
+        cursor.close();
     }
 
     @Override
     public void checkExistProduct(@NonNull String barcode, @NonNull CheckExistProductCallback checkExistProductCallback) {
        Cursor cursor = mContentResolver.query(
                 ProductPersistenceContract.ProductEntry.buildProductUri(),
-                new String[]{ProductPersistenceContract.ProductEntry._ID},
+                null,
                 ProductPersistenceContract.ProductEntry.COLUMN_NAME_BARCODE + " = ?",
                 new String[]{barcode},
                 null);
@@ -156,11 +189,51 @@ public class ProductLocalDataSource implements ProductDataSource {
 
     @Override
     public void parseProduct(@NonNull String barcode, @NonNull ParseProductCallback parseProductCallback) {
-        // TODO
+        Cursor cursor = mContentResolver.query(
+                ProductPersistenceContract.ProductEntry.buildProductUri(),
+                null,
+                ProductPersistenceContract.ProductEntry.COLUMN_NAME_BARCODE + " = ?",
+                new String[]{barcode},
+                null);
+
+        if (cursor.moveToLast()) {
+            Product product = Product.from(cursor);
+            if (product.isParsed()){
+                parseProductCallback.onProductParsed();
+            } else {
+                parseProductCallback.onProductMustBeParsed(product.getParsableCategories());
+            }
+        } else {
+            parseProductCallback.onError();
+        }
+        cursor.close();
     }
 
     @Override
-    public void updateProductBookmark(@NonNull String barcode, @NonNull UpdateProductBookmarkCallback updateProductBookmarkCallback) {
-        // TODO
+    public void updateProductBookmark(@NonNull String barcode, @NonNull final UpdateProductBookmarkCallback updateProductBookmarkCallback) {
+        getProduct(barcode, new GetProductCallback() {
+            @Override
+            public void onProductLoaded(Product product) {
+                boolean bookmarked = product.isBookmarked();
+                product.setBookmarked(!bookmarked);
+
+                updateProduct(product, new UpdateProductCallback() {
+                    @Override
+                    public void onProductUpdated() {
+                        updateProductBookmarkCallback.onProductBookmarkUpdated();
+                    }
+
+                    @Override
+                    public void onError() {
+                        updateProductBookmarkCallback.onError();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                updateProductBookmarkCallback.onError();
+            }
+        });
     }
 }

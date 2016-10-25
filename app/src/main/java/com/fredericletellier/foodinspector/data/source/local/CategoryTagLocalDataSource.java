@@ -29,6 +29,9 @@ import com.fredericletellier.foodinspector.data.source.CategoryTagDataSource;
 import com.fredericletellier.foodinspector.data.source.CategoryTagValues;
 import com.fredericletellier.foodinspector.data.source.local.db.CategoryTagPersistenceContract;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class CategoryTagLocalDataSource implements CategoryTagDataSource {
@@ -51,12 +54,38 @@ public class CategoryTagLocalDataSource implements CategoryTagDataSource {
     }
 
     @Override
+    public void getCategoryTags(@NonNull String barcode,
+                                @NonNull GetCategoryTagsCallback getCategoryTagsCallback) {
+
+        Cursor cursor = mContentResolver.query(
+                CategoryTagPersistenceContract.CategoryTagEntry.buildCategoryTagUri(),
+                null,
+                CategoryTagPersistenceContract.CategoryTagEntry.COLUMN_NAME_BARCODE + " = ?",
+                new String[]{barcode},
+                null);
+
+        if (cursor.moveToFirst()) {
+
+            List<String> categoriesKey = new ArrayList<String>();
+            do {
+                CategoryTag categoryTag = CategoryTag.from(cursor);
+                categoriesKey.add(categoryTag.getCategoryKey());
+            } while (cursor.moveToNext());
+
+            getCategoryTagsCallback.onCategoryTagsLoaded(categoriesKey);
+        } else {
+            getCategoryTagsCallback.onCategoryTagsNotExist();
+        }
+        cursor.close();
+    }
+
+    @Override
     public void checkExistCategoryTag(@NonNull String barcode, @NonNull String categoryKey,
                                       @NonNull CheckExistCategoryTagCallback checkExistCategoryTagCallback) {
 
         Cursor cursor = mContentResolver.query(
                 CategoryTagPersistenceContract.CategoryTagEntry.buildCategoryTagUri(),
-                new String[]{CategoryTagPersistenceContract.CategoryTagEntry._ID},
+                null,
                 CategoryTagPersistenceContract.CategoryTagEntry.COLUMN_NAME_BARCODE + " = ? AND " +
                         CategoryTagPersistenceContract.CategoryTagEntry.COLUMN_NAME_CATEGORY_KEY + " = ?",
                 new String[]{barcode, categoryKey},

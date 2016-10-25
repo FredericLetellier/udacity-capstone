@@ -59,7 +59,7 @@ public class CategoryLocalDataSource implements CategoryDataSource {
 
         Cursor cursor = mContentResolver.query(
                 CategoryPersistenceContract.CategoryEntry.buildCategoryUri(),
-                new String[]{CategoryPersistenceContract.CategoryEntry._ID},
+                null,
                 CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_CATEGORY_KEY + " = ?",
                 new String[]{categoryKey},
                 null);
@@ -144,10 +144,5 @@ public class CategoryLocalDataSource implements CategoryDataSource {
                 });
             }
         });
-    }
-
-    @Override
-    public void getCategoryOfProduct(@NonNull String barcode, @NonNull GetCategoryOfProductCallback getCategoryOfProductCallback) {
-        // TODO
     }
 }

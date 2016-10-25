@@ -79,9 +79,9 @@ public interface EventDataSource {
 
     interface GetEventsOnErrorCallback {
 
-        void onEventsOnErrorLoaded(List<Event> events);
+        void onEventsOnErrorLoaded(List<String> eventsOnError);
 
-        void onError(Throwable throwable);
+        void onError();
 
     }
 

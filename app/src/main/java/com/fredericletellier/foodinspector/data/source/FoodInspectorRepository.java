@@ -124,142 +124,138 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
     }
 
     @Override
-    public void checkExistCategory(@NonNull String categoryKey, @NonNull CheckExistCategoryCallback checkExistCategoryCallback) {
-        //no-op, internal use only
+    public void checkExistCategory(@NonNull String categoryKey,
+                                   @NonNull CheckExistCategoryCallback checkExistCategoryCallback) {
+
+        mCategoryLocalDataSource.checkExistCategory(categoryKey, checkExistCategoryCallback);
     }
 
     @Override
-    public void addCategory(@NonNull Category category, @NonNull AddCategoryCallback addCategoryCallback) {
-        //no-op, internal use only
+    public void addCategory(@NonNull Category category,
+                            @NonNull AddCategoryCallback addCategoryCallback) {
+
+        mCategoryLocalDataSource.addCategory(category, addCategoryCallback);
     }
 
     @Override
-    public void updateCategory(@NonNull Category category, @NonNull UpdateCategoryCallback updateCategoryCallback) {
-        //no-op, internal use only
+    public void updateCategory(@NonNull Category category,
+                               @NonNull UpdateCategoryCallback updateCategoryCallback) {
+
+        mCategoryLocalDataSource.updateCategory(category, updateCategoryCallback);
     }
 
     @Override
-    public void saveCategory(@NonNull Category category, @NonNull final SaveCategoryCallback saveCategoryCallback) {
-        mCategoryLocalDataSource.saveCategory(category, new SaveCategoryCallback() {
-            @Override
-            public void onCategorySaved() {
-                saveCategoryCallback.onCategorySaved();
-            }
+    public void saveCategory(@NonNull Category category,
+                             @NonNull final SaveCategoryCallback saveCategoryCallback) {
 
-            @Override
-            public void onError() {
-                saveCategoryCallback.onError();
-            }
-        });
+        mCategoryLocalDataSource.saveCategory(category, saveCategoryCallback);
     }
 
     @Override
-    public void getCategoryOfProduct(@NonNull String barcode, @NonNull GetCategoryOfProductCallback getCategoryOfProductCallback) {
+    public void getCategoryTags(@NonNull String barcode,
+                                @NonNull GetCategoryTagsCallback getCategoryTagsCallback) {
+        mCategoryTagLocalDataSource.getCategoryTags(barcode, getCategoryTagsCallback);
+    }
+
+    @Override
+    public void checkExistCategoryTag(@NonNull String barcode, @NonNull String categoryKey,
+                                      @NonNull CheckExistCategoryTagCallback checkExistCategoryTagCallback) {
+
+        mCategoryTagLocalDataSource.checkExistCategoryTag(barcode, categoryKey, checkExistCategoryTagCallback);
+    }
+
+    @Override
+    public void addCategoryTag(@NonNull CategoryTag categoryTag,
+                               @NonNull AddCategoryTagCallback addCategoryTagCallback) {
+
+        mCategoryTagLocalDataSource.addCategoryTag(categoryTag, addCategoryTagCallback);
+    }
+
+    @Override
+    public void updateCategoryTag(@NonNull CategoryTag categoryTag,
+                                  @NonNull UpdateCategoryTagCallback updateCategoryTagCallback) {
+
+        mCategoryTagLocalDataSource.updateCategoryTag(categoryTag, updateCategoryTagCallback);
+    }
+
+    @Override
+    public void saveCategoryTag(@NonNull CategoryTag categoryTag,
+                                @NonNull final SaveCategoryTagCallback saveCategoryTagCallback) {
+
+        mCategoryTagLocalDataSource.saveCategoryTag(categoryTag, saveCategoryTagCallback);
+    }
+
+    @Override
+    public void getCountryCategory(@NonNull CountryCategory countryCategory,
+                                   @NonNull GetCountryCategoryCallback getCountryCategoryCallback) {
         // TODO
     }
 
     @Override
-    public void checkExistCategoryTag(@NonNull String barcode, @NonNull String categoryKey, @NonNull CheckExistCategoryTagCallback checkExistCategoryTagCallback) {
-        //no-op, internal use only
+    public void checkExistCountryCategory(@NonNull String categoryKey, @NonNull String countryKey,
+                                          @NonNull CheckExistCountryCategoryCallback checkExistCountryCategoryCallback) {
+
+        mCountryCategoryLocalDataSource.checkExistCountryCategory(categoryKey, countryKey, checkExistCountryCategoryCallback);
     }
 
     @Override
-    public void addCategoryTag(@NonNull CategoryTag categoryTag, @NonNull AddCategoryTagCallback addCategoryTagCallback) {
-        //no-op, internal use only
+    public void addCountryCategory(@NonNull CountryCategory countryCategory,
+                                   @NonNull AddCountryCategoryCallback addCountryCategoryCallback) {
+
+        mCountryCategoryLocalDataSource.addCountryCategory(countryCategory, addCountryCategoryCallback);
     }
 
     @Override
-    public void updateCategoryTag(@NonNull CategoryTag categoryTag, @NonNull UpdateCategoryTagCallback updateCategoryTagCallback) {
-        //no-op, internal use only
+    public void updateCountryCategory(@NonNull CountryCategory countryCategory,
+                                      @NonNull UpdateCountryCategoryCallback updateCountryCategoryCallback) {
+
+        mCountryCategoryLocalDataSource.updateCountryCategory(countryCategory,updateCountryCategoryCallback);
     }
 
     @Override
-    public void saveCategoryTag(@NonNull CategoryTag categoryTag, @NonNull final SaveCategoryTagCallback saveCategoryTagCallback) {
-        mCategoryTagLocalDataSource.saveCategoryTag(categoryTag, new SaveCategoryTagCallback() {
-            @Override
-            public void onCategoryTagSaved() {
-                saveCategoryTagCallback.onCategoryTagSaved();
-            }
+    public void saveCountryCategory(@NonNull CountryCategory countryCategory,
+                                    @NonNull final SaveCountryCategoryCallback saveCountryCategoryCallback) {
 
-            @Override
-            public void onError() {
-                saveCategoryTagCallback.onError();
-            }
-        });
+        mCountryCategoryLocalDataSource.saveCountryCategory(countryCategory, saveCountryCategoryCallback);
     }
 
     @Override
-    public void getCountryCategory(@NonNull CountryCategory countryCategory, @NonNull GetCountryCategoryCallback getCountryCategoryCallback) {
+    public void getCountryCategoryOfProduct(@NonNull String barcode, @NonNull String countryKey,
+                                            @NonNull GetCountryCategoryOfProductCallback getCountryCategoryOfProductCallback) {
         // TODO
     }
 
     @Override
-    public void checkExistCountryCategory(@NonNull String categoryKey, @NonNull String countryKey, @NonNull CheckExistCountryCategoryCallback checkExistCountryCategoryCallback) {
-        //no-op, internal use only
+    public void checkExistEvent(@NonNull String barcode,
+                                @NonNull CheckExistEventCallback checkExistEventCallback) {
+
+        mEventLocalDataSource.checkExistEvent(barcode, checkExistEventCallback);
     }
 
     @Override
-    public void addCountryCategory(@NonNull CountryCategory countryCategory, @NonNull AddCountryCategoryCallback addCountryCategoryCallback) {
-        //no-op, internal use only
+    public void addEvent(@NonNull Event event,
+                         @NonNull AddEventCallback addEventCallback) {
+
+        mEventLocalDataSource.addEvent(event, addEventCallback);
     }
 
     @Override
-    public void updateCountryCategory(@NonNull CountryCategory countryCategory, @NonNull UpdateCountryCategoryCallback updateCountryCategoryCallback) {
-        //no-op, internal use only
+    public void updateEvent(@NonNull Event event,
+                            @NonNull UpdateEventCallback updateEventCallback) {
+
+        mEventLocalDataSource.updateEvent(event, updateEventCallback);
     }
 
     @Override
-    public void saveCountryCategory(@NonNull CountryCategory countryCategory, @NonNull final SaveCountryCategoryCallback saveCountryCategoryCallback) {
-        mCountryCategoryLocalDataSource.saveCountryCategory(countryCategory, new SaveCountryCategoryCallback() {
-            @Override
-            public void onCountryCategorySaved() {
-                saveCountryCategoryCallback.onCountryCategorySaved();
-            }
+    public void saveEvent(@NonNull Event event,
+                          @NonNull final SaveEventCallback saveEventCallback) {
 
-            @Override
-            public void onError() {
-                saveCountryCategoryCallback.onError();
-            }
-        });
+        mEventLocalDataSource.saveEvent(event, saveEventCallback);
     }
 
     @Override
-    public void getCountryCategoryOfProduct(@NonNull String barcode, @NonNull GetCountryCategoryOfProductCallback getCountryCategoryOfProductCallback) {
-        // TODO
-    }
-
-    @Override
-    public void checkExistEvent(@NonNull String barcode, @NonNull CheckExistEventCallback checkExistEventCallback) {
-        //no-op, internal use only
-    }
-
-    @Override
-    public void addEvent(@NonNull Event event, @NonNull AddEventCallback addEventCallback) {
-        //no-op, internal use only
-    }
-
-    @Override
-    public void updateEvent(@NonNull Event event, @NonNull UpdateEventCallback updateEventCallback) {
-        //no-op, internal use only
-    }
-
-    @Override
-    public void saveEvent(@NonNull Event event, @NonNull final SaveEventCallback saveEventCallback) {
-        mEventLocalDataSource.saveEvent(event, new SaveEventCallback() {
-            @Override
-            public void onEventSaved() {
-                saveEventCallback.onEventSaved();
-            }
-
-            @Override
-            public void onError() {
-                saveEventCallback.onError();
-            }
-        });
-    }
-
-    @Override
-    public void saveScan(@NonNull String barcode, @NonNull SaveScanCallback saveScanCallback) {
+    public void saveScan(@NonNull String barcode,
+                         @NonNull SaveScanCallback saveScanCallback) {
         // TODO
     }
 
@@ -270,96 +266,148 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
 
     @Override
     public void getEventsOnError(@NonNull GetEventsOnErrorCallback getEventsOnErrorCallback) {
-        // TODO
+
+        mEventLocalDataSource.getEventsOnError(getEventsOnErrorCallback);
     }
 
     @Override
-    public void getProduct(@NonNull String barcode, @NonNull final GetProductCallback getProductCallback) {
-        mProductLocalDataSource.checkExistProduct(barcode, new CheckExistProductCallback() {
+    public void getProduct(@NonNull final String barcode,
+                           @NonNull final GetProductCallback getProductCallback) {
+
+        mProductLocalDataSource.getProduct(barcode, new GetProductCallback() {
             @Override
-            public void onProductExisted(long id) {
-                //TODO dernier point d arret
+            public void onProductLoaded(Product product) {
+                getProductCallback.onProductLoaded(product);
             }
 
             @Override
-            public void onProductNotExisted() {
+            public void onError(Throwable throwable) {
+                mProductRemoteDataSource.getProduct(barcode, new GetProductCallback() {
+                    @Override
+                    public void onProductLoaded(final Product product) {
+                        mProductLocalDataSource.saveProduct(product, new SaveProductCallback() {
+                            @Override
+                            public void onProductSaved() {
+                                getProductCallback.onProductLoaded(product);
+                            }
 
+                            @Override
+                            public void onError() {
+                                getProductCallback.onError(null);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        getProductCallback.onError(throwable);
+                    }
+                });
             }
         });
     }
 
     @Override
-    public void getProducts(@NonNull String categoryKey, @NonNull String countryKey, @NonNull String nutritionGradeValue, @NonNull Integer offsetProducts, @NonNull Integer numberOfProducts, @NonNull GetProductsCallback getProductsCallback) {
+    public void getProducts(@NonNull String categoryKey, @NonNull String countryKey,
+                            @NonNull String nutritionGradeValue, @NonNull Integer offsetProducts,
+                            @NonNull Integer numberOfProducts, @NonNull GetProductsCallback getProductsCallback) {
         // TODO
     }
 
     @Override
-    public void checkExistProduct(@NonNull String barcode, @NonNull CheckExistProductCallback checkExistProductCallback) {
-        //no-op, internal use only
+    public void checkExistProduct(@NonNull String barcode,
+                                  @NonNull CheckExistProductCallback checkExistProductCallback) {
+
+        mProductLocalDataSource.checkExistProduct(barcode, checkExistProductCallback);
     }
 
     @Override
-    public void addProduct(@NonNull Product product, @NonNull AddProductCallback addProductCallback) {
-        //no-op, internal use only
+    public void addProduct(@NonNull Product product,
+                           @NonNull AddProductCallback addProductCallback) {
+
+        mProductLocalDataSource.addProduct(product, addProductCallback);
     }
 
     @Override
-    public void updateProduct(@NonNull Product product, @NonNull UpdateProductCallback updateProductCallback) {
-        //no-op, internal use only
+    public void updateProduct(@NonNull Product product,
+                              @NonNull UpdateProductCallback updateProductCallback) {
+
+        mProductLocalDataSource.updateProduct(product, updateProductCallback);
     }
 
     @Override
-    public void saveProduct(@NonNull Product product, @NonNull final SaveProductCallback saveProductCallback) {
-        mProductLocalDataSource.saveProduct(product, new SaveProductCallback() {
+    public void saveProduct(@NonNull Product product,
+                            @NonNull final SaveProductCallback saveProductCallback) {
+
+        mProductLocalDataSource.saveProduct(product, saveProductCallback);
+    }
+
+    @Override
+    public void parseProduct(@NonNull String barcode,
+                             @NonNull final ParseProductCallback parseProductCallback) {
+
+        mProductLocalDataSource.parseProduct(barcode, new ParseProductCallback() {
             @Override
-            public void onProductSaved() {
-                saveProductCallback.onProductSaved();
+            public void onProductParsed() {
+                parseProductCallback.onProductParsed();
+            }
+
+            @Override
+            public void onProductMustBeParsed(String parsableCategories) {
+                String[] parsedCategories = parsableCategories.split(",");
+
+                for (String parsedCategory : parsedCategories){
+
+                    // TODO dernier point d'arret
+                    // Appeler getCategory
+                    //     qui appelle checkCategory
+                    //         appelle getNameCategory
+                    //         appelle saveCategory
+                    //     qui appelle saveCategoryTag
+
+                }
+
             }
 
             @Override
             public void onError() {
-                saveProductCallback.onError();
+                parseProductCallback.onError();
             }
         });
     }
 
     @Override
-    public void parseProduct(@NonNull String barcode, @NonNull ParseProductCallback parseProductCallback) {
-        // TODO
+    public void updateProductBookmark(@NonNull String barcode,
+                                      @NonNull final UpdateProductBookmarkCallback updateProductBookmarkCallback) {
+        mProductLocalDataSource.updateProductBookmark(barcode, updateProductBookmarkCallback);
     }
 
     @Override
-    public void updateProductBookmark(@NonNull String barcode, @NonNull UpdateProductBookmarkCallback updateProductBookmarkCallback) {
-        // TODO
+    public void checkExistSuggestion(@NonNull String barcode,
+                                     @NonNull String categoryKey, @NonNull String countryKey,
+                                     @NonNull CheckExistSuggestionCallback checkExistSuggestionCallback) {
+
+        mSuggestionLocalDataSource.checkExistSuggestion(barcode, categoryKey, countryKey, checkExistSuggestionCallback);
     }
 
     @Override
-    public void checkExistSuggestion(@NonNull String barcode, @NonNull String categoryKey, @NonNull String countryKey, @NonNull CheckExistSuggestionCallback checkExistSuggestionCallback) {
-        //no-op, internal use only
+    public void addSuggestion(@NonNull Suggestion suggestion,
+                              @NonNull AddSuggestionCallback addSuggestionCallback) {
+
+        mSuggestionLocalDataSource.addSuggestion(suggestion, addSuggestionCallback);
     }
 
     @Override
-    public void addSuggestion(@NonNull Suggestion suggestion, @NonNull AddSuggestionCallback addSuggestionCallback) {
-        //no-op, internal use only
+    public void updateSuggestion(@NonNull Suggestion suggestion,
+                                 @NonNull UpdateSuggestionCallback updateSuggestionCallback) {
+
+        mSuggestionLocalDataSource.updateSuggestion(suggestion, updateSuggestionCallback);
     }
 
     @Override
-    public void updateSuggestion(@NonNull Suggestion suggestion, @NonNull UpdateSuggestionCallback updateSuggestionCallback) {
-        //no-op, internal use only
-    }
+    public void saveSuggestion(@NonNull Suggestion suggestion,
+                               @NonNull final SaveSuggestionCallback saveSuggestionCallback) {
 
-    @Override
-    public void saveSuggestion(@NonNull Suggestion suggestion, @NonNull final SaveSuggestionCallback saveSuggestionCallback) {
-        mSuggestionLocalDataSource.saveSuggestion(suggestion, new SaveSuggestionCallback() {
-            @Override
-            public void onSuggestionSaved() {
-                saveSuggestionCallback.onSuggestionSaved();
-            }
-
-            @Override
-            public void onError() {
-                saveSuggestionCallback.onError();
-            }
-        });
+        mSuggestionLocalDataSource.saveSuggestion(suggestion, saveSuggestionCallback);
     }
 }

@@ -53,7 +53,7 @@ public class CountryCategoryLocalDataSource implements CountryCategoryDataSource
     @Override
     public void getCountryCategory(@NonNull CountryCategory countryCategory,
                                    @NonNull GetCountryCategoryCallback getCountryCategoryCallback) {
-
+        // no-op in local
     }
 
     @Override
@@ -62,7 +62,7 @@ public class CountryCategoryLocalDataSource implements CountryCategoryDataSource
 
         Cursor cursor = mContentResolver.query(
                 CountryCategoryPersistenceContract.CountryCategoryEntry.buildCountryCategoryUri(),
-                new String[]{CountryCategoryPersistenceContract.CountryCategoryEntry._ID},
+                null,
                 CountryCategoryPersistenceContract.CountryCategoryEntry.COLUMN_NAME_CATEGORY_KEY + " = ? AND " +
                         CountryCategoryPersistenceContract.CountryCategoryEntry.COLUMN_NAME_COUNTRY_KEY + " = ?",
                 new String[]{categoryKey, countryKey},
@@ -155,8 +155,8 @@ public class CountryCategoryLocalDataSource implements CountryCategoryDataSource
     }
 
     @Override
-    public void getCountryCategoryOfProduct(@NonNull String barcode,
+    public void getCountryCategoryOfProduct(@NonNull String barcode, @NonNull String countryKey,
                                             @NonNull GetCountryCategoryOfProductCallback getCountryCategoryOfProductCallback) {
-        // TODO
+        // no-op in local
     }
 }

@@ -76,6 +76,8 @@ public final class ProductPersistenceContract {
                 ProductPersistenceContract.ProductEntry.COLUMN_NAME_IMAGE_FRONT_SMALL_URL,
                 ProductPersistenceContract.ProductEntry.COLUMN_NAME_IMAGE_FRONT_URL};
 
+        public static final String SUGGESTION_OF_PRODUCTS = "products";
+
         public static Uri buildProductUriWith(long id) {
             return ContentUris.withAppendedId(CONTENT_PRODUCT_URI, id);
         }
@@ -87,6 +89,10 @@ public final class ProductPersistenceContract {
 
         public static Uri buildProductUri() {
             return CONTENT_PRODUCT_URI.buildUpon().build();
+        }
+
+        public static Uri buildSuggestionOfProductsUri() {
+            return BASE_CONTENT_URI.buildUpon().appendPath(ProductEntry.SUGGESTION_OF_PRODUCTS).build();
         }
 
     }

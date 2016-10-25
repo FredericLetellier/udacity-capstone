@@ -22,10 +22,13 @@ import android.support.annotation.NonNull;
 
 import com.fredericletellier.foodinspector.data.Product;
 import com.fredericletellier.foodinspector.data.ProductBarcode;
+import com.fredericletellier.foodinspector.data.Search;
 import com.fredericletellier.foodinspector.data.source.ProductDataSource;
 import com.fredericletellier.foodinspector.data.source.remote.API.APIError;
 import com.fredericletellier.foodinspector.data.source.remote.API.ErrorUtils;
 import com.fredericletellier.foodinspector.data.source.remote.API.OpenFoodFactsAPIEndpointInterface;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -95,12 +98,50 @@ public class ProductRemoteDataSource implements ProductDataSource {
     }
 
     @Override
-    public void getProducts(@NonNull String categoryKey, @NonNull String countryKey, @NonNull String nutritionGradeValue, @NonNull Integer offsetProducts, @NonNull Integer numberOfProducts, @NonNull GetProductsCallback getProductsCallback) {
-        //TODO Intégrer la partie remote de la procédure globale du repository
+    public void getProducts(@NonNull String categoryKey, @NonNull String countryKey,
+                            @NonNull String nutritionGradeValue, @NonNull Integer offsetProducts,
+                            @NonNull Integer numberOfProducts, @NonNull final GetProductsCallback getProductsCallback) {
+        checkNotNull(categoryKey);
+        checkNotNull(countryKey);
+        checkNotNull(nutritionGradeValue);
+        checkNotNull(offsetProducts);
+        checkNotNull(numberOfProducts);
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(OpenFoodFactsAPIEndpointInterface.ENDPOINT_SEARCH)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        OpenFoodFactsAPIEndpointInterface apiService = retrofit.create(OpenFoodFactsAPIEndpointInterface.class);
+
+        int page = offsetProducts / numberOfProducts;
+        Call<Search> call = apiService.getProducts(categoryKey, countryKey, nutritionGradeValue,
+                String.valueOf(numberOfProducts), String.valueOf(page));
+
+        call.enqueue(new Callback<Search>() {
+            @Override
+            public void onResponse(Call<Search> call, Response<Search> response) {
+                if (response.isSuccessful()) {
+                    List<Product> products = response.body().getProducts();
+                    getProductsCallback.onProductsLoaded(products);
+                } else {
+                    APIError e = ErrorUtils.parseError(response);
+                    Throwable t = new Throwable(e.message(), new Throwable(String.valueOf(e.status())));
+                    getProductsCallback.onError(t);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Search> call, Throwable t) {
+                getProductsCallback.onError(t);
+            }
+        });
     }
 
     @Override
-    public void checkExistProduct(@NonNull String barcode, @NonNull CheckExistProductCallback checkExistProductCallback) {
+    public void checkExistProduct(@NonNull String barcode,
+                                  @NonNull CheckExistProductCallback checkExistProductCallback) {
         //no-op in remote
     }
 
@@ -125,7 +166,8 @@ public class ProductRemoteDataSource implements ProductDataSource {
     }
 
     @Override
-    public void updateProductBookmark(@NonNull String barcode, @NonNull UpdateProductBookmarkCallback updateProductBookmarkCallback) {
+    public void updateProductBookmark(@NonNull String barcode,
+                                      @NonNull UpdateProductBookmarkCallback updateProductBookmarkCallback) {
         //no-op in remote
     }
 }

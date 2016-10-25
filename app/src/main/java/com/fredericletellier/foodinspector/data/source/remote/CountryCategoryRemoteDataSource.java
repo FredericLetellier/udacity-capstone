@@ -93,6 +93,8 @@ public class CountryCategoryRemoteDataSource implements CountryCategoryDataSourc
             public void onFailure(Call<Search> call, Throwable t) {
 
                 getCountryCategoryCallback.onError(t);
+
+                // TODO Optimize handling error
                 //if (t instanceof IOException) {
                 //    errorType. = "Network problem (socket timeout, unknown host, etc.)";
                 //    errorDesc = String.valueOf(t.getCause());
@@ -132,8 +134,8 @@ public class CountryCategoryRemoteDataSource implements CountryCategoryDataSourc
     }
 
     @Override
-    public void getCountryCategoryOfProduct(@NonNull String barcode,
+    public void getCountryCategoryOfProduct(@NonNull String barcode, @NonNull String countryKey,
                                             @NonNull GetCountryCategoryOfProductCallback getCountryCategoryOfProductCallback) {
-        //TODO Intégrer la partie remote de la procédure globale du repository
+        //no-op in remote
     }
 }

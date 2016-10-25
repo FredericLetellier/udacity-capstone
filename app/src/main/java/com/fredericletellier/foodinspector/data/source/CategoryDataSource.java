@@ -22,8 +22,6 @@ import android.support.annotation.NonNull;
 
 import com.fredericletellier.foodinspector.data.Category;
 
-import java.util.List;
-
 /**
  * Main entry point for accessing category data.
  */
@@ -61,14 +59,6 @@ public interface CategoryDataSource {
 
     }
 
-    interface GetCategoryOfProductCallback {
-
-        void onCategoryOfProductLoaded(List<Category> categories);
-
-        void onError(Throwable throwable);
-
-    }
-
     void checkExistCategory(@NonNull String categoryKey, @NonNull CheckExistCategoryCallback checkExistCategoryCallback);
 
     void addCategory(@NonNull Category category, @NonNull AddCategoryCallback addCategoryCallback);
@@ -76,7 +66,5 @@ public interface CategoryDataSource {
     void updateCategory(@NonNull Category category, @NonNull UpdateCategoryCallback updateCategoryCallback);
 
     void saveCategory(@NonNull Category category, @NonNull SaveCategoryCallback saveCategoryCallback);
-
-    void getCategoryOfProduct(@NonNull String barcode, @NonNull GetCategoryOfProductCallback getCategoryOfProductCallback);
 
 }

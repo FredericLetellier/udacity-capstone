@@ -62,9 +62,4 @@ public class CategoryRemoteDataSource implements CategoryDataSource {
     public void saveCategory(@NonNull Category category, @NonNull SaveCategoryCallback saveCategoryCallback) {
         //no-op in remote
     }
-
-    @Override
-    public void getCategoryOfProduct(@NonNull String barcode, @NonNull GetCategoryOfProductCallback getCategoryOfProductCallback) {
-        //no-op in remote
-    }
 }
