@@ -28,39 +28,39 @@ import com.fredericletellier.foodinspector.data.Suggestion;
  */
 public interface SuggestionDataSource {
 
-    interface GetSuggestionCallback {
+    interface GetSuggestionIdCallback {
 
-        void onSuggestionLoaded(Suggestion suggestion);
+        void onSuggestionIdLoaded(long id);
 
-        void onError(Throwable throwable);
+        void onSuggestionNotExist();
 
     }
 
     interface AddSuggestionCallback {
 
-        void onSuggestionAdded(Suggestion suggestion);
+        void onSuggestionAdded();
 
-        void onError(Throwable throwable);
+        void onError();
 
     }
 
     interface UpdateSuggestionCallback {
 
-        void onSuggestionUpdated(Suggestion suggestion);
+        void onSuggestionUpdated();
 
-        void onError(Throwable throwable);
+        void onError();
 
     }
 
     interface SaveSuggestionCallback {
 
-        void onSuggestionSaved(Suggestion suggestion);
+        void onSuggestionSaved();
 
-        void onError(Throwable throwable);
+        void onError();
 
     }
 
-    void getSuggestion(@NonNull Suggestion suggestion, @NonNull GetSuggestionCallback getSuggestionCallback);
+    void getSuggestionId(@NonNull String barcode, @NonNull String categoryKey, @NonNull String countryKey, @NonNull GetSuggestionIdCallback getSuggestionIdCallback);
 
     void addSuggestion(@NonNull Suggestion suggestion, @NonNull AddSuggestionCallback addSuggestionCallback);
 

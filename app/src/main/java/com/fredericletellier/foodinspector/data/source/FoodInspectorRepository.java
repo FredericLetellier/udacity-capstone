@@ -275,22 +275,32 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
     }
 
     @Override
-    public void getSuggestion(@NonNull Suggestion suggestion, @NonNull GetSuggestionCallback getSuggestionCallback) {
-        // TODO
+    public void getSuggestionId(@NonNull String barcode, @NonNull String categoryKey, @NonNull String countryKey, @NonNull GetSuggestionIdCallback getSuggestionIdCallback) {
+        //no-op
     }
 
     @Override
     public void addSuggestion(@NonNull Suggestion suggestion, @NonNull AddSuggestionCallback addSuggestionCallback) {
-        // TODO
+        //no-op
     }
 
     @Override
     public void updateSuggestion(@NonNull Suggestion suggestion, @NonNull UpdateSuggestionCallback updateSuggestionCallback) {
-        // TODO
+        //no-op
     }
 
     @Override
-    public void saveSuggestion(@NonNull Suggestion suggestion, @NonNull SaveSuggestionCallback saveSuggestionCallback) {
-        // TODO
+    public void saveSuggestion(@NonNull Suggestion suggestion, @NonNull final SaveSuggestionCallback saveSuggestionCallback) {
+        mSuggestionLocalDataSource.saveSuggestion(suggestion, new SaveSuggestionCallback() {
+            @Override
+            public void onSuggestionSaved() {
+                saveSuggestionCallback.onSuggestionSaved();
+            }
+
+            @Override
+            public void onError() {
+                saveSuggestionCallback.onError();
+            }
+        });
     }
 }
