@@ -27,10 +27,23 @@ public class CategoryTagValues {
 
     public static ContentValues from(CategoryTag categoryTag) {
         ContentValues values = new ContentValues();
-        values.put(CategoryTagPersistenceContract.CategoryTagEntry._ID, categoryTag.getId());
-        values.put(CategoryTagPersistenceContract.CategoryTagEntry.COLUMN_NAME_BARCODE, categoryTag.getBarcode());
-        values.put(CategoryTagPersistenceContract.CategoryTagEntry.COLUMN_NAME_CATEGORY_KEY, categoryTag.getCategoryKey());
-        values.put(CategoryTagPersistenceContract.CategoryTagEntry.COLUMN_NAME_RANK, categoryTag.getRank());
+
+        if(categoryTag.getId() != 0L) {
+            values.put(CategoryTagPersistenceContract.CategoryTagEntry._ID, categoryTag.getId());
+        }
+
+        if(categoryTag.getBarcode() != null) {
+            values.put(CategoryTagPersistenceContract.CategoryTagEntry.COLUMN_NAME_BARCODE, categoryTag.getBarcode());
+        }
+
+        if(categoryTag.getCategoryKey() != null) {
+            values.put(CategoryTagPersistenceContract.CategoryTagEntry.COLUMN_NAME_CATEGORY_KEY, categoryTag.getCategoryKey());
+        }
+
+        if(categoryTag.getRank() != 0) {
+            values.put(CategoryTagPersistenceContract.CategoryTagEntry.COLUMN_NAME_RANK, categoryTag.getRank());
+        }
+
         return values;
     }
 

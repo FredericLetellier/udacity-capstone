@@ -19,19 +19,21 @@
 package com.fredericletellier.foodinspector.data.source;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
+import com.fredericletellier.foodinspector.data.Category;
+import com.fredericletellier.foodinspector.data.CategoryTag;
+import com.fredericletellier.foodinspector.data.CountryCategory;
 import com.fredericletellier.foodinspector.data.Event;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.fredericletellier.foodinspector.data.Product;
+import com.fredericletellier.foodinspector.data.Suggestion;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Concrete implementation to check local data exist, and load remote data
  */
-public class FoodInspectorRepository implements ProductDataSource, CategoryDataSource, EventDataSource {
+public class FoodInspectorRepository implements ProductDataSource, EventDataSource,
+        CategoryDataSource, CategoryTagDataSource, CountryCategoryDataSource, SuggestionDataSource {
 
     private static FoodInspectorRepository INSTANCE = null;
 
@@ -39,27 +41,44 @@ public class FoodInspectorRepository implements ProductDataSource, CategoryDataS
 
     private final ProductDataSource mProductLocalDataSource;
 
-    private final CategoryDataSource mCategoryRemoteDataSource;
-
-    private final CategoryDataSource mCategoryLocalDataSource;
-
     private final EventDataSource mEventRemoteDataSource;
 
     private final EventDataSource mEventLocalDataSource;
 
+    private final CategoryDataSource mCategoryRemoteDataSource;
+
+    private final CategoryDataSource mCategoryLocalDataSource;
+
+    private final CategoryTagDataSource mCategoryTagLocalDataSource;
+
+    private final CountryCategoryDataSource mCountryCategoryRemoteDataSource;
+
+    private final CountryCategoryDataSource mCountryCategoryLocalDataSource;
+
+    private final SuggestionDataSource mSuggestionLocalDataSource;
+
+
     // Prevent direct instantiation.
     private FoodInspectorRepository(@NonNull ProductDataSource productRemoteDataSource,
                                     @NonNull ProductDataSource productLocalDataSource,
+                                    @NonNull EventDataSource eventRemoteDataSource,
+                                    @NonNull EventDataSource eventLocalDataSource,
                                     @NonNull CategoryDataSource categoryRemoteDataSource,
                                     @NonNull CategoryDataSource categoryLocalDataSource,
-                                    @NonNull EventDataSource eventRemoteDataSource,
-                                    @NonNull EventDataSource eventLocalDataSource) {
+                                    @NonNull CategoryTagDataSource categoryTagLocalDataSource,
+                                    @NonNull CountryCategoryDataSource countryCategoryRemoteDataSource,
+                                    @NonNull CountryCategoryDataSource countryCategoryLocalDataSource,
+                                    @NonNull SuggestionDataSource suggestionLocalDataSource) {
         mProductRemoteDataSource = checkNotNull(productRemoteDataSource);
         mProductLocalDataSource = checkNotNull(productLocalDataSource);
-        mCategoryRemoteDataSource = checkNotNull(categoryRemoteDataSource);
-        mCategoryLocalDataSource = checkNotNull(categoryLocalDataSource);
         mEventRemoteDataSource = checkNotNull(eventRemoteDataSource);
         mEventLocalDataSource = checkNotNull(eventLocalDataSource);
+        mCategoryRemoteDataSource = checkNotNull(categoryRemoteDataSource);
+        mCategoryLocalDataSource = checkNotNull(categoryLocalDataSource);
+        mCategoryTagLocalDataSource = checkNotNull(categoryTagLocalDataSource);
+        mCountryCategoryRemoteDataSource = checkNotNull(countryCategoryRemoteDataSource);
+        mCountryCategoryLocalDataSource = checkNotNull(countryCategoryLocalDataSource);
+        mSuggestionLocalDataSource = checkNotNull(suggestionLocalDataSource);
     }
 
     /**
@@ -67,117 +86,211 @@ public class FoodInspectorRepository implements ProductDataSource, CategoryDataS
      *
      * @param productRemoteDataSource the backend product data source
      * @param productLocalDataSource  the device storage product data source
+     * @param eventRemoteDataSource  the backend event data source
+     * @param eventLocalDataSource  the device storage event data source
      * @param categoryRemoteDataSource the backend category data source
      * @param categoryLocalDataSource  the device storage category data source
-     * @param eventRemoteDataSource  the backend category data source
-     * @param eventLocalDataSource  the device storage event data source
+     * @param categoryTagLocalDataSource  the device storage categoryTag data source
+     * @param countryCategoryRemoteDataSource  the backend countryCategory data source
+     * @param countryCategoryLocalDataSource  the device storage countryCategory data source
+     * @param suggestionLocalDataSource  the device storage suggestion data source
      * @return the {@link FoodInspectorRepository} instance
      */
     public static FoodInspectorRepository getInstance(ProductDataSource productRemoteDataSource,
                                                       ProductDataSource productLocalDataSource,
+                                                      EventDataSource eventRemoteDataSource,
+                                                      EventDataSource eventLocalDataSource,
                                                       CategoryDataSource categoryRemoteDataSource,
                                                       CategoryDataSource categoryLocalDataSource,
-                                                      EventDataSource eventRemoteDataSource,
-                                                      EventDataSource eventLocalDataSource) {
+                                                      CategoryTagDataSource categoryTagLocalDataSource,
+                                                      CountryCategoryDataSource countryCategoryRemoteDataSource,
+                                                      CountryCategoryDataSource countryCategoryLocalDataSource,
+                                                      SuggestionDataSource suggestionLocalDataSource) {
         if (INSTANCE == null) {
             INSTANCE = new FoodInspectorRepository(productRemoteDataSource, productLocalDataSource,
-                    categoryRemoteDataSource, categoryLocalDataSource, eventRemoteDataSource,
-                    eventLocalDataSource);
+                    eventRemoteDataSource, eventLocalDataSource, categoryRemoteDataSource,
+                    categoryLocalDataSource, categoryTagLocalDataSource, countryCategoryRemoteDataSource,
+                    countryCategoryLocalDataSource, suggestionLocalDataSource);
         }
         return INSTANCE;
     }
 
     /**
-     * Used to force {@link #getInstance(ProductDataSource, ProductDataSource, CategoryDataSource, CategoryDataSource, EventDataSource, EventDataSource)}
+     * Used to force {@link #getInstance(ProductDataSource, ProductDataSource, EventDataSource, EventDataSource, CategoryDataSource, CategoryDataSource, CategoryTagDataSource, CountryCategoryDataSource, CountryCategoryDataSource, SuggestionDataSource)}
      * to create a new instance next time it's called.
      */
     public static void destroyInstance() {
         INSTANCE = null;
     }
 
-    /**
-     * Check events from local data source (SQLite), if some events are pending network,
-     * {@link GetEventsCallback#onEventsPendingNetwork(List)} is called
-     * Get data of product in remote source for each events in the callback
-     */
-    @Override
-    public void getEvents(@Nullable List<Event> events, @NonNull final GetEventsCallback callback){
-        checkNotNull(callback);
 
-        mEventLocalDataSource.getEvents(null, new GetEventsCallback() {
+    @Override
+    public void getCategory(@NonNull Category category, @NonNull GetCategoryCallback getCategoryCallback) {
+        // TODO
+    }
+
+    @Override
+    public void addCategory(@NonNull Category category, @NonNull AddCategoryCallback addCategoryCallback) {
+        // TODO
+    }
+
+    @Override
+    public void updateCategory(@NonNull Category category, @NonNull UpdateCategoryCallback updateCategoryCallback) {
+        // TODO
+    }
+
+    @Override
+    public void saveCategory(@NonNull Category category, @NonNull SaveCategoryCallback saveCategoryCallback) {
+        // TODO
+    }
+
+    @Override
+    public void getCategoryOfProduct(@NonNull String barcode, @NonNull GetCategoryOfProductCallback getCategoryOfProductCallback) {
+        // TODO
+    }
+
+    @Override
+    public void getCategoryTagId(@NonNull String barcode, @NonNull String categoryKey, @NonNull GetCategoryTagIdCallback getCategoryTagIdCallback) {
+        //no-op
+    }
+
+    @Override
+    public void addCategoryTag(@NonNull CategoryTag categoryTag, @NonNull AddCategoryTagCallback addCategoryTagCallback) {
+        //no-op
+    }
+
+    @Override
+    public void updateCategoryTag(@NonNull CategoryTag categoryTag, @NonNull UpdateCategoryTagCallback updateCategoryTagCallback) {
+        //no-op
+    }
+
+    @Override
+    public void saveCategoryTag(@NonNull CategoryTag categoryTag, @NonNull final SaveCategoryTagCallback saveCategoryTagCallback) {
+        mCategoryTagLocalDataSource.saveCategoryTag(categoryTag, new SaveCategoryTagCallback() {
             @Override
-            public void onEventsPendingNetwork(List<Event> events) {
-                mEventRemoteDataSource.getEvents(events, callback);
+            public void onCategoryTagSaved() {
+                saveCategoryTagCallback.onCategoryTagSaved();
+            }
+
+            @Override
+            public void onError() {
+                saveCategoryTagCallback.onError();
             }
         });
     }
 
-    /**
-     * Check if product of the event exist in local data source (SQLite), if not,
-     * {@link AddEventCallback#onEventProductNotAvailable()} is called and
-     * Get data of product in remote source for this event
-     */
     @Override
-    public void addEvent(@NonNull final String productId, @NonNull final AddEventCallback callback){
-        checkNotNull(productId);
-        checkNotNull(callback);
-
-        mEventLocalDataSource.addEvent(productId, new AddEventCallback() {
-            @Override
-            public void onEventProductNotAvailable() {
-                mEventRemoteDataSource.addEvent(productId, callback);
-            }
-        });
-
+    public void getCountryCategory(@NonNull CountryCategory countryCategory, @NonNull GetCountryCategoryCallback getCountryCategoryCallback) {
+        // TODO
     }
 
-    /**
-     * Update the favorite field of event in local data source (SQLite)
-     */
     @Override
-    public void updateFavoriteFieldEvent(@NonNull String productId){
-        checkNotNull(productId);
-
-        mEventLocalDataSource.updateFavoriteFieldEvent(productId);
+    public void addCountryCategory(@NonNull CountryCategory countryCategory, @NonNull AddCountryCategoryCallback addCountryCategoryCallback) {
+        // TODO
     }
 
-    /**
-     * Check if categories for this product and this country code exist in local data source (SQLite),
-     * If not, {@link GetCategoriesCallback#onCategoriesNotAvailable(ArrayList)} is called
-     * Get data in remote source for each categories in the callback
-     */
     @Override
-    public void getCategories(@NonNull final String productId, @Nullable ArrayList<String> categories, @NonNull final String countryCode, @NonNull final GetCategoriesCallback callback) {
-        checkNotNull(productId);
-        checkNotNull(countryCode);
-        checkNotNull(callback);
-
-        mCategoryLocalDataSource.getCategories(productId, null, countryCode, new GetCategoriesCallback() {
-            @Override
-            public void onCategoriesNotAvailable(ArrayList<String> categories) {
-                mCategoryRemoteDataSource.getCategories(null, categories, countryCode, callback);
-            }
-        });
+    public void updateCountryCategory(@NonNull CountryCategory countryCategory, @NonNull UpdateCountryCategoryCallback updateCountryCategoryCallback) {
+        // TODO
     }
 
-    /**
-     * Check if products exist in local data source (SQLite),
-     * If not, {@link GetXProductsInCategoryCallback#onProductsNotAvailable()} is called and
-     * Get products in remote source
-     */
     @Override
-    public void getXProductsInCategory(@NonNull final String categoryId, @NonNull final String nutritionGradeValue, @NonNull final Integer skipProducts, @NonNull final GetXProductsInCategoryCallback callback) {
-        checkNotNull(categoryId);
-        checkNotNull(nutritionGradeValue);
-        checkNotNull(skipProducts);
-        checkNotNull(callback);
-
-        mProductLocalDataSource.getXProductsInCategory(categoryId, nutritionGradeValue, skipProducts, new GetXProductsInCategoryCallback() {
-            @Override
-            public void onProductsNotAvailable() {
-                mProductRemoteDataSource.getXProductsInCategory(categoryId, nutritionGradeValue, skipProducts, callback);
-            }
-        });
+    public void saveCountryCategory(@NonNull CountryCategory countryCategory, @NonNull SaveCountryCategoryCallback saveCountryCategoryCallback) {
+        // TODO
     }
 
+    @Override
+    public void getCountryCategoryOfProduct(@NonNull String barcode, @NonNull GetCountryCategoryOfProductCallback getCountryCategoryOfProductCallback) {
+        // TODO
+    }
+
+    @Override
+    public void getEvent(@NonNull Event event, @NonNull GetEventCallback getEventCallback) {
+        // TODO
+    }
+
+    @Override
+    public void addEvent(@NonNull Event event, @NonNull AddEventCallback addEventCallback) {
+        // TODO
+    }
+
+    @Override
+    public void updateEvent(@NonNull Event event, @NonNull UpdateEventCallback updateEventCallback) {
+        // TODO
+    }
+
+    @Override
+    public void saveEvent(@NonNull Event event, @NonNull SaveEventCallback saveEventCallback) {
+        // TODO
+    }
+
+    @Override
+    public void saveScan(@NonNull String barcode, @NonNull SaveScanCallback saveScanCallback) {
+        // TODO
+    }
+
+    @Override
+    public void refreshEventsOnError(@NonNull RefreshEventsOnErrorCallback refreshEventsOnErrorCallback) {
+        // TODO
+    }
+
+    @Override
+    public void getEventsOnError(@NonNull GetEventsOnErrorCallback getEventsOnErrorCallback) {
+        // TODO
+    }
+
+    @Override
+    public void getProduct(@NonNull String barcode, @NonNull GetProductCallback getProductCallback) {
+        // TODO
+    }
+
+    @Override
+    public void getProducts(@NonNull String categoryKey, @NonNull String countryKey, @NonNull String nutritionGradeValue, @NonNull Integer offsetProducts, @NonNull Integer numberOfProducts, @NonNull GetProductsCallback getProductsCallback) {
+        // TODO
+    }
+
+    @Override
+    public void addProduct(@NonNull Product product, @NonNull AddProductCallback addProductCallback) {
+        // TODO
+    }
+
+    @Override
+    public void updateProduct(@NonNull Product product, @NonNull UpdateProductCallback updateProductCallback) {
+        // TODO
+    }
+
+    @Override
+    public void saveProduct(@NonNull Product product, @NonNull SaveProductCallback saveProductCallback) {
+        // TODO
+    }
+
+    @Override
+    public void parseProduct(@NonNull String barcode, @NonNull ParseProductCallback parseProductCallback) {
+        // TODO
+    }
+
+    @Override
+    public void updateProductBookmark(@NonNull String barcode, @NonNull UpdateProductBookmarkCallback updateProductBookmarkCallback) {
+        // TODO
+    }
+
+    @Override
+    public void getSuggestion(@NonNull Suggestion suggestion, @NonNull GetSuggestionCallback getSuggestionCallback) {
+        // TODO
+    }
+
+    @Override
+    public void addSuggestion(@NonNull Suggestion suggestion, @NonNull AddSuggestionCallback addSuggestionCallback) {
+        // TODO
+    }
+
+    @Override
+    public void updateSuggestion(@NonNull Suggestion suggestion, @NonNull UpdateSuggestionCallback updateSuggestionCallback) {
+        // TODO
+    }
+
+    @Override
+    public void saveSuggestion(@NonNull Suggestion suggestion, @NonNull SaveSuggestionCallback saveSuggestionCallback) {
+        // TODO
+    }
 }

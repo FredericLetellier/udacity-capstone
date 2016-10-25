@@ -20,6 +20,8 @@ package com.fredericletellier.foodinspector.data.source.local;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.fredericletellier.foodinspector.data.CategoryTag;
@@ -48,10 +50,23 @@ public class CategoryTagLocalDataSource implements CategoryTagDataSource {
         return INSTANCE;
     }
 
-
     @Override
-    public void getCategoryTag(@NonNull CategoryTag categoryTag, @NonNull GetCategoryTagCallback getCategoryTagCallback) {
+    public void getCategoryTagId(@NonNull String barcode, @NonNull String categoryKey, @NonNull GetCategoryTagIdCallback getCategoryTagIdCallback) {
+        Cursor cursor = mContentResolver.query(
+                CategoryTagPersistenceContract.CategoryTagEntry.buildCategoryTagUri(),
+                new String[]{CategoryTagPersistenceContract.CategoryTagEntry._ID},
+                CategoryTagPersistenceContract.CategoryTagEntry.COLUMN_NAME_BARCODE + " = ? AND " +
+                        CategoryTagPersistenceContract.CategoryTagEntry.COLUMN_NAME_CATEGORY_KEY + " = ?",
+                new String[]{barcode, categoryKey},
+                null);
 
+        if (cursor.moveToLast()) {
+            long _id = cursor.getLong(cursor.getColumnIndex(CategoryTagPersistenceContract.CategoryTagEntry._ID));
+            getCategoryTagIdCallback.onCategoryTagIdLoaded(_id);
+        } else {
+            getCategoryTagIdCallback.onCategoryTagNotExist();
+        }
+        cursor.close();
     }
 
     @Override
@@ -59,7 +74,13 @@ public class CategoryTagLocalDataSource implements CategoryTagDataSource {
         checkNotNull(categoryTag);
 
         ContentValues values = CategoryTagValues.from(categoryTag);
-        mContentResolver.insert(CategoryTagPersistenceContract.CategoryTagEntry.buildCategoryTagUri(), values);
+        Uri uri = mContentResolver.insert(CategoryTagPersistenceContract.CategoryTagEntry.buildCategoryTagUri(), values);
+
+        if (uri != null) {
+            addCategoryTagCallback.onCategoryTagAdded();
+        } else {
+            addCategoryTagCallback.onError();
+        }
     }
 
     @Override
@@ -73,11 +94,52 @@ public class CategoryTagLocalDataSource implements CategoryTagDataSource {
 
         int rows = mContentResolver.update(CategoryTagPersistenceContract.CategoryTagEntry.buildCategoryTagUri(), values, selection, selectionArgs);
 
-        checkNotNull(rows);
+        if (rows != 0) {
+            updateCategoryTagCallback.onCategoryTagUpdated();
+        } else {
+            updateCategoryTagCallback.onError();
+        }
     }
 
     @Override
-    public void saveCategoryTag(@NonNull CategoryTag categoryTag, @NonNull SaveCategoryTagCallback saveCategoryTagCallback) {
+    public void saveCategoryTag(@NonNull final CategoryTag categoryTag, @NonNull final SaveCategoryTagCallback saveCategoryTagCallback) {
+        checkNotNull(categoryTag);
 
+        String barcode = categoryTag.getBarcode();
+        String categoryKey = categoryTag.getCategoryKey();
+
+        getCategoryTagId(barcode, categoryKey, new GetCategoryTagIdCallback() {
+
+            @Override
+            public void onCategoryTagIdLoaded(long id) {
+                categoryTag.setId(id);
+                updateCategoryTag(categoryTag, new UpdateCategoryTagCallback() {
+                    @Override
+                    public void onCategoryTagUpdated() {
+                        saveCategoryTagCallback.onCategoryTagSaved();
+                    }
+
+                    @Override
+                    public void onError() {
+                        saveCategoryTagCallback.onError();
+                    }
+                });
+            }
+
+            @Override
+            public void onCategoryTagNotExist() {
+                addCategoryTag(categoryTag, new AddCategoryTagCallback() {
+                    @Override
+                    public void onCategoryTagAdded() {
+                        saveCategoryTagCallback.onCategoryTagSaved();
+                    }
+
+                    @Override
+                    public void onError() {
+                        saveCategoryTagCallback.onError();
+                    }
+                });
+            }
+        });
     }
 }

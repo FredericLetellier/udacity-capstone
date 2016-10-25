@@ -28,39 +28,39 @@ import com.fredericletellier.foodinspector.data.CategoryTag;
  */
 public interface CategoryTagDataSource {
 
-    interface GetCategoryTagCallback {
+    interface GetCategoryTagIdCallback {
 
-        void onCategoryTagLoaded(CategoryTag categoryTag);
+        void onCategoryTagIdLoaded(long id);
 
-        void onError(Throwable throwable);
+        void onCategoryTagNotExist();
 
     }
 
     interface AddCategoryTagCallback {
 
-        void onCategoryTagAdded(CategoryTag categoryTag);
+        void onCategoryTagAdded();
 
-        void onError(Throwable throwable);
+        void onError();
 
     }
 
     interface UpdateCategoryTagCallback {
 
-        void onCategoryTagUpdated(CategoryTag categoryTag);
+        void onCategoryTagUpdated();
 
-        void onError(Throwable throwable);
+        void onError();
 
     }
 
     interface SaveCategoryTagCallback {
 
-        void onCategoryTagSaved(CategoryTag categoryTag);
+        void onCategoryTagSaved();
 
-        void onError(Throwable throwable);
+        void onError();
 
     }
 
-    void getCategoryTag(@NonNull CategoryTag categoryTag, @NonNull GetCategoryTagCallback getCategoryTagCallback);
+    void getCategoryTagId(@NonNull String barcode, @NonNull String categoryKey, @NonNull GetCategoryTagIdCallback getCategoryTagIdCallback);
 
     void addCategoryTag(@NonNull CategoryTag categoryTag, @NonNull AddCategoryTagCallback addCategoryTagCallback);
 
