@@ -42,7 +42,7 @@ public class EventRemoteDataSource implements EventDataSource {
     }
 
     @Override
-    public void getEventId(@NonNull String barcode, @NonNull GetEventIdCallback getEventIdCallback) {
+    public void checkExistEvent(@NonNull String barcode, @NonNull CheckExistEventCallback checkExistEventCallback) {
         //no-op in remote
     }
 

@@ -37,11 +37,11 @@ public interface CountryCategoryDataSource {
 
     }
 
-    interface GetCountryCategoryIdCallback {
+    interface CheckExistCountryCategoryCallback {
 
-        void onCountryCategoryIdLoaded(long id);
+        void onCountryCategoryExisted(long id);
 
-        void onCountryCategoryNotExist();
+        void onCountryCategoryNotExisted();
 
     }
 
@@ -79,7 +79,7 @@ public interface CountryCategoryDataSource {
 
     void getCountryCategory(@NonNull CountryCategory countryCategory, @NonNull GetCountryCategoryCallback getCountryCategoryCallback);
 
-    void getCountryCategoryId(@NonNull String categoryKey, @NonNull String countryKey, @NonNull GetCountryCategoryIdCallback getCountryCategoryIdCallback);
+    void checkExistCountryCategory(@NonNull String categoryKey, @NonNull String countryKey, @NonNull CheckExistCountryCategoryCallback checkExistCountryCategoryCallback);
 
     void addCountryCategory(@NonNull CountryCategory countryCategory, @NonNull AddCountryCategoryCallback addCountryCategoryCallback);
 

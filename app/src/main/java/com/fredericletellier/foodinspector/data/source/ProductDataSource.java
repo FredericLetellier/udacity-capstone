@@ -45,11 +45,11 @@ public interface ProductDataSource {
 
     }
 
-    interface GetProductIdCallback {
+    interface CheckExistProductCallback {
 
-        void onProductIdLoaded(long id);
+        void onProductExisted(long id);
 
-        void onProductNotExist();
+        void onProductNotExisted();
 
     }
 
@@ -97,7 +97,7 @@ public interface ProductDataSource {
 
     void getProducts(@NonNull String categoryKey, @NonNull String countryKey, @NonNull String nutritionGradeValue, @NonNull Integer offsetProducts, @NonNull Integer numberOfProducts, @NonNull GetProductsCallback getProductsCallback);
 
-    void getProductId(@NonNull String barcode, @NonNull GetProductIdCallback getProductIdCallback);
+    void checkExistProduct(@NonNull String barcode, @NonNull CheckExistProductCallback checkExistProductCallback);
 
     void addProduct(@NonNull Product product, @NonNull AddProductCallback addProductCallback);
 

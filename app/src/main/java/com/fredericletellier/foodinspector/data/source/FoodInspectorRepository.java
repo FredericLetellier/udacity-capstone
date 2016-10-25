@@ -124,7 +124,7 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
     }
 
     @Override
-    public void getCategoryId(@NonNull String categoryKey, @NonNull GetCategoryIdCallback getCategoryIdCallback) {
+    public void checkExistCategory(@NonNull String categoryKey, @NonNull CheckExistCategoryCallback checkExistCategoryCallback) {
         //no-op, internal use only
     }
 
@@ -159,7 +159,7 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
     }
 
     @Override
-    public void getCategoryTagId(@NonNull String barcode, @NonNull String categoryKey, @NonNull GetCategoryTagIdCallback getCategoryTagIdCallback) {
+    public void checkExistCategoryTag(@NonNull String barcode, @NonNull String categoryKey, @NonNull CheckExistCategoryTagCallback checkExistCategoryTagCallback) {
         //no-op, internal use only
     }
 
@@ -194,7 +194,7 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
     }
 
     @Override
-    public void getCountryCategoryId(@NonNull String categoryKey, @NonNull String countryKey, @NonNull GetCountryCategoryIdCallback getCountryCategoryIdCallback) {
+    public void checkExistCountryCategory(@NonNull String categoryKey, @NonNull String countryKey, @NonNull CheckExistCountryCategoryCallback checkExistCountryCategoryCallback) {
         //no-op, internal use only
     }
 
@@ -229,7 +229,7 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
     }
 
     @Override
-    public void getEventId(@NonNull String barcode, @NonNull GetEventIdCallback getEventIdCallback) {
+    public void checkExistEvent(@NonNull String barcode, @NonNull CheckExistEventCallback checkExistEventCallback) {
         //no-op, internal use only
     }
 
@@ -274,8 +274,18 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
     }
 
     @Override
-    public void getProduct(@NonNull String barcode, @NonNull GetProductCallback getProductCallback) {
-        // TODO
+    public void getProduct(@NonNull String barcode, @NonNull final GetProductCallback getProductCallback) {
+        mProductLocalDataSource.checkExistProduct(barcode, new CheckExistProductCallback() {
+            @Override
+            public void onProductExisted(long id) {
+                //TODO dernier point d arret
+            }
+
+            @Override
+            public void onProductNotExisted() {
+
+            }
+        });
     }
 
     @Override
@@ -284,7 +294,7 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
     }
 
     @Override
-    public void getProductId(@NonNull String barcode, @NonNull GetProductIdCallback getProductIdCallback) {
+    public void checkExistProduct(@NonNull String barcode, @NonNull CheckExistProductCallback checkExistProductCallback) {
         //no-op, internal use only
     }
 
@@ -324,7 +334,7 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
     }
 
     @Override
-    public void getSuggestionId(@NonNull String barcode, @NonNull String categoryKey, @NonNull String countryKey, @NonNull GetSuggestionIdCallback getSuggestionIdCallback) {
+    public void checkExistSuggestion(@NonNull String barcode, @NonNull String categoryKey, @NonNull String countryKey, @NonNull CheckExistSuggestionCallback checkExistSuggestionCallback) {
         //no-op, internal use only
     }
 

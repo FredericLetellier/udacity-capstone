@@ -28,11 +28,11 @@ import com.fredericletellier.foodinspector.data.Suggestion;
  */
 public interface SuggestionDataSource {
 
-    interface GetSuggestionIdCallback {
+    interface CheckExistSuggestionCallback {
 
-        void onSuggestionIdLoaded(long id);
+        void onSuggestionExisted(long id);
 
-        void onSuggestionNotExist();
+        void onSuggestionNotExisted();
 
     }
 
@@ -60,7 +60,7 @@ public interface SuggestionDataSource {
 
     }
 
-    void getSuggestionId(@NonNull String barcode, @NonNull String categoryKey, @NonNull String countryKey, @NonNull GetSuggestionIdCallback getSuggestionIdCallback);
+    void checkExistSuggestion(@NonNull String barcode, @NonNull String categoryKey, @NonNull String countryKey, @NonNull CheckExistSuggestionCallback checkExistSuggestionCallback);
 
     void addSuggestion(@NonNull Suggestion suggestion, @NonNull AddSuggestionCallback addSuggestionCallback);
 

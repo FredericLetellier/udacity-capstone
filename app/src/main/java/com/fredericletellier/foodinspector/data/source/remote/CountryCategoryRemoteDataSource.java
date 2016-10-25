@@ -109,8 +109,7 @@ public class CountryCategoryRemoteDataSource implements CountryCategoryDataSourc
     }
 
     @Override
-    public void getCountryCategoryId(@NonNull String categoryKey, @NonNull String countryKey,
-                                     @NonNull GetCountryCategoryCallback getCountryCategoryCallback) {
+    public void checkExistCountryCategory(@NonNull String categoryKey, @NonNull String countryKey, @NonNull CheckExistCountryCategoryCallback checkExistCountryCategoryCallback) {
         //no-op in remote
     }
 

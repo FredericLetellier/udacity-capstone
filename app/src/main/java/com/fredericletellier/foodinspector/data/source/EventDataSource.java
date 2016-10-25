@@ -29,11 +29,11 @@ import java.util.List;
  */
 public interface EventDataSource {
     
-    interface GetEventIdCallback {
+    interface CheckExistEventCallback {
 
-        void onEventIdLoaded(long id);
+        void onEventExisted(long id);
 
-        void onEventNotExist();
+        void onEventNotExisted();
 
     }
 
@@ -85,7 +85,7 @@ public interface EventDataSource {
 
     }
 
-    void getEventId(@NonNull String barcode, @NonNull GetEventIdCallback getEventIdCallback);
+    void checkExistEvent(@NonNull String barcode, @NonNull CheckExistEventCallback checkExistEventCallback);
 
     void addEvent(@NonNull Event event, @NonNull AddEventCallback addEventCallback);
 

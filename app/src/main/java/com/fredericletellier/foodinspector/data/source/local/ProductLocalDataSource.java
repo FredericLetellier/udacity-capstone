@@ -64,8 +64,8 @@ public class ProductLocalDataSource implements ProductDataSource {
     }
 
     @Override
-    public void getProductId(@NonNull String barcode, @NonNull ProductDataSource.GetProductIdCallback getProductIdCallback) {
-        Cursor cursor = mContentResolver.query(
+    public void checkExistProduct(@NonNull String barcode, @NonNull CheckExistProductCallback checkExistProductCallback) {
+       Cursor cursor = mContentResolver.query(
                 ProductPersistenceContract.ProductEntry.buildProductUri(),
                 new String[]{ProductPersistenceContract.ProductEntry._ID},
                 ProductPersistenceContract.ProductEntry.COLUMN_NAME_BARCODE + " = ?",
@@ -74,9 +74,9 @@ public class ProductLocalDataSource implements ProductDataSource {
 
         if (cursor.moveToLast()) {
             long _id = cursor.getLong(cursor.getColumnIndex(ProductPersistenceContract.ProductEntry._ID));
-            getProductIdCallback.onProductIdLoaded(_id);
+            checkExistProductCallback.onProductExisted(_id);
         } else {
-            getProductIdCallback.onProductNotExist();
+            checkExistProductCallback.onProductNotExisted();
         }
         cursor.close();
     }
@@ -119,10 +119,10 @@ public class ProductLocalDataSource implements ProductDataSource {
 
         String barcode = Product.getBarcode();
 
-        getProductId(barcode, new ProductDataSource.GetProductIdCallback() {
+        checkExistProduct(barcode, new CheckExistProductCallback() {
 
             @Override
-            public void onProductIdLoaded(long id) {
+            public void onProductExisted(long id) {
                 Product.setId(id);
                 updateProduct(Product, new UpdateProductCallback() {
                     @Override
@@ -138,7 +138,7 @@ public class ProductLocalDataSource implements ProductDataSource {
             }
 
             @Override
-            public void onProductNotExist() {
+            public void onProductNotExisted() {
                 addProduct(Product, new AddProductCallback() {
                     @Override
                     public void onProductAdded() {

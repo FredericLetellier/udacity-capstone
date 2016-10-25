@@ -54,7 +54,9 @@ public class CategoryLocalDataSource implements CategoryDataSource {
     }
 
     @Override
-    public void getCategoryId(@NonNull String categoryKey, @NonNull CategoryDataSource.GetCategoryIdCallback getCategoryIdCallback) {
+    public void checkExistCategory(@NonNull String categoryKey,
+                                   @NonNull CheckExistCategoryCallback checkExistCategoryCallback) {
+
         Cursor cursor = mContentResolver.query(
                 CategoryPersistenceContract.CategoryEntry.buildCategoryUri(),
                 new String[]{CategoryPersistenceContract.CategoryEntry._ID},
@@ -64,9 +66,9 @@ public class CategoryLocalDataSource implements CategoryDataSource {
 
         if (cursor.moveToLast()) {
             long _id = cursor.getLong(cursor.getColumnIndex(CategoryPersistenceContract.CategoryEntry._ID));
-            getCategoryIdCallback.onCategoryIdLoaded(_id);
+            checkExistCategoryCallback.onCategoryExisted(_id);
         } else {
-            getCategoryIdCallback.onCategoryNotExist();
+            checkExistCategoryCallback.onCategoryNotExisted();
         }
         cursor.close();
     }
@@ -109,10 +111,10 @@ public class CategoryLocalDataSource implements CategoryDataSource {
 
         String categoryKey = Category.getCategoryKey();
 
-        getCategoryId(categoryKey, new CategoryDataSource.GetCategoryIdCallback() {
+        checkExistCategory(categoryKey, new CheckExistCategoryCallback() {
 
             @Override
-            public void onCategoryIdLoaded(long id) {
+            public void onCategoryExisted(long id) {
                 Category.setId(id);
                 updateCategory(Category, new CategoryDataSource.UpdateCategoryCallback() {
                     @Override
@@ -128,7 +130,7 @@ public class CategoryLocalDataSource implements CategoryDataSource {
             }
 
             @Override
-            public void onCategoryNotExist() {
+            public void onCategoryNotExisted() {
                 addCategory(Category, new CategoryDataSource.AddCategoryCallback() {
                     @Override
                     public void onCategoryAdded() {

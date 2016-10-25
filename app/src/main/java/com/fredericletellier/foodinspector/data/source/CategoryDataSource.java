@@ -29,11 +29,11 @@ import java.util.List;
  */
 public interface CategoryDataSource {
 
-    interface GetCategoryIdCallback {
+    interface CheckExistCategoryCallback {
 
-        void onCategoryIdLoaded(long id);
+        void onCategoryExisted(long id);
 
-        void onCategoryNotExist();
+        void onCategoryNotExisted();
 
     }
 
@@ -69,7 +69,7 @@ public interface CategoryDataSource {
 
     }
 
-    void getCategoryId(@NonNull String categoryKey, @NonNull GetCategoryIdCallback getCategoryIdCallback);
+    void checkExistCategory(@NonNull String categoryKey, @NonNull CheckExistCategoryCallback checkExistCategoryCallback);
 
     void addCategory(@NonNull Category category, @NonNull AddCategoryCallback addCategoryCallback);
 

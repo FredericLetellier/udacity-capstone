@@ -54,7 +54,7 @@ public class EventLocalDataSource implements EventDataSource {
     }
 
     @Override
-    public void getEventId(@NonNull String barcode, @NonNull EventDataSource.GetEventIdCallback getEventIdCallback) {
+    public void checkExistEvent(@NonNull String barcode, @NonNull CheckExistEventCallback checkExistEventCallback) {
         Cursor cursor = mContentResolver.query(
                 EventPersistenceContract.EventEntry.buildEventUri(),
                 new String[]{EventPersistenceContract.EventEntry._ID},
@@ -64,9 +64,9 @@ public class EventLocalDataSource implements EventDataSource {
 
         if (cursor.moveToLast()) {
             long _id = cursor.getLong(cursor.getColumnIndex(EventPersistenceContract.EventEntry._ID));
-            getEventIdCallback.onEventIdLoaded(_id);
+            checkExistEventCallback.onEventExisted(_id);
         } else {
-            getEventIdCallback.onEventNotExist();
+            checkExistEventCallback.onEventNotExisted();
         }
         cursor.close();
     }
@@ -109,10 +109,10 @@ public class EventLocalDataSource implements EventDataSource {
 
         String barcode = Event.getBarcode();
 
-        getEventId(barcode, new EventDataSource.GetEventIdCallback() {
+        checkExistEvent(barcode, new CheckExistEventCallback() {
 
             @Override
-            public void onEventIdLoaded(long id) {
+            public void onEventExisted(long id) {
                 Event.setId(id);
                 updateEvent(Event, new EventDataSource.UpdateEventCallback() {
                     @Override
@@ -128,7 +128,7 @@ public class EventLocalDataSource implements EventDataSource {
             }
 
             @Override
-            public void onEventNotExist() {
+            public void onEventNotExisted() {
                 addEvent(Event, new EventDataSource.AddEventCallback() {
                     @Override
                     public void onEventAdded() {

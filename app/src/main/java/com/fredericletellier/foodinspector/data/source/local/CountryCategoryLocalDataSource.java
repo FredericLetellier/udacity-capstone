@@ -57,8 +57,9 @@ public class CountryCategoryLocalDataSource implements CountryCategoryDataSource
     }
 
     @Override
-    public void getCountryCategoryId(@NonNull String categoryKey, @NonNull String countryKey,
-                                     @NonNull GetCountryCategoryIdCallback getCountryCategoryIdCallback) {
+    public void checkExistCountryCategory(@NonNull String categoryKey, @NonNull String countryKey,
+                                          @NonNull CheckExistCountryCategoryCallback checkExistCountryCategoryCallback) {
+
         Cursor cursor = mContentResolver.query(
                 CountryCategoryPersistenceContract.CountryCategoryEntry.buildCountryCategoryUri(),
                 new String[]{CountryCategoryPersistenceContract.CountryCategoryEntry._ID},
@@ -69,9 +70,9 @@ public class CountryCategoryLocalDataSource implements CountryCategoryDataSource
 
         if (cursor.moveToLast()) {
             long _id = cursor.getLong(cursor.getColumnIndex(CountryCategoryPersistenceContract.CountryCategoryEntry._ID));
-            getCountryCategoryIdCallback.onCountryCategoryIdLoaded(_id);
+            checkExistCountryCategoryCallback.onCountryCategoryExisted(_id);
         } else {
-            getCountryCategoryIdCallback.onCountryCategoryNotExist();
+            checkExistCountryCategoryCallback.onCountryCategoryNotExisted();
         }
         cursor.close();
     }
@@ -118,10 +119,10 @@ public class CountryCategoryLocalDataSource implements CountryCategoryDataSource
         String categoryKey = CountryCategory.getCategoryKey();
         String countryKey = CountryCategory.getCountryKey();
 
-        getCountryCategoryId(categoryKey, countryKey, new CountryCategoryDataSource.GetCountryCategoryIdCallback() {
+        checkExistCountryCategory(categoryKey, countryKey, new CheckExistCountryCategoryCallback() {
 
             @Override
-            public void onCountryCategoryIdLoaded(long id) {
+            public void onCountryCategoryExisted(long id) {
                 CountryCategory.setId(id);
                 updateCountryCategory(CountryCategory, new CountryCategoryDataSource.UpdateCountryCategoryCallback() {
                     @Override
@@ -137,7 +138,7 @@ public class CountryCategoryLocalDataSource implements CountryCategoryDataSource
             }
 
             @Override
-            public void onCountryCategoryNotExist() {
+            public void onCountryCategoryNotExisted() {
                 addCountryCategory(CountryCategory, new CountryCategoryDataSource.AddCountryCategoryCallback() {
                     @Override
                     public void onCountryCategoryAdded() {

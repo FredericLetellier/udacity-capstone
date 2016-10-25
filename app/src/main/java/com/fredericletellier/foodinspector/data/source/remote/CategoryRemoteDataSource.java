@@ -43,9 +43,8 @@ public class CategoryRemoteDataSource implements CategoryDataSource {
 
     //TODO Intégrer la partie remote de la procédure de récupération du nom
 
-
     @Override
-    public void getCategoryId(@NonNull String categoryKey, @NonNull GetCategoryIdCallback getCategoryIdCallback) {
+    public void checkExistCategory(@NonNull String categoryKey, @NonNull CheckExistCategoryCallback checkExistCategoryCallback) {
         //no-op in remote
     }
 

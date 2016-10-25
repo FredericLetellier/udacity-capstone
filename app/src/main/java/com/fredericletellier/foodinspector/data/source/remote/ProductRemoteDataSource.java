@@ -100,7 +100,7 @@ public class ProductRemoteDataSource implements ProductDataSource {
     }
 
     @Override
-    public void getProductId(@NonNull String barcode, @NonNull GetProductIdCallback getProductIdCallback) {
+    public void checkExistProduct(@NonNull String barcode, @NonNull CheckExistProductCallback checkExistProductCallback) {
         //no-op in remote
     }
 

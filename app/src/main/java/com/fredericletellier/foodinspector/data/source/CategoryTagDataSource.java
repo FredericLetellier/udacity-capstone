@@ -28,11 +28,11 @@ import com.fredericletellier.foodinspector.data.CategoryTag;
  */
 public interface CategoryTagDataSource {
 
-    interface GetCategoryTagIdCallback {
+    interface CheckExistCategoryTagCallback {
 
-        void onCategoryTagIdLoaded(long id);
+        void onCategoryTagExisted(long id);
 
-        void onCategoryTagNotExist();
+        void onCategoryTagNotExisted();
 
     }
 
@@ -60,7 +60,7 @@ public interface CategoryTagDataSource {
 
     }
 
-    void getCategoryTagId(@NonNull String barcode, @NonNull String categoryKey, @NonNull GetCategoryTagIdCallback getCategoryTagIdCallback);
+    void checkExistCategoryTag(@NonNull String barcode, @NonNull String categoryKey, @NonNull CheckExistCategoryTagCallback checkExistCategoryTagCallback);
 
     void addCategoryTag(@NonNull CategoryTag categoryTag, @NonNull AddCategoryTagCallback addCategoryTagCallback);
 

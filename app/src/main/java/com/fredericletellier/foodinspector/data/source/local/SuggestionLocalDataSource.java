@@ -50,8 +50,10 @@ public class SuggestionLocalDataSource implements SuggestionDataSource {
         return INSTANCE;
     }
 
+
     @Override
-    public void getSuggestionId(@NonNull String barcode, @NonNull String categoryKey, @NonNull String countryKey, @NonNull GetSuggestionIdCallback getSuggestionIdCallback) {
+    public void checkExistSuggestion(@NonNull String barcode, @NonNull String categoryKey, @NonNull String countryKey,
+                                     @NonNull CheckExistSuggestionCallback checkExistSuggestionCallback) {
         Cursor cursor = mContentResolver.query(
                 SuggestionPersistenceContract.SuggestionEntry.buildSuggestionUri(),
                 new String[]{SuggestionPersistenceContract.SuggestionEntry._ID},
@@ -63,9 +65,9 @@ public class SuggestionLocalDataSource implements SuggestionDataSource {
 
         if (cursor.moveToLast()) {
             long _id = cursor.getLong(cursor.getColumnIndex(SuggestionPersistenceContract.SuggestionEntry._ID));
-            getSuggestionIdCallback.onSuggestionIdLoaded(_id);
+            checkExistSuggestionCallback.onSuggestionExisted(_id);
         } else {
-            getSuggestionIdCallback.onSuggestionNotExist();
+            checkExistSuggestionCallback.onSuggestionNotExisted();
         }
         cursor.close();
     }
@@ -110,10 +112,10 @@ public class SuggestionLocalDataSource implements SuggestionDataSource {
         String categoryKey = Suggestion.getCategoryKey();
         String countryKey = Suggestion.getCountryKey();
 
-        getSuggestionId(barcode, categoryKey, countryKey, new GetSuggestionIdCallback() {
+        checkExistSuggestion(barcode, categoryKey, countryKey, new CheckExistSuggestionCallback() {
 
             @Override
-            public void onSuggestionIdLoaded(long id) {
+            public void onSuggestionExisted(long id) {
                 Suggestion.setId(id);
                 updateSuggestion(Suggestion, new UpdateSuggestionCallback() {
                     @Override
@@ -129,7 +131,7 @@ public class SuggestionLocalDataSource implements SuggestionDataSource {
             }
 
             @Override
-            public void onSuggestionNotExist() {
+            public void onSuggestionNotExisted() {
                 addSuggestion(Suggestion, new AddSuggestionCallback() {
                     @Override
                     public void onSuggestionAdded() {

@@ -51,7 +51,9 @@ public class CategoryTagLocalDataSource implements CategoryTagDataSource {
     }
 
     @Override
-    public void getCategoryTagId(@NonNull String barcode, @NonNull String categoryKey, @NonNull GetCategoryTagIdCallback getCategoryTagIdCallback) {
+    public void checkExistCategoryTag(@NonNull String barcode, @NonNull String categoryKey,
+                                      @NonNull CheckExistCategoryTagCallback checkExistCategoryTagCallback) {
+
         Cursor cursor = mContentResolver.query(
                 CategoryTagPersistenceContract.CategoryTagEntry.buildCategoryTagUri(),
                 new String[]{CategoryTagPersistenceContract.CategoryTagEntry._ID},
@@ -62,9 +64,9 @@ public class CategoryTagLocalDataSource implements CategoryTagDataSource {
 
         if (cursor.moveToLast()) {
             long _id = cursor.getLong(cursor.getColumnIndex(CategoryTagPersistenceContract.CategoryTagEntry._ID));
-            getCategoryTagIdCallback.onCategoryTagIdLoaded(_id);
+            checkExistCategoryTagCallback.onCategoryTagExisted(_id);
         } else {
-            getCategoryTagIdCallback.onCategoryTagNotExist();
+            checkExistCategoryTagCallback.onCategoryTagNotExisted();
         }
         cursor.close();
     }
@@ -108,10 +110,10 @@ public class CategoryTagLocalDataSource implements CategoryTagDataSource {
         String barcode = categoryTag.getBarcode();
         String categoryKey = categoryTag.getCategoryKey();
 
-        getCategoryTagId(barcode, categoryKey, new GetCategoryTagIdCallback() {
+        checkExistCategoryTag(barcode, categoryKey, new CheckExistCategoryTagCallback() {
 
             @Override
-            public void onCategoryTagIdLoaded(long id) {
+            public void onCategoryTagExisted(long id) {
                 categoryTag.setId(id);
                 updateCategoryTag(categoryTag, new UpdateCategoryTagCallback() {
                     @Override
@@ -127,7 +129,7 @@ public class CategoryTagLocalDataSource implements CategoryTagDataSource {
             }
 
             @Override
-            public void onCategoryTagNotExist() {
+            public void onCategoryTagNotExisted() {
                 addCategoryTag(categoryTag, new AddCategoryTagCallback() {
                     @Override
                     public void onCategoryTagAdded() {
