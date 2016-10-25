@@ -108,6 +108,15 @@ public class Event {
         this.mId = id;
     }
 
+    /**
+     *
+     * @return
+     * The id
+     */
+    public String getAsStringId() {
+        return String.valueOf(mId);
+    }
+
     public Event withId(long id) {
         this.mId = id;
         return this;

@@ -123,25 +123,34 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
         INSTANCE = null;
     }
 
-
     @Override
-    public void getCategory(@NonNull Category category, @NonNull GetCategoryCallback getCategoryCallback) {
-        // TODO
+    public void getCategoryId(@NonNull String categoryKey, @NonNull GetCategoryIdCallback getCategoryIdCallback) {
+        //no-op, internal use only
     }
 
     @Override
     public void addCategory(@NonNull Category category, @NonNull AddCategoryCallback addCategoryCallback) {
-        // TODO
+        //no-op, internal use only
     }
 
     @Override
     public void updateCategory(@NonNull Category category, @NonNull UpdateCategoryCallback updateCategoryCallback) {
-        // TODO
+        //no-op, internal use only
     }
 
     @Override
-    public void saveCategory(@NonNull Category category, @NonNull SaveCategoryCallback saveCategoryCallback) {
-        // TODO
+    public void saveCategory(@NonNull Category category, @NonNull final SaveCategoryCallback saveCategoryCallback) {
+        mCategoryLocalDataSource.saveCategory(category, new SaveCategoryCallback() {
+            @Override
+            public void onCategorySaved() {
+                saveCategoryCallback.onCategorySaved();
+            }
+
+            @Override
+            public void onError() {
+                saveCategoryCallback.onError();
+            }
+        });
     }
 
     @Override
@@ -151,17 +160,17 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
 
     @Override
     public void getCategoryTagId(@NonNull String barcode, @NonNull String categoryKey, @NonNull GetCategoryTagIdCallback getCategoryTagIdCallback) {
-        //no-op
+        //no-op, internal use only
     }
 
     @Override
     public void addCategoryTag(@NonNull CategoryTag categoryTag, @NonNull AddCategoryTagCallback addCategoryTagCallback) {
-        //no-op
+        //no-op, internal use only
     }
 
     @Override
     public void updateCategoryTag(@NonNull CategoryTag categoryTag, @NonNull UpdateCategoryTagCallback updateCategoryTagCallback) {
-        //no-op
+        //no-op, internal use only
     }
 
     @Override
@@ -185,18 +194,33 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
     }
 
     @Override
+    public void getCountryCategoryId(@NonNull String categoryKey, @NonNull String countryKey, @NonNull GetCountryCategoryIdCallback getCountryCategoryIdCallback) {
+        //no-op, internal use only
+    }
+
+    @Override
     public void addCountryCategory(@NonNull CountryCategory countryCategory, @NonNull AddCountryCategoryCallback addCountryCategoryCallback) {
-        // TODO
+        //no-op, internal use only
     }
 
     @Override
     public void updateCountryCategory(@NonNull CountryCategory countryCategory, @NonNull UpdateCountryCategoryCallback updateCountryCategoryCallback) {
-        // TODO
+        //no-op, internal use only
     }
 
     @Override
-    public void saveCountryCategory(@NonNull CountryCategory countryCategory, @NonNull SaveCountryCategoryCallback saveCountryCategoryCallback) {
-        // TODO
+    public void saveCountryCategory(@NonNull CountryCategory countryCategory, @NonNull final SaveCountryCategoryCallback saveCountryCategoryCallback) {
+        mCountryCategoryLocalDataSource.saveCountryCategory(countryCategory, new SaveCountryCategoryCallback() {
+            @Override
+            public void onCountryCategorySaved() {
+                saveCountryCategoryCallback.onCountryCategorySaved();
+            }
+
+            @Override
+            public void onError() {
+                saveCountryCategoryCallback.onError();
+            }
+        });
     }
 
     @Override
@@ -205,23 +229,33 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
     }
 
     @Override
-    public void getEvent(@NonNull Event event, @NonNull GetEventCallback getEventCallback) {
-        // TODO
+    public void getEventId(@NonNull String barcode, @NonNull GetEventIdCallback getEventIdCallback) {
+        //no-op, internal use only
     }
 
     @Override
     public void addEvent(@NonNull Event event, @NonNull AddEventCallback addEventCallback) {
-        // TODO
+        //no-op, internal use only
     }
 
     @Override
     public void updateEvent(@NonNull Event event, @NonNull UpdateEventCallback updateEventCallback) {
-        // TODO
+        //no-op, internal use only
     }
 
     @Override
-    public void saveEvent(@NonNull Event event, @NonNull SaveEventCallback saveEventCallback) {
-        // TODO
+    public void saveEvent(@NonNull Event event, @NonNull final SaveEventCallback saveEventCallback) {
+        mEventLocalDataSource.saveEvent(event, new SaveEventCallback() {
+            @Override
+            public void onEventSaved() {
+                saveEventCallback.onEventSaved();
+            }
+
+            @Override
+            public void onError() {
+                saveEventCallback.onError();
+            }
+        });
     }
 
     @Override
@@ -250,18 +284,33 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
     }
 
     @Override
+    public void getProductId(@NonNull String barcode, @NonNull GetProductIdCallback getProductIdCallback) {
+        //no-op, internal use only
+    }
+
+    @Override
     public void addProduct(@NonNull Product product, @NonNull AddProductCallback addProductCallback) {
-        // TODO
+        //no-op, internal use only
     }
 
     @Override
     public void updateProduct(@NonNull Product product, @NonNull UpdateProductCallback updateProductCallback) {
-        // TODO
+        //no-op, internal use only
     }
 
     @Override
-    public void saveProduct(@NonNull Product product, @NonNull SaveProductCallback saveProductCallback) {
-        // TODO
+    public void saveProduct(@NonNull Product product, @NonNull final SaveProductCallback saveProductCallback) {
+        mProductLocalDataSource.saveProduct(product, new SaveProductCallback() {
+            @Override
+            public void onProductSaved() {
+                saveProductCallback.onProductSaved();
+            }
+
+            @Override
+            public void onError() {
+                saveProductCallback.onError();
+            }
+        });
     }
 
     @Override
@@ -276,17 +325,17 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
 
     @Override
     public void getSuggestionId(@NonNull String barcode, @NonNull String categoryKey, @NonNull String countryKey, @NonNull GetSuggestionIdCallback getSuggestionIdCallback) {
-        //no-op
+        //no-op, internal use only
     }
 
     @Override
     public void addSuggestion(@NonNull Suggestion suggestion, @NonNull AddSuggestionCallback addSuggestionCallback) {
-        //no-op
+        //no-op, internal use only
     }
 
     @Override
     public void updateSuggestion(@NonNull Suggestion suggestion, @NonNull UpdateSuggestionCallback updateSuggestionCallback) {
-        //no-op
+        //no-op, internal use only
     }
 
     @Override

@@ -19,14 +19,15 @@
 package com.fredericletellier.foodinspector.data.source.local;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.fredericletellier.foodinspector.data.Product;
 import com.fredericletellier.foodinspector.data.source.ProductDataSource;
+import com.fredericletellier.foodinspector.data.source.ProductValues;
 import com.fredericletellier.foodinspector.data.source.local.db.ProductPersistenceContract;
-import com.fredericletellier.foodinspector.data.source.local.db.ProductsInCategoryPersistenceContract;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -52,40 +53,114 @@ public class ProductLocalDataSource implements ProductDataSource {
         return INSTANCE;
     }
 
-    /**
-     * Get the limited list of products with an offset, for a specific categoryId and specific nutritionGradeValue
-     * If not exist, {@link GetXProductsInCategoryCallback#onProductsNotAvailable()} is called
-     */
     @Override
-    public void getXProductsInCategory(@NonNull String categoryId, @NonNull String nutritionGradeValue, @NonNull Integer offsetProducts, @NonNull GetXProductsInCategoryCallback callback) {
-        checkNotNull(categoryId);
-        checkNotNull(nutritionGradeValue);
-        checkNotNull(offsetProducts);
-        checkNotNull(callback);
+    public void getProduct(@NonNull String barcode, @NonNull GetProductCallback getProductCallback) {
+        // TODO
+    }
 
-        Uri uri = ProductPersistenceContract.ProductEntry.buildProductsincategoryJoinProductUri();
+    @Override
+    public void getProducts(@NonNull String categoryKey, @NonNull String countryKey, @NonNull String nutritionGradeValue, @NonNull Integer offsetProducts, @NonNull Integer numberOfProducts, @NonNull GetProductsCallback getProductsCallback) {
+        // TODO
+    }
 
-        String selection =
-                ProductsInCategoryPersistenceContract.ProductsInCategoryEntry.COLUMN_NAME_CATEGORY_ID + " LIKE ?" + " AND" +
-                ProductPersistenceContract.ProductEntry.COLUMN_NAME_NUTRITION_GRADE + " LIKE ?";
-        String[] selectionArgs = {categoryId, nutritionGradeValue};
-        String sortOrder =
-                ProductsInCategoryPersistenceContract.ProductsInCategoryEntry._ID + " DESC" +
-                " LIMIT " + Product.LOADING_LIMIT +
-                " OFFSET " + offsetProducts;
-
+    @Override
+    public void getProductId(@NonNull String barcode, @NonNull ProductDataSource.GetProductIdCallback getProductIdCallback) {
         Cursor cursor = mContentResolver.query(
-                uri,
-                null,
-                selection,
-                selectionArgs,
-                sortOrder);
+                ProductPersistenceContract.ProductEntry.buildProductUri(),
+                new String[]{ProductPersistenceContract.ProductEntry._ID},
+                ProductPersistenceContract.ProductEntry.COLUMN_NAME_BARCODE + " = ?",
+                new String[]{barcode},
+                null);
 
-        if (cursor == null || !cursor.moveToFirst()) {
-            cursor.close();
-            callback.onProductsNotAvailable();
-            return;
+        if (cursor.moveToLast()) {
+            long _id = cursor.getLong(cursor.getColumnIndex(ProductPersistenceContract.ProductEntry._ID));
+            getProductIdCallback.onProductIdLoaded(_id);
+        } else {
+            getProductIdCallback.onProductNotExist();
         }
         cursor.close();
+    }
+
+    @Override
+    public void addProduct(@NonNull Product Product, @NonNull ProductDataSource.AddProductCallback addProductCallback) {
+        checkNotNull(Product);
+
+        ContentValues values = ProductValues.from(Product);
+        Uri uri = mContentResolver.insert(ProductPersistenceContract.ProductEntry.buildProductUri(), values);
+
+        if (uri != null) {
+            addProductCallback.onProductAdded();
+        } else {
+            addProductCallback.onError();
+        }
+    }
+
+    @Override
+    public void updateProduct(@NonNull Product Product, @NonNull ProductDataSource.UpdateProductCallback updateProductCallback) {
+        checkNotNull(Product);
+
+        ContentValues values = ProductValues.from(Product);
+
+        String selection = ProductPersistenceContract.ProductEntry._ID + " LIKE ?";
+        String[] selectionArgs = {Product.getAsStringId()};
+
+        int rows = mContentResolver.update(ProductPersistenceContract.ProductEntry.buildProductUri(), values, selection, selectionArgs);
+
+        if (rows != 0) {
+            updateProductCallback.onProductUpdated();
+        } else {
+            updateProductCallback.onError();
+        }
+    }
+
+    @Override
+    public void saveProduct(@NonNull final Product Product, @NonNull final ProductDataSource.SaveProductCallback saveProductCallback) {
+        checkNotNull(Product);
+
+        String barcode = Product.getBarcode();
+
+        getProductId(barcode, new ProductDataSource.GetProductIdCallback() {
+
+            @Override
+            public void onProductIdLoaded(long id) {
+                Product.setId(id);
+                updateProduct(Product, new UpdateProductCallback() {
+                    @Override
+                    public void onProductUpdated() {
+                        saveProductCallback.onProductSaved();
+                    }
+
+                    @Override
+                    public void onError() {
+                        saveProductCallback.onError();
+                    }
+                });
+            }
+
+            @Override
+            public void onProductNotExist() {
+                addProduct(Product, new AddProductCallback() {
+                    @Override
+                    public void onProductAdded() {
+                        saveProductCallback.onProductSaved();
+                    }
+
+                    @Override
+                    public void onError() {
+                        saveProductCallback.onError();
+                    }
+                });
+            }
+        });
+    }
+
+    @Override
+    public void parseProduct(@NonNull String barcode, @NonNull ParseProductCallback parseProductCallback) {
+        // TODO
+    }
+
+    @Override
+    public void updateProductBookmark(@NonNull String barcode, @NonNull UpdateProductBookmarkCallback updateProductBookmarkCallback) {
+        // TODO
     }
 }

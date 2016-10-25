@@ -23,15 +23,11 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.fredericletellier.foodinspector.data.Event;
 import com.fredericletellier.foodinspector.data.source.EventDataSource;
+import com.fredericletellier.foodinspector.data.source.EventValues;
 import com.fredericletellier.foodinspector.data.source.local.db.EventPersistenceContract;
-import com.fredericletellier.foodinspector.data.source.local.db.ProductPersistenceContract;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -57,130 +53,109 @@ public class EventLocalDataSource implements EventDataSource {
         return INSTANCE;
     }
 
-    /**
-     * Get the list of event with status No_Network
-     * If exist, {@link GetEventsCallback#onEventsPendingNetwork(List)} is called
-     */
     @Override
-    public void getEvents(@Nullable List<Event> events, @NonNull GetEventsCallback callback){
-        checkNotNull(callback);
-
-        Uri uri = EventPersistenceContract.EventEntry.buildEventUri();
-
+    public void getEventId(@NonNull String barcode, @NonNull EventDataSource.GetEventIdCallback getEventIdCallback) {
         Cursor cursor = mContentResolver.query(
-                uri,
-                null,
-                EventPersistenceContract.EventEntry.COLUMN_NAME_STATUS + " = ?",
-                new String[]{Event.STATUS_NO_NETWORK},
+                EventPersistenceContract.EventEntry.buildEventUri(),
+                new String[]{EventPersistenceContract.EventEntry._ID},
+                EventPersistenceContract.EventEntry.COLUMN_NAME_BARCODE + " = ?",
+                new String[]{barcode},
                 null);
 
-        events = new ArrayList<Event>();
-
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                events.add(Event.from(cursor));
-            } while (cursor.moveToNext());
-
-            callback.onEventsPendingNetwork(events);
-        }
-        cursor.close();
-    }
-
-    /**
-     * Check if product exist in local data source
-     * If not exist, {@link AddEventCallback#onEventProductNotAvailable()} is called
-     * If exist, update or create associated event
-     */
-    @Override
-    public void addEvent(@NonNull String productId, @NonNull AddEventCallback callback){
-        checkNotNull(productId);
-        checkNotNull(callback);
-
-        Uri uriProduct = ProductPersistenceContract.ProductEntry.buildProductUriWith(productId);
-
-        Cursor cursorProduct = mContentResolver.query(
-                uriProduct,
-                null,
-                null,
-                null,
-                null);
-
-        if (cursorProduct == null || !cursorProduct.moveToFirst()) {
-            cursorProduct.close();
-            callback.onEventProductNotAvailable();
-            return;
-        }
-        cursorProduct.close();
-
-        Uri uriEvent = EventPersistenceContract.EventEntry.buildEventUri();
-
-        Cursor cursorEvent = mContentResolver.query(
-                uriEvent,
-                null,
-                EventPersistenceContract.EventEntry.COLUMN_NAME_PRODUCT_ID + " = ?",
-                new String[]{productId},
-                null);
-
-        Long tsLong = System.currentTimeMillis()/1000;
-        String timestamp = tsLong.toString();
-
-        if (cursorEvent != null && cursorEvent.moveToFirst()) {
-            Event event = Event.from(cursorEvent);
-
-            ContentValues values = new ContentValues();
-            values.put(EventPersistenceContract.EventEntry.COLUMN_NAME_UNIX_TIMESTAMP, timestamp);
-
-            mContentResolver.update(
-                    EventPersistenceContract.EventEntry.buildEventUri(),
-                    values,
-                    EventPersistenceContract.EventEntry._ID + " LIKE ?",
-                    new String[]{event.getId()});
-
+        if (cursor.moveToLast()) {
+            long _id = cursor.getLong(cursor.getColumnIndex(EventPersistenceContract.EventEntry._ID));
+            getEventIdCallback.onEventIdLoaded(_id);
         } else {
-
-            ContentValues values = new ContentValues();
-            values.put(EventPersistenceContract.EventEntry.COLUMN_NAME_UNIX_TIMESTAMP, timestamp);
-            values.put(EventPersistenceContract.EventEntry.COLUMN_NAME_STATUS, Event.STATUS_OK);
-            values.put(EventPersistenceContract.EventEntry.COLUMN_NAME_PRODUCT_ID, productId);
-            values.put(EventPersistenceContract.EventEntry.COLUMN_NAME_FAVORITE, false);
-
-            mContentResolver.insert(EventPersistenceContract.EventEntry.buildEventUri(), values);
-        }
-        cursorEvent.close();
-    }
-
-    /**
-     * Check if event exist in local data source
-     * If exist, update favorite field
-     */
-    @Override
-    public void updateFavoriteFieldEvent(@NonNull String productId){
-        checkNotNull(productId);
-
-        Uri uri = EventPersistenceContract.EventEntry.buildEventUri();
-
-        Cursor cursor = mContentResolver.query(
-                uri,
-                null,
-                EventPersistenceContract.EventEntry.COLUMN_NAME_PRODUCT_ID + " = ?",
-                new String[]{productId},
-                null);
-
-        if (cursor != null && cursor.moveToFirst()) {
-
-            Event event = Event.from(cursor);
-
-            ContentValues values = new ContentValues();
-            values.put(EventPersistenceContract.EventEntry.COLUMN_NAME_FAVORITE, event.getFavorite() ? 0 : 1);
-
-            mContentResolver.update(
-                    EventPersistenceContract.EventEntry.buildEventUri(),
-                    values,
-                    EventPersistenceContract.EventEntry._ID + " LIKE ?",
-                    new String[]{event.getId()});
-
+            getEventIdCallback.onEventNotExist();
         }
         cursor.close();
     }
 
+    @Override
+    public void addEvent(@NonNull Event Event, @NonNull EventDataSource.AddEventCallback addEventCallback) {
+        checkNotNull(Event);
+
+        ContentValues values = EventValues.from(Event);
+        Uri uri = mContentResolver.insert(EventPersistenceContract.EventEntry.buildEventUri(), values);
+
+        if (uri != null) {
+            addEventCallback.onEventAdded();
+        } else {
+            addEventCallback.onError();
+        }
+    }
+
+    @Override
+    public void updateEvent(@NonNull Event Event, @NonNull EventDataSource.UpdateEventCallback updateEventCallback) {
+        checkNotNull(Event);
+
+        ContentValues values = EventValues.from(Event);
+
+        String selection = EventPersistenceContract.EventEntry._ID + " LIKE ?";
+        String[] selectionArgs = {Event.getAsStringId()};
+
+        int rows = mContentResolver.update(EventPersistenceContract.EventEntry.buildEventUri(), values, selection, selectionArgs);
+
+        if (rows != 0) {
+            updateEventCallback.onEventUpdated();
+        } else {
+            updateEventCallback.onError();
+        }
+    }
+
+    @Override
+    public void saveEvent(@NonNull final Event Event, @NonNull final EventDataSource.SaveEventCallback saveEventCallback) {
+        checkNotNull(Event);
+
+        String barcode = Event.getBarcode();
+
+        getEventId(barcode, new EventDataSource.GetEventIdCallback() {
+
+            @Override
+            public void onEventIdLoaded(long id) {
+                Event.setId(id);
+                updateEvent(Event, new EventDataSource.UpdateEventCallback() {
+                    @Override
+                    public void onEventUpdated() {
+                        saveEventCallback.onEventSaved();
+                    }
+
+                    @Override
+                    public void onError() {
+                        saveEventCallback.onError();
+                    }
+                });
+            }
+
+            @Override
+            public void onEventNotExist() {
+                addEvent(Event, new EventDataSource.AddEventCallback() {
+                    @Override
+                    public void onEventAdded() {
+                        saveEventCallback.onEventSaved();
+                    }
+
+                    @Override
+                    public void onError() {
+                        saveEventCallback.onError();
+                    }
+                });
+            }
+        });
+    }
+
+    @Override
+    public void saveScan(@NonNull String barcode, @NonNull SaveScanCallback saveScanCallback) {
+        // TODO
+    }
+
+    @Override
+    public void refreshEventsOnError(@NonNull RefreshEventsOnErrorCallback refreshEventsOnErrorCallback) {
+        // TODO
+    }
+
+    @Override
+    public void getEventsOnError(@NonNull GetEventsOnErrorCallback getEventsOnErrorCallback) {
+        // TODO
+    }
 }

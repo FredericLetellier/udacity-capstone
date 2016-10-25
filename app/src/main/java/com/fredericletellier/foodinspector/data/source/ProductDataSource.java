@@ -45,27 +45,35 @@ public interface ProductDataSource {
 
     }
 
+    interface GetProductIdCallback {
+
+        void onProductIdLoaded(long id);
+
+        void onProductNotExist();
+
+    }
+
     interface AddProductCallback {
 
-        void onProductAdded(Product product);
+        void onProductAdded();
 
-        void onError(Throwable throwable);
+        void onError();
 
     }
 
     interface UpdateProductCallback {
 
-        void onProductUpdated(Product product);
+        void onProductUpdated();
 
-        void onError(Throwable throwable);
+        void onError();
 
     }
 
     interface SaveProductCallback {
 
-        void onProductSaved(Product product);
+        void onProductSaved();
 
-        void onError(Throwable throwable);
+        void onError();
 
     }
 
@@ -73,7 +81,7 @@ public interface ProductDataSource {
 
         void onProductParsed(Product product);
 
-        void onError(Throwable throwable);
+        void onError();
 
     }
 
@@ -81,13 +89,15 @@ public interface ProductDataSource {
 
         void onProductBookmarkUpdated(Product product);
 
-        void onError(Throwable throwable);
+        void onError();
 
     }
 
     void getProduct(@NonNull String barcode, @NonNull GetProductCallback getProductCallback);
 
     void getProducts(@NonNull String categoryKey, @NonNull String countryKey, @NonNull String nutritionGradeValue, @NonNull Integer offsetProducts, @NonNull Integer numberOfProducts, @NonNull GetProductsCallback getProductsCallback);
+
+    void getProductId(@NonNull String barcode, @NonNull GetProductIdCallback getProductIdCallback);
 
     void addProduct(@NonNull Product product, @NonNull AddProductCallback addProductCallback);
 

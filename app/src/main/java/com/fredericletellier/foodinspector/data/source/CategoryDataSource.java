@@ -29,35 +29,35 @@ import java.util.List;
  */
 public interface CategoryDataSource {
 
-    interface GetCategoryCallback {
+    interface GetCategoryIdCallback {
 
-        void onCategoryLoaded(Category category);
+        void onCategoryIdLoaded(long id);
 
-        void onError(Throwable throwable);
+        void onCategoryNotExist();
 
     }
 
     interface AddCategoryCallback {
 
-        void onCategoryAdded(Category category);
+        void onCategoryAdded();
 
-        void onError(Throwable throwable);
+        void onError();
 
     }
 
     interface UpdateCategoryCallback {
 
-        void onCategoryUpdated(Category category);
+        void onCategoryUpdated();
 
-        void onError(Throwable throwable);
+        void onError();
 
     }
 
     interface SaveCategoryCallback {
 
-        void onCategorySaved(Category category);
+        void onCategorySaved();
 
-        void onError(Throwable throwable);
+        void onError();
 
     }
 
@@ -69,7 +69,7 @@ public interface CategoryDataSource {
 
     }
 
-    void getCategory(@NonNull Category category, @NonNull GetCategoryCallback getCategoryCallback);
+    void getCategoryId(@NonNull String categoryKey, @NonNull GetCategoryIdCallback getCategoryIdCallback);
 
     void addCategory(@NonNull Category category, @NonNull AddCategoryCallback addCategoryCallback);
 

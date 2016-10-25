@@ -90,6 +90,15 @@ public class Category {
 
     /**
      *
+     * @return
+     * The id
+     */
+    public String getAsStringId() {
+        return String.valueOf(mId);
+    }
+
+    /**
+     *
      * @param id
      * The id
      */

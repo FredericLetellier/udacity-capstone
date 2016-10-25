@@ -29,35 +29,35 @@ import java.util.List;
  */
 public interface EventDataSource {
     
-    interface GetEventCallback {
+    interface GetEventIdCallback {
 
-        void onEventLoaded(Event event);
+        void onEventIdLoaded(long id);
 
-        void onError(Throwable throwable);
+        void onEventNotExist();
 
     }
 
     interface AddEventCallback {
 
-        void onEventAdded(Event event);
+        void onEventAdded();
 
-        void onError(Throwable throwable);
+        void onError();
 
     }
 
     interface UpdateEventCallback {
 
-        void onEventUpdated(Event event);
+        void onEventUpdated();
 
-        void onError(Throwable throwable);
+        void onError();
 
     }
 
     interface SaveEventCallback {
 
-        void onEventSaved(Event event);
+        void onEventSaved();
 
-        void onError(Throwable throwable);
+        void onError();
 
     }
 
@@ -85,7 +85,7 @@ public interface EventDataSource {
 
     }
 
-    void getEvent(@NonNull Event event, @NonNull GetEventCallback getEventCallback);
+    void getEventId(@NonNull String barcode, @NonNull GetEventIdCallback getEventIdCallback);
 
     void addEvent(@NonNull Event event, @NonNull AddEventCallback addEventCallback);
 

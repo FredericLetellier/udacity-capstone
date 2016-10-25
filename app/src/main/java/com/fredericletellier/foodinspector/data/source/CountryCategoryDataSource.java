@@ -37,27 +37,35 @@ public interface CountryCategoryDataSource {
 
     }
 
+    interface GetCountryCategoryIdCallback {
+
+        void onCountryCategoryIdLoaded(long id);
+
+        void onCountryCategoryNotExist();
+
+    }
+
     interface AddCountryCategoryCallback {
 
-        void onCountryCategoryAdded(CountryCategory countryCategory);
+        void onCountryCategoryAdded();
 
-        void onError(Throwable throwable);
+        void onError();
 
     }
 
     interface UpdateCountryCategoryCallback {
 
-        void onCountryCategoryUpdated(CountryCategory countryCategory);
+        void onCountryCategoryUpdated();
 
-        void onError(Throwable throwable);
+        void onError();
 
     }
 
     interface SaveCountryCategoryCallback {
 
-        void onCountryCategorySaved(CountryCategory countryCategory);
+        void onCountryCategorySaved();
 
-        void onError(Throwable throwable);
+        void onError();
 
     }
 
@@ -70,6 +78,8 @@ public interface CountryCategoryDataSource {
     }
 
     void getCountryCategory(@NonNull CountryCategory countryCategory, @NonNull GetCountryCategoryCallback getCountryCategoryCallback);
+
+    void getCountryCategoryId(@NonNull String categoryKey, @NonNull String countryKey, @NonNull GetCountryCategoryIdCallback getCountryCategoryIdCallback);
 
     void addCountryCategory(@NonNull CountryCategory countryCategory, @NonNull AddCountryCategoryCallback addCountryCategoryCallback);
 

@@ -100,6 +100,11 @@ public class ProductRemoteDataSource implements ProductDataSource {
     }
 
     @Override
+    public void getProductId(@NonNull String barcode, @NonNull GetProductIdCallback getProductIdCallback) {
+        //no-op in remote
+    }
+
+    @Override
     public void addProduct(@NonNull Product product, @NonNull AddProductCallback addProductCallback) {
         //no-op in remote
     }

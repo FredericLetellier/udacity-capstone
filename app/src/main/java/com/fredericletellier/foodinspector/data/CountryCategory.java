@@ -96,6 +96,15 @@ public class CountryCategory {
 
     /**
      *
+     * @return
+     * The id
+     */
+    public String getAsStringId() {
+        return String.valueOf(mId);
+    }
+
+    /**
+     *
      * @param id
      * The id
      */

@@ -23,15 +23,11 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-import com.fredericletellier.foodinspector.data.Product;
+import com.fredericletellier.foodinspector.data.Category;
 import com.fredericletellier.foodinspector.data.source.CategoryDataSource;
-import com.fredericletellier.foodinspector.data.source.local.db.CategoriesInProductPersistenceContract;
+import com.fredericletellier.foodinspector.data.source.CategoryValues;
 import com.fredericletellier.foodinspector.data.source.local.db.CategoryPersistenceContract;
-import com.fredericletellier.foodinspector.data.source.local.db.ProductPersistenceContract;
-
-import java.util.ArrayList;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -57,127 +53,99 @@ public class CategoryLocalDataSource implements CategoryDataSource {
         return INSTANCE;
     }
 
-    /**
-     * Check the product exist
-     * Check if categories of this product are parsed
-     * If not, parse it
-     * Get all categories associated with this product
-     * Check if these categories exist in country categories
-     * If not exist, {@link GetCategoriesCallback#onCategoriesNotAvailable(ArrayList)}
-     * is called with a list of categories
-     */
     @Override
-    public void getCategories(@NonNull String productId, @Nullable ArrayList<String> categories, @NonNull String countryCode, @NonNull GetCategoriesCallback callback) {
-        checkNotNull(productId);
-        checkNotNull(countryCode);
-        checkNotNull(callback);
-
-        Uri uriProduct = ProductPersistenceContract.ProductEntry.buildProductUriWith(productId);
-
-        //Search product
-        Cursor cursorProduct = mContentResolver.query(
-                uriProduct,
-                null,
-                null,
-                null,
+    public void getCategoryId(@NonNull String categoryKey, @NonNull CategoryDataSource.GetCategoryIdCallback getCategoryIdCallback) {
+        Cursor cursor = mContentResolver.query(
+                CategoryPersistenceContract.CategoryEntry.buildCategoryUri(),
+                new String[]{CategoryPersistenceContract.CategoryEntry._ID},
+                CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_CATEGORY_KEY + " = ?",
+                new String[]{categoryKey},
                 null);
 
-        if (cursorProduct == null || !cursorProduct.moveToFirst()) {
-            cursorProduct.close();
-            return;
+        if (cursor.moveToLast()) {
+            long _id = cursor.getLong(cursor.getColumnIndex(CategoryPersistenceContract.CategoryEntry._ID));
+            getCategoryIdCallback.onCategoryIdLoaded(_id);
+        } else {
+            getCategoryIdCallback.onCategoryNotExist();
         }
+        cursor.close();
+    }
 
-        Product product = Product.from(cursorProduct);
-        cursorProduct.close();
-        String parsableCategories = product.getParsableCategories();
+    @Override
+    public void addCategory(@NonNull Category Category, @NonNull CategoryDataSource.AddCategoryCallback addCategoryCallback) {
+        checkNotNull(Category);
 
-        //If categories of product are not parsed, parse it
-        if (!parsableCategories.equals(Product.PARSING_DONE)){
-            String[] parsableCategoriesArray = parsableCategories.split(",");
-            int i = 0;
+        ContentValues values = CategoryValues.from(Category);
+        Uri uri = mContentResolver.insert(CategoryPersistenceContract.CategoryEntry.buildCategoryUri(), values);
 
-            for (String parsableCategory : parsableCategoriesArray)
-            {
-                Uri uriCategoriesInProduct = CategoriesInProductPersistenceContract.CategoriesInProductEntry.buildProductsInCategoryUri();
+        if (uri != null) {
+            addCategoryCallback.onCategoryAdded();
+        } else {
+            addCategoryCallback.onError();
+        }
+    }
 
-                Cursor cursorCategoriesInProduct = mContentResolver.query(
-                        uriCategoriesInProduct,
-                        null,
-                        CategoriesInProductPersistenceContract.CategoriesInProductEntry.COLUMN_NAME_CATEGORY_ID + " = ? AND" +
-                                CategoriesInProductPersistenceContract.CategoriesInProductEntry.COLUMN_NAME_PRODUCT_ID + " = ?",
-                        new String[]{parsableCategory, product.getId()},
-                        null);
+    @Override
+    public void updateCategory(@NonNull Category Category, @NonNull CategoryDataSource.UpdateCategoryCallback updateCategoryCallback) {
+        checkNotNull(Category);
 
-                //If category not exist, insert in database
-                if (!cursorCategoriesInProduct.moveToLast()) {
-                    String categoryName = parsableCategory.replace('-',' ');
-                    categoryName = categoryName.substring(0, 1).toUpperCase() + categoryName.substring(1);
+        ContentValues values = CategoryValues.from(Category);
 
-                    ContentValues values = new ContentValues();
-                    values.put(CategoriesInProductPersistenceContract.CategoriesInProductEntry.COLUMN_NAME_CATEGORY_ID, parsableCategory);
-                    values.put(CategoriesInProductPersistenceContract.CategoriesInProductEntry.COLUMN_NAME_PRODUCT_ID, product.getId());
-                    values.put(CategoriesInProductPersistenceContract.CategoriesInProductEntry.COLUMN_NAME_RANK, i);
-                    values.put(CategoriesInProductPersistenceContract.CategoriesInProductEntry.COLUMN_NAME_CATEGORY_NAME, categoryName);
+        String selection = CategoryPersistenceContract.CategoryEntry._ID + " LIKE ?";
+        String[] selectionArgs = {Category.getAsStringId()};
 
-                    mContentResolver.insert(CategoriesInProductPersistenceContract.CategoriesInProductEntry.buildProductsInCategoryUri(), values);
-                }
-                cursorCategoriesInProduct.close();
-                i++;
+        int rows = mContentResolver.update(CategoryPersistenceContract.CategoryEntry.buildCategoryUri(), values, selection, selectionArgs);
+
+        if (rows != 0) {
+            updateCategoryCallback.onCategoryUpdated();
+        } else {
+            updateCategoryCallback.onError();
+        }
+    }
+
+    @Override
+    public void saveCategory(@NonNull final Category Category, @NonNull final CategoryDataSource.SaveCategoryCallback saveCategoryCallback) {
+        checkNotNull(Category);
+
+        String categoryKey = Category.getCategoryKey();
+
+        getCategoryId(categoryKey, new CategoryDataSource.GetCategoryIdCallback() {
+
+            @Override
+            public void onCategoryIdLoaded(long id) {
+                Category.setId(id);
+                updateCategory(Category, new CategoryDataSource.UpdateCategoryCallback() {
+                    @Override
+                    public void onCategoryUpdated() {
+                        saveCategoryCallback.onCategorySaved();
+                    }
+
+                    @Override
+                    public void onError() {
+                        saveCategoryCallback.onError();
+                    }
+                });
             }
 
-            //Mark product than its categories are parsed
-            ContentValues values = new ContentValues();
-            values.put(ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSABLE_CATEGORIES, Product.PARSING_DONE);
+            @Override
+            public void onCategoryNotExist() {
+                addCategory(Category, new CategoryDataSource.AddCategoryCallback() {
+                    @Override
+                    public void onCategoryAdded() {
+                        saveCategoryCallback.onCategorySaved();
+                    }
 
-            mContentResolver.update(
-                    ProductPersistenceContract.ProductEntry.buildProductUri(),
-                    values,
-                    ProductPersistenceContract.ProductEntry._ID + " LIKE ?",
-                    new String[]{product.getId()});
-        }
+                    @Override
+                    public void onError() {
+                        saveCategoryCallback.onError();
+                    }
+                });
+            }
+        });
+    }
 
-        //Search all categories associated with this product
-        Uri uriCategoriesInProduct2 = CategoriesInProductPersistenceContract.CategoriesInProductEntry.buildProductsInCategoryUri();
-
-        Cursor cursorCategoriesInProduct2 = mContentResolver.query(
-                uriCategoriesInProduct2,
-                null,
-                CategoriesInProductPersistenceContract.CategoriesInProductEntry.COLUMN_NAME_PRODUCT_ID + " = ?",
-                new String[]{product.getId()},
-                null);
-
-        categories = new ArrayList<String>();
-
-        //For each categories find, search the associated country category
-        if (cursorCategoriesInProduct2 != null && cursorCategoriesInProduct2.moveToFirst()) {
-            do {
-                String worldCategoryId = cursorCategoriesInProduct2.getString(
-                        cursorCategoriesInProduct2.getColumnIndex(
-                                CategoriesInProductPersistenceContract.CategoriesInProductEntry.COLUMN_NAME_CATEGORY_ID));
-
-                Uri uriCategory = CategoryPersistenceContract.CategoryEntry.buildCategoryUri();
-
-                Cursor cursorCategory = mContentResolver.query(
-                        uriCategory,
-                        null,
-                        CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_WORLD_CATEGORY_ID + " = ?  AND " +
-                        CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_COUNTRY_ID + " = ?",
-                        new String[]{worldCategoryId, countryCode},
-                        null);
-
-                //If country category not exist, add to the list
-                if (!cursorCategory.moveToLast()) {
-                    categories.add(worldCategoryId);
-                }
-                cursorCategory.close();
-
-            } while (cursorCategoriesInProduct2.moveToNext());
-        }
-        cursorCategoriesInProduct2.close();
-
-        if (categories.size() > 0){
-            callback.onCategoriesNotAvailable(categories);
-        }
-
+    @Override
+    public void getCategoryOfProduct(@NonNull String barcode, @NonNull GetCategoryOfProductCallback getCategoryOfProductCallback) {
+        // TODO
     }
 }
