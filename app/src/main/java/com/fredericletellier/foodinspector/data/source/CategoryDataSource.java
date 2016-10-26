@@ -27,6 +27,14 @@ import com.fredericletellier.foodinspector.data.Category;
  */
 public interface CategoryDataSource {
 
+    interface GetCategoryCallback {
+
+        void onCategoryLoaded(Category category);
+
+        void onError(Throwable throwable);
+
+    }
+
     interface CheckExistCategoryCallback {
 
         void onCategoryExisted(long id);
@@ -58,6 +66,8 @@ public interface CategoryDataSource {
         void onError();
 
     }
+
+    void getCategory(@NonNull String categoryKey, @NonNull GetCategoryCallback getCategoryCallback);
 
     void checkExistCategory(@NonNull String categoryKey, @NonNull CheckExistCategoryCallback checkExistCategoryCallback);
 

@@ -41,7 +41,30 @@ public class CategoryRemoteDataSource implements CategoryDataSource {
         return INSTANCE;
     }
 
-    //TODO Intégrer la partie remote de la procédure de récupération du nom
+    // TODO Implement real remote method
+    @Override
+    public void getCategory(@NonNull String categoryKey, @NonNull GetCategoryCallback getCategoryCallback) {
+        String mLongCategoryKey = categoryKey;
+        String segments[] = categoryKey.split(":");
+
+        String mExtension;
+        String mShortCategoryKey;
+
+        if (segments.length > 0){
+            mExtension = segments[0];
+            mShortCategoryKey = segments[1];
+        } else {
+            mExtension = null;
+            mShortCategoryKey = segments[0];
+        }
+
+        mShortCategoryKey = mShortCategoryKey.replace("-", " ");
+        String categoryName = mShortCategoryKey.substring(0, 1).toUpperCase() + mShortCategoryKey.substring(1).toLowerCase();
+
+        Category category = new Category(categoryKey, categoryName);
+
+        getCategoryCallback.onCategoryLoaded(category);
+    }
 
     @Override
     public void checkExistCategory(@NonNull String categoryKey, @NonNull CheckExistCategoryCallback checkExistCategoryCallback) {

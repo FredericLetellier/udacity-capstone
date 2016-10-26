@@ -63,7 +63,7 @@ public interface EventDataSource {
 
     interface SaveScanCallback {
 
-        void onScanSaved(Event event);
+        void onScanSaved();
 
         void onError(Throwable throwable);
 

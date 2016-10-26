@@ -51,9 +51,22 @@ public class CountryCategoryLocalDataSource implements CountryCategoryDataSource
     }
 
     @Override
-    public void getCountryCategory(@NonNull CountryCategory countryCategory,
-                                   @NonNull GetCountryCategoryCallback getCountryCategoryCallback) {
-        // no-op in local
+    public void getCountryCategory(@NonNull String categoryKey, @NonNull String countryKey, @NonNull GetCountryCategoryCallback getCountryCategoryCallback) {
+        Cursor cursor = mContentResolver.query(
+                CountryCategoryPersistenceContract.CountryCategoryEntry.buildCountryCategoryUri(),
+                null,
+                CountryCategoryPersistenceContract.CountryCategoryEntry.COLUMN_NAME_CATEGORY_KEY + " = ? AND " +
+                        CountryCategoryPersistenceContract.CountryCategoryEntry.COLUMN_NAME_COUNTRY_KEY + " = ?",
+                new String[]{categoryKey, countryKey},
+                null);
+
+        if (cursor.moveToLast()) {
+            CountryCategory countryCategory = CountryCategory.from(cursor);
+            getCountryCategoryCallback.onCountryCategoryLoaded(countryCategory);
+        } else {
+            getCountryCategoryCallback.onError(null);
+        }
+        cursor.close();
     }
 
     @Override

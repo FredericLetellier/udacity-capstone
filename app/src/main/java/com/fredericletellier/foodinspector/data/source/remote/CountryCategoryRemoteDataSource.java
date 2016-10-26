@@ -57,12 +57,11 @@ public class CountryCategoryRemoteDataSource implements CountryCategoryDataSourc
      * get the data (HTTP error, IOException, IllegalStateException, ...)
      */
     @Override
-    public void getCountryCategory(@NonNull CountryCategory countryCategory,
+    public void getCountryCategory(@NonNull final String categoryKey, @NonNull final String countryKey,
                                    @NonNull final GetCountryCategoryCallback getCountryCategoryCallback) {
-        checkNotNull(countryCategory);
+        checkNotNull(categoryKey);
+        checkNotNull(countryKey);
         checkNotNull(getCountryCategoryCallback);
-
-        final CountryCategory mCountryCategory = countryCategory;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(OpenFoodFactsAPIEndpointInterface.ENDPOINT_SEARCH)
@@ -71,17 +70,16 @@ public class CountryCategoryRemoteDataSource implements CountryCategoryDataSourc
 
         OpenFoodFactsAPIEndpointInterface apiService = retrofit.create(OpenFoodFactsAPIEndpointInterface.class);
 
-        Call<Search> call = apiService.getCountryCategory(
-                mCountryCategory.getCategoryKey(),
-                mCountryCategory.getCountryKey());
+        Call<Search> call = apiService.getCountryCategory(categoryKey,countryKey);
 
         call.enqueue(new Callback<Search>() {
             @Override
             public void onResponse(Call<Search> call, Response<Search> response) {
                 if (response.isSuccessful()) {
                     Search search = response.body();
-                    mCountryCategory.setSumOfProducts(search.getCount());
-                    getCountryCategoryCallback.onCountryCategoryLoaded(mCountryCategory);
+                    int sumOfProducts = search.getCount();
+                    CountryCategory countryCategory = new CountryCategory(categoryKey, countryKey, sumOfProducts);
+                    getCountryCategoryCallback.onCountryCategoryLoaded(countryCategory);
                 } else {
                     APIError e = ErrorUtils.parseError(response);
                     Throwable t = new Throwable(e.message(), new Throwable(String.valueOf(e.status())));
@@ -91,10 +89,13 @@ public class CountryCategoryRemoteDataSource implements CountryCategoryDataSourc
 
             @Override
             public void onFailure(Call<Search> call, Throwable t) {
-
                 getCountryCategoryCallback.onError(t);
 
                 // TODO Optimize handling error
+                // Get action about error directly
+                // And call onError() without parameters (or something basic like a code)
+
+
                 //if (t instanceof IOException) {
                 //    errorType. = "Network problem (socket timeout, unknown host, etc.)";
                 //    errorDesc = String.valueOf(t.getCause());

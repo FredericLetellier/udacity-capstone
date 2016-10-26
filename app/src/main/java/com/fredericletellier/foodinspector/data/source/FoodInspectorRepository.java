@@ -27,6 +27,8 @@ import com.fredericletellier.foodinspector.data.Event;
 import com.fredericletellier.foodinspector.data.Product;
 import com.fredericletellier.foodinspector.data.Suggestion;
 
+import java.io.IOException;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -40,8 +42,6 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
     private final ProductDataSource mProductRemoteDataSource;
 
     private final ProductDataSource mProductLocalDataSource;
-
-    private final EventDataSource mEventRemoteDataSource;
 
     private final EventDataSource mEventLocalDataSource;
 
@@ -61,7 +61,6 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
     // Prevent direct instantiation.
     private FoodInspectorRepository(@NonNull ProductDataSource productRemoteDataSource,
                                     @NonNull ProductDataSource productLocalDataSource,
-                                    @NonNull EventDataSource eventRemoteDataSource,
                                     @NonNull EventDataSource eventLocalDataSource,
                                     @NonNull CategoryDataSource categoryRemoteDataSource,
                                     @NonNull CategoryDataSource categoryLocalDataSource,
@@ -71,7 +70,6 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
                                     @NonNull SuggestionDataSource suggestionLocalDataSource) {
         mProductRemoteDataSource = checkNotNull(productRemoteDataSource);
         mProductLocalDataSource = checkNotNull(productLocalDataSource);
-        mEventRemoteDataSource = checkNotNull(eventRemoteDataSource);
         mEventLocalDataSource = checkNotNull(eventLocalDataSource);
         mCategoryRemoteDataSource = checkNotNull(categoryRemoteDataSource);
         mCategoryLocalDataSource = checkNotNull(categoryLocalDataSource);
@@ -86,7 +84,6 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
      *
      * @param productRemoteDataSource the backend product data source
      * @param productLocalDataSource  the device storage product data source
-     * @param eventRemoteDataSource  the backend event data source
      * @param eventLocalDataSource  the device storage event data source
      * @param categoryRemoteDataSource the backend category data source
      * @param categoryLocalDataSource  the device storage category data source
@@ -98,7 +95,6 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
      */
     public static FoodInspectorRepository getInstance(ProductDataSource productRemoteDataSource,
                                                       ProductDataSource productLocalDataSource,
-                                                      EventDataSource eventRemoteDataSource,
                                                       EventDataSource eventLocalDataSource,
                                                       CategoryDataSource categoryRemoteDataSource,
                                                       CategoryDataSource categoryLocalDataSource,
@@ -108,15 +104,15 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
                                                       SuggestionDataSource suggestionLocalDataSource) {
         if (INSTANCE == null) {
             INSTANCE = new FoodInspectorRepository(productRemoteDataSource, productLocalDataSource,
-                    eventRemoteDataSource, eventLocalDataSource, categoryRemoteDataSource,
-                    categoryLocalDataSource, categoryTagLocalDataSource, countryCategoryRemoteDataSource,
+                    eventLocalDataSource, categoryRemoteDataSource, categoryLocalDataSource,
+                    categoryTagLocalDataSource, countryCategoryRemoteDataSource,
                     countryCategoryLocalDataSource, suggestionLocalDataSource);
         }
         return INSTANCE;
     }
 
     /**
-     * Used to force {@link #getInstance(ProductDataSource, ProductDataSource, EventDataSource, EventDataSource, CategoryDataSource, CategoryDataSource, CategoryTagDataSource, CountryCategoryDataSource, CountryCategoryDataSource, SuggestionDataSource)}
+     * Used to force {@link #getInstance(ProductDataSource, ProductDataSource, EventDataSource, CategoryDataSource, CategoryDataSource, CategoryTagDataSource, CountryCategoryDataSource, CountryCategoryDataSource, SuggestionDataSource)}
      * to create a new instance next time it's called.
      */
     public static void destroyInstance() {
@@ -124,150 +120,259 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
     }
 
     @Override
+    public void getCategory(@NonNull final String categoryKey, @NonNull final GetCategoryCallback getCategoryCallback) {
+
+        mCategoryLocalDataSource.getCategory(categoryKey, new GetCategoryCallback() {
+            @Override
+            public void onCategoryLoaded(Category category) {
+                getCategoryCallback.onCategoryLoaded(category);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                mCategoryRemoteDataSource.getCategory(categoryKey, new GetCategoryCallback() {
+
+                    @Override
+                    public void onCategoryLoaded(final Category category) {
+                        mCategoryLocalDataSource.saveCategory(category, new SaveCategoryCallback() {
+                            @Override
+                            public void onCategorySaved() {
+                                getCategoryCallback.onCategoryLoaded(category);
+                            }
+
+                            @Override
+                            public void onError() {
+                                getCategoryCallback.onError(null);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        getCategoryCallback.onError(throwable);
+                    }
+                });
+            }
+        });
+    }
+
+    @Override
     public void checkExistCategory(@NonNull String categoryKey,
                                    @NonNull CheckExistCategoryCallback checkExistCategoryCallback) {
 
-        mCategoryLocalDataSource.checkExistCategory(categoryKey, checkExistCategoryCallback);
+        // no-op
     }
 
     @Override
     public void addCategory(@NonNull Category category,
                             @NonNull AddCategoryCallback addCategoryCallback) {
 
-        mCategoryLocalDataSource.addCategory(category, addCategoryCallback);
+        // no-op
     }
 
     @Override
     public void updateCategory(@NonNull Category category,
                                @NonNull UpdateCategoryCallback updateCategoryCallback) {
 
-        mCategoryLocalDataSource.updateCategory(category, updateCategoryCallback);
+        // no-op
     }
 
     @Override
     public void saveCategory(@NonNull Category category,
                              @NonNull final SaveCategoryCallback saveCategoryCallback) {
 
-        mCategoryLocalDataSource.saveCategory(category, saveCategoryCallback);
+        // no-op
     }
 
     @Override
     public void getCategoryTags(@NonNull String barcode,
                                 @NonNull GetCategoryTagsCallback getCategoryTagsCallback) {
-        mCategoryTagLocalDataSource.getCategoryTags(barcode, getCategoryTagsCallback);
+        // no-op
     }
 
     @Override
     public void checkExistCategoryTag(@NonNull String barcode, @NonNull String categoryKey,
                                       @NonNull CheckExistCategoryTagCallback checkExistCategoryTagCallback) {
 
-        mCategoryTagLocalDataSource.checkExistCategoryTag(barcode, categoryKey, checkExistCategoryTagCallback);
+        // no-op
     }
 
     @Override
     public void addCategoryTag(@NonNull CategoryTag categoryTag,
                                @NonNull AddCategoryTagCallback addCategoryTagCallback) {
 
-        mCategoryTagLocalDataSource.addCategoryTag(categoryTag, addCategoryTagCallback);
+        // no-op
     }
 
     @Override
     public void updateCategoryTag(@NonNull CategoryTag categoryTag,
                                   @NonNull UpdateCategoryTagCallback updateCategoryTagCallback) {
 
-        mCategoryTagLocalDataSource.updateCategoryTag(categoryTag, updateCategoryTagCallback);
+        // no-op
     }
 
     @Override
     public void saveCategoryTag(@NonNull CategoryTag categoryTag,
                                 @NonNull final SaveCategoryTagCallback saveCategoryTagCallback) {
 
-        mCategoryTagLocalDataSource.saveCategoryTag(categoryTag, saveCategoryTagCallback);
+        // no-op
     }
 
     @Override
-    public void getCountryCategory(@NonNull CountryCategory countryCategory,
-                                   @NonNull GetCountryCategoryCallback getCountryCategoryCallback) {
-        // TODO
+    public void getCountryCategory(@NonNull final String categoryKey, @NonNull final String countryKey, @NonNull final GetCountryCategoryCallback getCountryCategoryCallback) {
+
+        mCountryCategoryLocalDataSource.getCountryCategory(categoryKey, countryKey, new GetCountryCategoryCallback() {
+            @Override
+            public void onCountryCategoryLoaded(CountryCategory countryCategory) {
+                getCountryCategoryCallback.onCountryCategoryLoaded(countryCategory);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                mCountryCategoryLocalDataSource.getCountryCategory(categoryKey, countryKey, new GetCountryCategoryCallback() {
+                    @Override
+                    public void onCountryCategoryLoaded(final CountryCategory countryCategory) {
+                        mCountryCategoryLocalDataSource.saveCountryCategory(countryCategory, new SaveCountryCategoryCallback() {
+
+                            @Override
+                            public void onCountryCategorySaved() {
+                                getCountryCategoryCallback.onCountryCategoryLoaded(countryCategory);
+                            }
+
+                            @Override
+                            public void onError() {
+                                getCountryCategoryCallback.onError(null);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        getCountryCategoryCallback.onError(throwable);
+                    }
+                });
+            }
+        });
     }
 
     @Override
     public void checkExistCountryCategory(@NonNull String categoryKey, @NonNull String countryKey,
                                           @NonNull CheckExistCountryCategoryCallback checkExistCountryCategoryCallback) {
 
-        mCountryCategoryLocalDataSource.checkExistCountryCategory(categoryKey, countryKey, checkExistCountryCategoryCallback);
+        // no-op
     }
 
     @Override
     public void addCountryCategory(@NonNull CountryCategory countryCategory,
                                    @NonNull AddCountryCategoryCallback addCountryCategoryCallback) {
 
-        mCountryCategoryLocalDataSource.addCountryCategory(countryCategory, addCountryCategoryCallback);
+        // no-op
     }
 
     @Override
     public void updateCountryCategory(@NonNull CountryCategory countryCategory,
                                       @NonNull UpdateCountryCategoryCallback updateCountryCategoryCallback) {
 
-        mCountryCategoryLocalDataSource.updateCountryCategory(countryCategory,updateCountryCategoryCallback);
+        // no-op
     }
 
     @Override
     public void saveCountryCategory(@NonNull CountryCategory countryCategory,
                                     @NonNull final SaveCountryCategoryCallback saveCountryCategoryCallback) {
 
-        mCountryCategoryLocalDataSource.saveCountryCategory(countryCategory, saveCountryCategoryCallback);
+        // no-op
     }
 
     @Override
     public void getCountryCategoryOfProduct(@NonNull String barcode, @NonNull String countryKey,
                                             @NonNull GetCountryCategoryOfProductCallback getCountryCategoryOfProductCallback) {
-        // TODO
+        // TODO with a loop
     }
 
     @Override
     public void checkExistEvent(@NonNull String barcode,
                                 @NonNull CheckExistEventCallback checkExistEventCallback) {
 
-        mEventLocalDataSource.checkExistEvent(barcode, checkExistEventCallback);
+        // no-op
     }
 
     @Override
     public void addEvent(@NonNull Event event,
                          @NonNull AddEventCallback addEventCallback) {
 
-        mEventLocalDataSource.addEvent(event, addEventCallback);
+        // no-op
     }
 
     @Override
     public void updateEvent(@NonNull Event event,
                             @NonNull UpdateEventCallback updateEventCallback) {
 
-        mEventLocalDataSource.updateEvent(event, updateEventCallback);
+        // no-op
     }
 
     @Override
     public void saveEvent(@NonNull Event event,
                           @NonNull final SaveEventCallback saveEventCallback) {
 
-        mEventLocalDataSource.saveEvent(event, saveEventCallback);
+        // no-op
     }
 
     @Override
-    public void saveScan(@NonNull String barcode,
-                         @NonNull SaveScanCallback saveScanCallback) {
-        // TODO
+    public void saveScan(@NonNull final String barcode,
+                         @NonNull final SaveScanCallback saveScanCallback) {
+
+        getProduct(barcode, new GetProductCallback() {
+            @Override
+            public void onProductLoaded(Product product) {
+                Event event = new Event(barcode, Event.STATUS_OK);
+                mEventLocalDataSource.saveEvent(event, new SaveEventCallback() {
+                    @Override
+                    public void onEventSaved() {
+                        saveScanCallback.onScanSaved();
+                    }
+
+                    @Override
+                    public void onError() {
+                        saveScanCallback.onError(null);
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                String eventStatus;
+
+                if (throwable instanceof IOException) {
+                    eventStatus = Event.STATUS_NO_NETWORK;
+                } else {
+                    eventStatus = Event.STATUS_NOT_IN_OFF_DATABASE;
+                }
+                Event event = new Event(barcode, eventStatus);
+
+                mEventLocalDataSource.saveEvent(event, new SaveEventCallback() {
+                    @Override
+                    public void onEventSaved() {
+                        saveScanCallback.onScanSaved();
+                    }
+
+                    @Override
+                    public void onError() {
+                        saveScanCallback.onError(null);
+                    }
+                });
+            }
+        });
     }
 
     @Override
     public void refreshEventsOnError(@NonNull RefreshEventsOnErrorCallback refreshEventsOnErrorCallback) {
-        // TODO
+        // TODO with a loop
     }
 
     @Override
     public void getEventsOnError(@NonNull GetEventsOnErrorCallback getEventsOnErrorCallback) {
 
-        mEventLocalDataSource.getEventsOnError(getEventsOnErrorCallback);
+        // no-op
     }
 
     @Override
@@ -311,35 +416,35 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
     public void getProducts(@NonNull String categoryKey, @NonNull String countryKey,
                             @NonNull String nutritionGradeValue, @NonNull Integer offsetProducts,
                             @NonNull Integer numberOfProducts, @NonNull GetProductsCallback getProductsCallback) {
-        // TODO
+        // TODO with a loop (no loop if GetRemoteProducts embedded logic of save)
     }
 
     @Override
     public void checkExistProduct(@NonNull String barcode,
                                   @NonNull CheckExistProductCallback checkExistProductCallback) {
 
-        mProductLocalDataSource.checkExistProduct(barcode, checkExistProductCallback);
+        // no-op
     }
 
     @Override
     public void addProduct(@NonNull Product product,
                            @NonNull AddProductCallback addProductCallback) {
 
-        mProductLocalDataSource.addProduct(product, addProductCallback);
+        // no-op
     }
 
     @Override
     public void updateProduct(@NonNull Product product,
                               @NonNull UpdateProductCallback updateProductCallback) {
 
-        mProductLocalDataSource.updateProduct(product, updateProductCallback);
+        // no-op
     }
 
     @Override
     public void saveProduct(@NonNull Product product,
                             @NonNull final SaveProductCallback saveProductCallback) {
 
-        mProductLocalDataSource.saveProduct(product, saveProductCallback);
+        // no-op
     }
 
     @Override
@@ -358,12 +463,32 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
 
                 for (String parsedCategory : parsedCategories){
 
-                    // TODO dernier point d'arret
+                    // TODO with a loop - dernier point d'arret
                     // Appeler getCategory
-                    //     qui appelle checkCategory
-                    //         appelle getNameCategory
-                    //         appelle saveCategory
-                    //     qui appelle saveCategoryTag
+                    //      Appeler saveCategoryTag
+                    // Appeler saveProduct with parse.isDone when all callback are finished
+
+                    getCategory(parsedCategory, new GetCategoryCallback() {
+                        @Override
+                        public void onCategoryLoaded(Category category) {
+                            mCategoryTagLocalDataSource.saveCategoryTag(categoryTag, new SaveCategoryTagCallback() {
+                                @Override
+                                public void onCategoryTagSaved() {
+
+                                }
+
+                                @Override
+                                public void onError() {
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onError(Throwable throwable) {
+
+                        }
+                    });
 
                 }
 
@@ -387,27 +512,27 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
                                      @NonNull String categoryKey, @NonNull String countryKey,
                                      @NonNull CheckExistSuggestionCallback checkExistSuggestionCallback) {
 
-        mSuggestionLocalDataSource.checkExistSuggestion(barcode, categoryKey, countryKey, checkExistSuggestionCallback);
+        // no-op
     }
 
     @Override
     public void addSuggestion(@NonNull Suggestion suggestion,
                               @NonNull AddSuggestionCallback addSuggestionCallback) {
 
-        mSuggestionLocalDataSource.addSuggestion(suggestion, addSuggestionCallback);
+        // no-op
     }
 
     @Override
     public void updateSuggestion(@NonNull Suggestion suggestion,
                                  @NonNull UpdateSuggestionCallback updateSuggestionCallback) {
 
-        mSuggestionLocalDataSource.updateSuggestion(suggestion, updateSuggestionCallback);
+        // no-op
     }
 
     @Override
     public void saveSuggestion(@NonNull Suggestion suggestion,
                                @NonNull final SaveSuggestionCallback saveSuggestionCallback) {
 
-        mSuggestionLocalDataSource.saveSuggestion(suggestion, saveSuggestionCallback);
+        // no-op
     }
 }

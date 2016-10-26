@@ -42,6 +42,17 @@ public class Category {
 
     /**
      *
+     * @param categoryName
+     * @param categoryKey
+     */
+    public Category(String categoryKey, String categoryName) {
+        this.mId = 0L;
+        this.mCategoryKey = categoryKey;
+        this.mCategoryName = categoryName;
+    }
+
+    /**
+     *
      * @param id
      * @param categoryName
      * @param categoryKey

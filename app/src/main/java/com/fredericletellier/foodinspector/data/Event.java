@@ -48,6 +48,18 @@ public class Event {
 
     /**
      *
+     * @param status
+     * @param barcode
+     */
+    public Event(String barcode, String status) {
+        this.mId = 0L;
+        this.mTimestamp = System.currentTimeMillis()/1000;
+        this.mBarcode = barcode;
+        this.mStatus = status;
+    }
+
+    /**
+     *
      * @param timestamp
      * @param id
      * @param status

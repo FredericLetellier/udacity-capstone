@@ -77,7 +77,7 @@ public interface CountryCategoryDataSource {
 
     }
 
-    void getCountryCategory(@NonNull CountryCategory countryCategory, @NonNull GetCountryCategoryCallback getCountryCategoryCallback);
+    void getCountryCategory(@NonNull String categoryKey, @NonNull String countryKey, @NonNull GetCountryCategoryCallback getCountryCategoryCallback);
 
     void checkExistCountryCategory(@NonNull String categoryKey, @NonNull String countryKey, @NonNull CheckExistCountryCategoryCallback checkExistCountryCategoryCallback);
 

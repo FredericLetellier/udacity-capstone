@@ -54,6 +54,24 @@ public class CategoryLocalDataSource implements CategoryDataSource {
     }
 
     @Override
+    public void getCategory(@NonNull String categoryKey, @NonNull GetCategoryCallback getCategoryCallback) {
+        Cursor cursor = mContentResolver.query(
+                CategoryPersistenceContract.CategoryEntry.buildCategoryUri(),
+                null,
+                CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_CATEGORY_KEY + " = ?",
+                new String[]{categoryKey},
+                null);
+
+        if (cursor.moveToLast()) {
+            Category category = Category.from(cursor);
+            getCategoryCallback.onCategoryLoaded(category);
+        } else {
+            getCategoryCallback.onError(null);
+        }
+        cursor.close();
+    }
+
+    @Override
     public void checkExistCategory(@NonNull String categoryKey,
                                    @NonNull CheckExistCategoryCallback checkExistCategoryCallback) {
 
