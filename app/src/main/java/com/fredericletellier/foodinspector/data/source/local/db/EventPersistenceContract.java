@@ -60,6 +60,8 @@ public final class EventPersistenceContract {
                 EventPersistenceContract.EventEntry.COLUMN_NAME_BARCODE,
                 EventPersistenceContract.EventEntry.COLUMN_NAME_STATUS};
 
+        public static final String EVENTS_AND_PRODUCTS = "eventsandproducts";
+
         public static Uri buildEventUriWith(long id) {
             return ContentUris.withAppendedId(CONTENT_EVENT_URI, id);
         }
@@ -71,6 +73,10 @@ public final class EventPersistenceContract {
 
         public static Uri buildEventUri() {
             return CONTENT_EVENT_URI.buildUpon().build();
+        }
+
+        public static Uri buildEventsAndProductsUri() {
+            return BASE_CONTENT_URI.buildUpon().appendPath(EventEntry.EVENTS_AND_PRODUCTS).build();
         }
 
     }

@@ -42,6 +42,7 @@ public class FoodInspectorContentProvider extends ContentProvider {
     private static final int SUGGESTION_OF_PRODUCTS = 102;
     private static final int EVENT = 200;
     private static final int EVENT_ITEM = 201;
+    private static final int EVENTS_AND_PRODUCTS = 202;
     private static final int CATEGORY = 300;
     private static final int CATEGORY_ITEM = 301;
     private static final int CATEGORYTAG = 400;
@@ -56,6 +57,9 @@ public class FoodInspectorContentProvider extends ContentProvider {
 
     private static final SQLiteQueryBuilder sSuggestionOfProductsBuilder;
 
+    private static final SQLiteQueryBuilder sEventsAndProductsBuilder;
+
+
     static{
         sSuggestionOfProductsBuilder = new SQLiteQueryBuilder();
 
@@ -66,6 +70,16 @@ public class FoodInspectorContentProvider extends ContentProvider {
                         "." + ProductPersistenceContract.ProductEntry.COLUMN_NAME_BARCODE +
                         " = " + SuggestionPersistenceContract.SuggestionEntry.TABLE_NAME +
                         "." + SuggestionPersistenceContract.SuggestionEntry.COLUMN_NAME_BARCODE);
+
+        sEventsAndProductsBuilder = new SQLiteQueryBuilder();
+
+        sEventsAndProductsBuilder.setTables(
+                EventPersistenceContract.EventEntry.TABLE_NAME + " INNER JOIN " +
+                        ProductPersistenceContract.ProductEntry.TABLE_NAME +
+                        " ON " + EventPersistenceContract.EventEntry.TABLE_NAME +
+                        "." + EventPersistenceContract.EventEntry.COLUMN_NAME_BARCODE +
+                        " = " + ProductPersistenceContract.ProductEntry.TABLE_NAME +
+                        "." + ProductPersistenceContract.ProductEntry.COLUMN_NAME_BARCODE);
     }
 
     private static UriMatcher buildUriMatcher() {
@@ -78,6 +92,7 @@ public class FoodInspectorContentProvider extends ContentProvider {
 
         matcher.addURI(authority, EventPersistenceContract.EventEntry.TABLE_NAME, EVENT);
         matcher.addURI(authority, EventPersistenceContract.EventEntry.TABLE_NAME + "/*", EVENT_ITEM);
+        matcher.addURI(authority, EventPersistenceContract.EventEntry.EVENTS_AND_PRODUCTS, EVENTS_AND_PRODUCTS);
 
         matcher.addURI(authority, CategoryPersistenceContract.CategoryEntry.TABLE_NAME, CATEGORY);
         matcher.addURI(authority, CategoryPersistenceContract.CategoryEntry.TABLE_NAME + "/*", CATEGORY_ITEM);
@@ -190,6 +205,16 @@ public class FoodInspectorContentProvider extends ContentProvider {
                         projection,
                         EventPersistenceContract.EventEntry._ID + " = ?",
                         where_event,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case EVENTS_AND_PRODUCTS:
+                retCursor = sEventsAndProductsBuilder.query(mLocalDbHelper.getReadableDatabase(),
+                        projection,
+                        selection,
+                        selectionArgs,
                         null,
                         null,
                         sortOrder
