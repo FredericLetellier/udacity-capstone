@@ -79,7 +79,7 @@ public interface EventDataSource {
 
     interface GetEventsOnErrorCallback {
 
-        void onEventsOnErrorLoaded(List<String> eventsOnError);
+        void onEventsOnErrorLoaded(List<String> barcodeEventsOnError);
 
         void onError();
 

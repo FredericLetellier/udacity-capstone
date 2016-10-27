@@ -89,7 +89,7 @@ public class ProductLocalDataSource implements ProductDataSource {
             if (nbWishedProducts > nbLocalProducts){
                 getProductsCallback.onProductsUnfilled();
             } else {
-                // TODO Optimize : Why Local retrun null and Remote return List<Product>
+                // TODO Optimize : Why Local return null and Remote return List<Product>
                 // Same thing for getProduct, getCategory, getCountryCategory
                 getProductsCallback.onProductsLoaded(null);
             }

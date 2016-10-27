@@ -169,13 +169,13 @@ public class EventLocalDataSource implements EventDataSource {
 
         if (cursor.moveToFirst()) {
 
-            List<String> eventsOnError = new ArrayList<String>();
+            List<String> barcodeEventsOnError = new ArrayList<String>();
             do {
                 Event event = Event.from(cursor);
-                eventsOnError.add(event.getAsStringId());
+                barcodeEventsOnError.add(event.getBarcode());
             } while (cursor.moveToNext());
 
-            getEventsOnErrorCallback.onEventsOnErrorLoaded(eventsOnError);
+            getEventsOnErrorCallback.onEventsOnErrorLoaded(barcodeEventsOnError);
         } else {
             getEventsOnErrorCallback.onError();
         }

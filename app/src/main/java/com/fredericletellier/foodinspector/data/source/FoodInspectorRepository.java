@@ -115,6 +115,9 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
         return INSTANCE;
     }
 
+    // TODO Optimize : some callbacks are not supported, commented as "no-op in a loop"
+    // TODO Optimize : callbacks in error need to be handle globally and correctly
+
     /**
      * Used to force {@link #getInstance(ProductDataSource, ProductDataSource, EventDataSource, CategoryDataSource, CategoryDataSource, CategoryTagDataSource, CountryCategoryDataSource, CountryCategoryDataSource, SuggestionDataSource)}
      * to create a new instance next time it's called.
@@ -288,9 +291,46 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
     }
 
     @Override
-    public void getCountryCategoryOfProduct(@NonNull String barcode, @NonNull String countryKey,
-                                            @NonNull GetCountryCategoryOfProductCallback getCountryCategoryOfProductCallback) {
-        // TODO with a loop
+    public void getCountryCategoryOfProduct(@NonNull final String barcode, @NonNull final String countryKey,
+                                            @NonNull final GetCountryCategoryOfProductCallback getCountryCategoryOfProductCallback) {
+        parseProduct(barcode, new ParseProductCallback() {
+            @Override
+            public void onProductParsed() {
+                mCategoryTagLocalDataSource.getCategoryTags(barcode, new GetCategoryTagsCallback() {
+                    @Override
+                    public void onCategoryTagsLoaded(List<String> categoriesKey) {
+                        for (final String categoryKey : categoriesKey) {
+                            getCountryCategory(categoryKey, countryKey, new GetCountryCategoryCallback() {
+                                @Override
+                                public void onCountryCategoryLoaded(CountryCategory countryCategory) {
+                                    // no-op in a loop
+                                }
+
+                                @Override
+                                public void onError(Throwable throwable) {
+                                    // no-op in a loop
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCategoryTagsNotExist() {
+                        getCountryCategoryOfProductCallback.onError(null);
+                    }
+                });
+            }
+
+            @Override
+            public void onProductMustBeParsed(String parsableCategories) {
+                getCountryCategoryOfProductCallback.onError(null);
+            }
+
+            @Override
+            public void onError() {
+                getCountryCategoryOfProductCallback.onError(null);
+            }
+        });
     }
 
     @Override
@@ -369,8 +409,46 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
     }
 
     @Override
-    public void refreshEventsOnError(@NonNull RefreshEventsOnErrorCallback refreshEventsOnErrorCallback) {
-        // TODO with a loop
+    public void refreshEventsOnError(@NonNull final RefreshEventsOnErrorCallback refreshEventsOnErrorCallback) {
+        mEventLocalDataSource.getEventsOnError(new GetEventsOnErrorCallback() {
+            @Override
+            public void onEventsOnErrorLoaded(List<String> barcodeEventsOnError) {
+                if (!Connectivity.isConnected(FoodInspector.getContext())){
+                    refreshEventsOnErrorCallback.onError(null);
+                    return;
+                }
+
+                for (final String barcodeEventOnError : barcodeEventsOnError) {
+                    getProduct(barcodeEventOnError, new GetProductCallback() {
+                        @Override
+                        public void onProductLoaded(Product product) {
+                            Event event = new Event(barcodeEventOnError, Event.STATUS_OK);
+                            mEventLocalDataSource.saveEvent(event, new SaveEventCallback() {
+                                @Override
+                                public void onEventSaved() {
+                                    // no-op in a loop
+                                }
+
+                                @Override
+                                public void onError() {
+                                    // no-op in loop
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onError(Throwable throwable) {
+                            // no-op in a loop
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onError() {
+                refreshEventsOnErrorCallback.onEventsOnErrorRefreshed(null);
+            }
+        });
     }
 
     @Override
