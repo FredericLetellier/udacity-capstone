@@ -57,7 +57,7 @@ public interface ProductDataSource {
 
     interface AddProductCallback {
 
-        void onProductAdded();
+        void onProductAdded(String barcode);
 
         void onError();
 
@@ -65,7 +65,7 @@ public interface ProductDataSource {
 
     interface UpdateProductCallback {
 
-        void onProductUpdated();
+        void onProductUpdated(String barcode);
 
         void onError();
 
@@ -73,7 +73,7 @@ public interface ProductDataSource {
 
     interface SaveProductCallback {
 
-        void onProductSaved();
+        void onProductSaved(String barcode);
 
         void onError();
 

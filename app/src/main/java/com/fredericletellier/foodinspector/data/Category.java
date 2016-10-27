@@ -46,7 +46,6 @@ public class Category {
      * @param categoryKey
      */
     public Category(String categoryKey, String categoryName) {
-        this.mId = 0L;
         this.mCategoryKey = categoryKey;
         this.mCategoryName = categoryName;
     }

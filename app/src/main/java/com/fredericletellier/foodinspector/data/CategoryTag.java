@@ -43,6 +43,18 @@ public class CategoryTag {
 
     /**
      *
+     * @param rank
+     * @param categoryKey
+     * @param barcode
+     */
+    public CategoryTag(String barcode, String categoryKey, int rank) {
+        this.mBarcode = barcode;
+        this.mCategoryKey = categoryKey;
+        this.mRank = rank;
+    }
+
+    /**
+     *
      * @param id
      * @param rank
      * @param categoryKey

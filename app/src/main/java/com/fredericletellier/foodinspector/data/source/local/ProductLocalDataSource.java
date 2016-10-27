@@ -123,7 +123,7 @@ public class ProductLocalDataSource implements ProductDataSource {
         Uri uri = mContentResolver.insert(ProductPersistenceContract.ProductEntry.buildProductUri(), values);
 
         if (uri != null) {
-            addProductCallback.onProductAdded();
+            addProductCallback.onProductAdded(Product.getBarcode());
         } else {
             addProductCallback.onError();
         }
@@ -141,7 +141,7 @@ public class ProductLocalDataSource implements ProductDataSource {
         int rows = mContentResolver.update(ProductPersistenceContract.ProductEntry.buildProductUri(), values, selection, selectionArgs);
 
         if (rows != 0) {
-            updateProductCallback.onProductUpdated();
+            updateProductCallback.onProductUpdated(Product.getBarcode());
         } else {
             updateProductCallback.onError();
         }
@@ -160,8 +160,8 @@ public class ProductLocalDataSource implements ProductDataSource {
                 Product.setId(id);
                 updateProduct(Product, new UpdateProductCallback() {
                     @Override
-                    public void onProductUpdated() {
-                        saveProductCallback.onProductSaved();
+                    public void onProductUpdated(String barcode) {
+                        saveProductCallback.onProductSaved(barcode);
                     }
 
                     @Override
@@ -175,8 +175,8 @@ public class ProductLocalDataSource implements ProductDataSource {
             public void onProductNotExisted() {
                 addProduct(Product, new AddProductCallback() {
                     @Override
-                    public void onProductAdded() {
-                        saveProductCallback.onProductSaved();
+                    public void onProductAdded(String barcode) {
+                        saveProductCallback.onProductSaved(barcode);
                     }
 
                     @Override
@@ -220,7 +220,7 @@ public class ProductLocalDataSource implements ProductDataSource {
 
                 updateProduct(product, new UpdateProductCallback() {
                     @Override
-                    public void onProductUpdated() {
+                    public void onProductUpdated(String barcode) {
                         updateProductBookmarkCallback.onProductBookmarkUpdated();
                     }
 

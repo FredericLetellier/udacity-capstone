@@ -20,14 +20,18 @@ package com.fredericletellier.foodinspector.data.source;
 
 import android.support.annotation.NonNull;
 
+import com.fredericletellier.foodinspector.FoodInspector;
 import com.fredericletellier.foodinspector.data.Category;
 import com.fredericletellier.foodinspector.data.CategoryTag;
 import com.fredericletellier.foodinspector.data.CountryCategory;
 import com.fredericletellier.foodinspector.data.Event;
 import com.fredericletellier.foodinspector.data.Product;
 import com.fredericletellier.foodinspector.data.Suggestion;
+import com.fredericletellier.foodinspector.util.Connectivity;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -392,7 +396,7 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
                     public void onProductLoaded(final Product product) {
                         mProductLocalDataSource.saveProduct(product, new SaveProductCallback() {
                             @Override
-                            public void onProductSaved() {
+                            public void onProductSaved(String barcode) {
                                 getProductCallback.onProductLoaded(product);
                             }
 
@@ -413,10 +417,71 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
     }
 
     @Override
-    public void getProducts(@NonNull String categoryKey, @NonNull String countryKey,
-                            @NonNull String nutritionGradeValue, @NonNull Integer offsetProducts,
-                            @NonNull Integer numberOfProducts, @NonNull GetProductsCallback getProductsCallback) {
-        // TODO with a loop (no loop if GetRemoteProducts embedded logic of save)
+    public void getProducts(@NonNull final String categoryKey, @NonNull final String countryKey,
+                            @NonNull final String nutritionGradeValue, @NonNull final Integer offsetProducts,
+                            @NonNull final Integer numberOfProducts, @NonNull final GetProductsCallback getProductsCallback) {
+        mProductLocalDataSource.getProducts(categoryKey, countryKey, nutritionGradeValue, offsetProducts,
+                numberOfProducts, new GetProductsCallback() {
+                    @Override
+                    public void onProductsLoaded(List<Product> products) {
+                        getProductsCallback.onProductsLoaded(null);
+                    }
+
+                    @Override
+                    public void onProductsUnfilled() {
+                        if (!Connectivity.isConnected(FoodInspector.getContext())){
+                            getProductsCallback.onError(null);
+                            return;
+                        }
+
+                        mProductRemoteDataSource.getProducts(categoryKey, countryKey, nutritionGradeValue, offsetProducts,
+                                numberOfProducts, new GetProductsCallback() {
+                                    @Override
+                                    public void onProductsLoaded(List<Product> products) {
+
+                                        for (final Product product : products) {
+                                            mProductLocalDataSource.saveProduct(product, new SaveProductCallback() {
+                                                @Override
+                                                public void onProductSaved(String barcode) {
+                                                    Suggestion suggestion = new Suggestion(barcode, categoryKey, countryKey);
+                                                    mSuggestionLocalDataSource.saveSuggestion(suggestion, new SaveSuggestionCallback() {
+                                                        @Override
+                                                        public void onSuggestionSaved() {
+                                                            // no-op in loop
+                                                        }
+
+                                                        @Override
+                                                        public void onError() {
+                                                            // no-op in loop
+                                                        }
+                                                    });
+                                                }
+
+                                                @Override
+                                                public void onError() {
+                                                    // no-op in loop
+                                                }
+                                            });
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onProductsUnfilled() {
+                                        getProductsCallback.onProductsUnfilled();
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable throwable) {
+                                        getProductsCallback.onError(throwable);
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        getProductsCallback.onError(throwable);
+                    }
+                });
     }
 
     @Override
@@ -447,8 +512,11 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
         // no-op
     }
 
+    AtomicInteger countDownLatch = null;
+    AtomicInteger countDownLatchSuccess = null;
+
     @Override
-    public void parseProduct(@NonNull String barcode,
+    public void parseProduct(@NonNull final String barcode,
                              @NonNull final ParseProductCallback parseProductCallback) {
 
         mProductLocalDataSource.parseProduct(barcode, new ParseProductCallback() {
@@ -458,28 +526,35 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
             }
 
             @Override
-            public void onProductMustBeParsed(String parsableCategories) {
+            public void onProductMustBeParsed(final String parsableCategories) {
                 String[] parsedCategories = parsableCategories.split(",");
 
-                for (String parsedCategory : parsedCategories){
+                countDownLatch = new AtomicInteger(parsedCategories.length);
+                countDownLatchSuccess = new AtomicInteger(parsedCategories.length);
 
-                    // TODO with a loop - dernier point d'arret
-                    // Appeler getCategory
-                    //      Appeler saveCategoryTag
-                    // Appeler saveProduct with parse.isDone when all callback are finished
+                for (int i = 0; i < parsedCategories.length; i++) {
+                    final int rank = i;
+                    final String parsedCategory = parsedCategories[i];
 
                     getCategory(parsedCategory, new GetCategoryCallback() {
                         @Override
                         public void onCategoryLoaded(Category category) {
+                            CategoryTag categoryTag = new CategoryTag(barcode, parsedCategory, rank);
                             mCategoryTagLocalDataSource.saveCategoryTag(categoryTag, new SaveCategoryTagCallback() {
                                 @Override
                                 public void onCategoryTagSaved() {
-
+                                    int value = countDownLatch.decrementAndGet();
+                                    countDownLatchSuccess.decrementAndGet();
+                                    if ( value == 0 ) {
+                                        afterParseProduct(barcode, parseProductCallback);
+                                    }
                                 }
 
                                 @Override
                                 public void onError() {
-
+                                    int value = countDownLatch.decrementAndGet();
+                                    if ( value == 0 ) {
+                                        afterParseProduct(barcode, parseProductCallback);                                    }
                                 }
                             });
                         }
@@ -499,6 +574,25 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
                 parseProductCallback.onError();
             }
         });
+    }
+
+    private void afterParseProduct(String barcode, final ParseProductCallback parseProductCallback){
+        if (countDownLatch.get() == countDownLatchSuccess.get()) {
+            Product product = new Product(barcode, true);
+            saveProduct(product, new SaveProductCallback() {
+                @Override
+                public void onProductSaved(String barcode) {
+                    parseProductCallback.onProductParsed();
+                }
+
+                @Override
+                public void onError() {
+                    parseProductCallback.onError();
+                }
+            });
+        } else {
+            parseProductCallback.onError();
+        }
     }
 
     @Override

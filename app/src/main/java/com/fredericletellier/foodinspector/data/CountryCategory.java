@@ -48,7 +48,6 @@ public class CountryCategory {
      * @param countryKey
      */
     public CountryCategory(String categoryKey, String countryKey, int sumOfProducts) {
-        this.mId = 0L;
         this.mCategoryKey = categoryKey;
         this.mCountryKey = countryKey;
         this.mSumOfProducts = sumOfProducts;

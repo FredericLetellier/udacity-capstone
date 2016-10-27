@@ -75,6 +75,16 @@ public class Product {
 
     /**
      *
+     * @param barcode
+     * @param parsed
+     */
+    public Product(String barcode, boolean parsed) {
+        this.mBarcode = barcode;
+        this.mParsed = parsed;
+    }
+
+    /**
+     *
      * @param id
      * @param barcode
      * @param parsed

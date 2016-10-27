@@ -52,7 +52,6 @@ public class Event {
      * @param barcode
      */
     public Event(String barcode, String status) {
-        this.mId = 0L;
         this.mTimestamp = System.currentTimeMillis()/1000;
         this.mBarcode = barcode;
         this.mStatus = status;

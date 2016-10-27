@@ -43,6 +43,18 @@ public class Suggestion {
 
     /**
      *
+     * @param categoryKey
+     * @param barcode
+     * @param countryKey
+     */
+    public Suggestion(String barcode, String categoryKey, String countryKey) {
+        this.mBarcode = barcode;
+        this.mCategoryKey = categoryKey;
+        this.mCountryKey = countryKey;
+    }
+
+    /**
+     *
      * @param id
      * @param categoryKey
      * @param barcode
