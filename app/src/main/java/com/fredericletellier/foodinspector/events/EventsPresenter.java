@@ -30,7 +30,8 @@ import com.fredericletellier.foodinspector.data.Event;
 import com.fredericletellier.foodinspector.data.source.EventDataSource;
 import com.fredericletellier.foodinspector.data.source.FoodInspectorRepository;
 import com.fredericletellier.foodinspector.data.source.LoaderProvider;
-import com.google.android.gms.tasks.Task;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 
@@ -39,7 +40,7 @@ import java.util.List;
  * UI as required. It is implemented as a non UI {@link Fragment} to make use of the
  * {@link LoaderManager} mechanism for managing loading and updating data asynchronously.
  */
-public class EventsPresenter implements EventsContract.Presenter,
+public class EventsPresenter implements EventsContract.Presenter, FoodInspectorRepository.LoadDataCallback,
         EventDataSource.RefreshEventsOnErrorCallback, LoaderManager.LoaderCallbacks<Cursor> {
 
     public final static int EVENTS_LOADER = 1;
@@ -68,13 +69,13 @@ public class EventsPresenter implements EventsContract.Presenter,
 
     @Override
     public void start() {
-        loadTasks();
+        loadEvents();
     }
 
     /**
      * We will always have fresh data from remote, the Loaders handle the local data
      */
-    public void loadTasks() {
+    public void loadEvents() {
         mEventsView.setLoadingIndicator(true);
         mFoodInspectorRepository.refreshEventsOnError(this);
     }
@@ -83,7 +84,7 @@ public class EventsPresenter implements EventsContract.Presenter,
     public void onDataLoaded(Cursor data) {
         mEventsView.setLoadingIndicator(false);
         // Show the list of events
-        mEventsView.showTasks(data);
+        mEventsView.showEvents(data);
     }
 
 
@@ -91,7 +92,7 @@ public class EventsPresenter implements EventsContract.Presenter,
     public void onDataEmpty() {
         mEventsView.setLoadingIndicator(false);
         // Show a message indicating there are no events for that filter type.
-        processEmptyTasks();
+        processEmptyEvents();
     }
 
     @Override
@@ -112,10 +113,10 @@ public class EventsPresenter implements EventsContract.Presenter,
 
     @Override
     public void onDataReset() {
-        mEventsView.showTasks(null);
+        mEventsView.showEvents(null);
     }
 
-    private void processEmptyTasks() {
+    private void processEmptyEvents() {
         switch (mCurrentFiltering.getEventsFilterType()) {
             default:
             case ALL_EVENTS:
@@ -130,7 +131,7 @@ public class EventsPresenter implements EventsContract.Presenter,
     @Override
     public void openEventDetails(@NonNull Event requestedEvent) {
         checkNotNull(requestedEvent, "requestedEvent cannot be null!");
-        mEventsView.showTaskDetailsUi(requestedEvent);
+        mEventsView.showEventDetailsUi(requestedEvent);
     }
 
     @Override
@@ -139,7 +140,7 @@ public class EventsPresenter implements EventsContract.Presenter,
     }
 
     /**
-     * Sets the current task filtering type.
+     * Sets the current events filtering type.
      *
      * @param eventsFilter Can be {@link EventsFilterType#ALL_EVENTS} or
      *                   {@link EventsFilterType#EVENTS_WITH_BOOKMARKED_PRODUCT}

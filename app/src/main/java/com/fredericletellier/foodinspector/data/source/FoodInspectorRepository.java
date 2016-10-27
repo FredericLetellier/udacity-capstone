@@ -18,6 +18,7 @@
 
 package com.fredericletellier.foodinspector.data.source;
 
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import com.fredericletellier.foodinspector.FoodInspector;
@@ -706,5 +707,15 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
                                @NonNull final SaveSuggestionCallback saveSuggestionCallback) {
 
         // no-op
+    }
+
+    public interface LoadDataCallback {
+        void onDataLoaded(Cursor data);
+
+        void onDataEmpty();
+
+        void onError(Throwable throwable);
+
+        void onDataReset();
     }
 }
