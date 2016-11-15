@@ -4,4 +4,14 @@
     <string name="section_format">Hello World from section: %1$d</string>
 
     <string name="language_code">en</string>
+
+    <string name="event_subtitle_no_network">Awaiting network access</string>
+    <string name="event_subtitle_not_in_off_database">Product unrecognized by OpenFoodFacts</string>
+    <string name="event_subtitle_not_a_product">Unrecognized : food product, really?</string>
+
+    <string name="no_events_all">Scan food product barcode to begin</string>
+    <string name="no_events_with_bookmarked_product">Mark product as favorite to populate</string>
+
+    <string name="loading_events_error">Error while loading tasks</string>
+
 </resources>

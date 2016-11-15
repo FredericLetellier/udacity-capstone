@@ -18,7 +18,6 @@
 
 package com.fredericletellier.foodinspector.events;
 
-import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -31,9 +30,9 @@ import com.fredericletellier.foodinspector.data.source.EventDataSource;
 import com.fredericletellier.foodinspector.data.source.FoodInspectorRepository;
 import com.fredericletellier.foodinspector.data.source.LoaderProvider;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Listens to user actions from the UI ({@link EventsFragment}), retrieves the data and updates the
@@ -76,13 +75,11 @@ public class EventsPresenter implements EventsContract.Presenter, FoodInspectorR
      * We will always have fresh data from remote, the Loaders handle the local data
      */
     public void loadEvents() {
-        mEventsView.setLoadingIndicator(true);
         mFoodInspectorRepository.refreshEventsOnError(this);
     }
 
     @Override
     public void onDataLoaded(Cursor data) {
-        mEventsView.setLoadingIndicator(false);
         // Show the list of events
         mEventsView.showEvents(data);
     }
@@ -90,7 +87,6 @@ public class EventsPresenter implements EventsContract.Presenter, FoodInspectorR
 
     @Override
     public void onDataEmpty() {
-        mEventsView.setLoadingIndicator(false);
         // Show a message indicating there are no events for that filter type.
         processEmptyEvents();
     }
@@ -107,7 +103,6 @@ public class EventsPresenter implements EventsContract.Presenter, FoodInspectorR
 
     @Override
     public void onError(Throwable throwable) {
-        mEventsView.setLoadingIndicator(false);
         mEventsView.showLoadingEventsError();
     }
 
@@ -134,22 +129,6 @@ public class EventsPresenter implements EventsContract.Presenter, FoodInspectorR
         mEventsView.showEventDetailsUi(requestedEvent);
     }
 
-    @Override
-    public EventsFilterType getFiltering() {
-        return mCurrentFiltering.getEventsFilterType();
-    }
-
-    /**
-     * Sets the current events filtering type.
-     *
-     * @param eventsFilter Can be {@link EventsFilterType#ALL_EVENTS} or
-     *                   {@link EventsFilterType#EVENTS_WITH_BOOKMARKED_PRODUCT}
-     */
-    @Override
-    public void setFiltering(EventsFilter eventsFilter) {
-        mCurrentFiltering = eventsFilter;
-        mLoaderManager.initLoader(EVENTS_LOADER, mCurrentFiltering.getFilterExtras(), this);
-    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {

@@ -32,8 +32,6 @@ public interface EventsContract {
 
     interface View extends BaseView<Presenter> {
 
-        void setLoadingIndicator(boolean active);
-
         void showEvents(Cursor events);
 
         void showEventDetailsUi(Event event);
@@ -52,9 +50,6 @@ public interface EventsContract {
 
         void openEventDetails(@NonNull Event requestedEvent);
 
-        void setFiltering(EventsFilter requestType);
-
-        EventsFilterType getFiltering();
     }
 }
 
