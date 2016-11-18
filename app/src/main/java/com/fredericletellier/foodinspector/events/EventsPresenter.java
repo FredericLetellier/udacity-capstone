@@ -48,11 +48,7 @@ public class EventsPresenter implements EventsContract.Presenter, FoodInspectorR
 
     @NonNull
     private final FoodInspectorRepository mFoodInspectorRepository;
-
-    @NonNull
     private final LoaderManager mLoaderManager;
-
-    @NonNull
     private final LoaderProvider mLoaderProvider;
 
     private EventsFilter mCurrentFiltering;

@@ -18,9 +18,27 @@
 
 package com.fredericletellier.foodinspector.countrycategories;
 
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 public class CountryCategoriesFragment extends Fragment implements CountryCategoriesContract.View {
+
+    @NonNull
+    private static final String ARGUMENT_PRODUCT_BARCODE = "PRODUCT_BARCODE";
+
+    public CountryCategoriesFragment() {
+        // Requires empty public constructor
+    }
+
+    public static CountryCategoriesFragment newInstance(String productBarcode) {
+        Bundle arguments = new Bundle();
+        arguments.putString(ARGUMENT_PRODUCT_BARCODE, productBarcode);
+        CountryCategoriesFragment fragment = new CountryCategoriesFragment();
+        fragment.setArguments(arguments);
+        return fragment;
+    }
+
     @Override
     public void setPresenter(CountryCategoriesContract.Presenter presenter) {
 

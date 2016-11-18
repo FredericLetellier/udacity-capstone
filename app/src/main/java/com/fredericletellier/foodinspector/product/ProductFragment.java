@@ -18,9 +18,28 @@
 
 package com.fredericletellier.foodinspector.product;
 
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 public class ProductFragment extends Fragment implements ProductContract.View {
+
+    @NonNull
+    private static final String ARGUMENT_PRODUCT_BARCODE = "PRODUCT_BARCODE";
+
+    public ProductFragment() {
+        // Requires empty public constructor
+    }
+
+    public static ProductFragment newInstance(String productBarcode) {
+        Bundle arguments = new Bundle();
+        arguments.putString(ARGUMENT_PRODUCT_BARCODE, productBarcode);
+        ProductFragment fragment = new ProductFragment();
+        fragment.setArguments(arguments);
+        return fragment;
+    }
+
+
     @Override
     public void setPresenter(ProductContract.Presenter presenter) {
 

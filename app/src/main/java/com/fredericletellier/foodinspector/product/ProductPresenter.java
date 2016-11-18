@@ -20,13 +20,42 @@ package com.fredericletellier.foodinspector.product;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
+import com.fredericletellier.foodinspector.data.Product;
 import com.fredericletellier.foodinspector.data.source.FoodInspectorRepository;
+import com.fredericletellier.foodinspector.data.source.LoaderProvider;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ProductPresenter implements ProductContract.Presenter, FoodInspectorRepository.LoadDataCallback,
         LoaderManager.LoaderCallbacks<Cursor>  {
+
+    public final static int TASK_LOADER = 2;
+
+    @NonNull
+    private final FoodInspectorRepository mFoodInspectorRepository;
+    private ProductContract.View mProductView;
+    private LoaderProvider mLoaderProvider;
+    private LoaderManager mLoaderManager;
+    private Product mProduct;
+    private String mProductBarcode;
+
+    public ProductPresenter(@NonNull String productBarcode,
+                               @NonNull LoaderProvider loaderProvider,
+                               @NonNull LoaderManager loaderManager,
+                               @NonNull FoodInspectorRepository foodInspectorRepository,
+                               @NonNull ProductContract.View productView) {
+        mProductBarcode = checkNotNull(productBarcode, "productBarcode cannot be null!");
+        mLoaderProvider = checkNotNull(loaderProvider, "loaderProvider cannot be null!");
+        mLoaderManager = checkNotNull(loaderManager, "loaderManager cannot be null!");
+        mFoodInspectorRepository = checkNotNull(foodInspectorRepository, "foodInspectorRepository cannot be null!");
+        mProductView = checkNotNull(productView, "productView cannot be null!");
+        mProductView.setPresenter(this);
+    }
+
     @Override
     public void start() {
 
