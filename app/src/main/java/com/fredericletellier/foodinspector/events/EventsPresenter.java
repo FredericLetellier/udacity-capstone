@@ -53,7 +53,11 @@ public class EventsPresenter implements EventsContract.Presenter, FoodInspectorR
 
     private EventsFilter mCurrentFiltering;
 
-    public EventsPresenter(@NonNull LoaderProvider loaderProvider, @NonNull LoaderManager loaderManager, @NonNull FoodInspectorRepository foodInspectorRepository, @NonNull EventsContract.View eventsView, @NonNull EventsFilter eventsFilter) {
+    public EventsPresenter(@NonNull LoaderProvider loaderProvider,
+                           @NonNull LoaderManager loaderManager,
+                           @NonNull FoodInspectorRepository foodInspectorRepository,
+                           @NonNull EventsContract.View eventsView,
+                           @NonNull EventsFilter eventsFilter) {
         mLoaderProvider = checkNotNull(loaderProvider, "loaderProvider provider cannot be null");
         mLoaderManager = checkNotNull(loaderManager, "loaderManager provider cannot be null");
         mFoodInspectorRepository = checkNotNull(foodInspectorRepository, "foodInspectorRepository provider cannot be null");

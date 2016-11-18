@@ -28,12 +28,19 @@ import com.fredericletellier.foodinspector.R;
 import com.fredericletellier.foodinspector.countrycategories.CountryCategoriesFragment;
 import com.fredericletellier.foodinspector.countrycategories.CountryCategoriesPresenter;
 import com.fredericletellier.foodinspector.data.source.LoaderProvider;
+import com.fredericletellier.foodinspector.suggestions.SuggestionsFilter;
+import com.fredericletellier.foodinspector.suggestions.SuggestionsFilterType;
+import com.fredericletellier.foodinspector.suggestions.SuggestionsFragment;
+import com.fredericletellier.foodinspector.suggestions.SuggestionsPresenter;
 import com.fredericletellier.foodinspector.util.ActivityUtils;
 
 public class ProductActivity extends AppCompatActivity {
 
     public static final String EXTRA_PRODUCT_BARCODE = "PRODUCT_BARCODE";
+    private static final String CURRENT_COUNTRY_CATEGORY = "CURRENT_COUNTRY_CATEGORY";
     public LoaderProvider loaderProvider;
+    public String productBarcode;
+    public String countryCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +55,7 @@ public class ProductActivity extends AppCompatActivity {
         ab.setDisplayShowHomeEnabled(true);
 
         // Get the requested product barcode
-        String productBarcode = getIntent().getStringExtra(EXTRA_PRODUCT_BARCODE);
+        productBarcode = getIntent().getStringExtra(EXTRA_PRODUCT_BARCODE);
 
         ProductFragment productFragment = (ProductFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.contentFrameProduct);
@@ -83,8 +90,6 @@ public class ProductActivity extends AppCompatActivity {
             );
         }
 
-        loaderProvider = new LoaderProvider(getApplicationContext());
-
         // Create the presenter
         new CountryCategoriesPresenter(
                 productBarcode,
@@ -92,6 +97,133 @@ public class ProductActivity extends AppCompatActivity {
                 getSupportLoaderManager(),
                 Injection.provideFoodInspectorRepository(this),
                 countryCategoriesFragment
+        );
+
+        if (savedInstanceState != null) {
+            countryCategory = (String) savedInstanceState.getSerializable(CURRENT_COUNTRY_CATEGORY);
+            initSuggestions();
+        }
+    }
+
+    private void initSuggestions(){
+        SuggestionsFragment suggestionsFragmentA = (SuggestionsFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.contentFrameSuggestionsA);
+
+        if (suggestionsFragmentA == null) {
+            suggestionsFragmentA = suggestionsFragmentA.newInstance(productBarcode, countryCategory);
+
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
+                    suggestionsFragmentA, R.id.contentFrameSuggestionsA
+            );
+        }
+
+        SuggestionsFilter suggestionsFilterA = SuggestionsFilter.from(SuggestionsFilterType.NUTRITION_GRADE_A);
+
+        // Create the presenter
+        new SuggestionsPresenter(
+                productBarcode,
+                countryCategory,
+                loaderProvider,
+                getSupportLoaderManager(),
+                Injection.provideFoodInspectorRepository(this),
+                suggestionsFragmentA,
+                suggestionsFilterA
+        );
+
+        SuggestionsFragment suggestionsFragmentB = (SuggestionsFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.contentFrameSuggestionsB);
+
+        if (suggestionsFragmentB == null) {
+            suggestionsFragmentB = suggestionsFragmentB.newInstance(productBarcode, countryCategory);
+
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
+                    suggestionsFragmentB, R.id.contentFrameSuggestionsB
+            );
+        }
+
+        SuggestionsFilter suggestionsFilterB = SuggestionsFilter.from(SuggestionsFilterType.NUTRITION_GRADE_B);
+
+        // Create the presenter
+        new SuggestionsPresenter(
+                productBarcode,
+                countryCategory,
+                loaderProvider,
+                getSupportLoaderManager(),
+                Injection.provideFoodInspectorRepository(this),
+                suggestionsFragmentB,
+                suggestionsFilterB
+        );
+
+        SuggestionsFragment suggestionsFragmentC = (SuggestionsFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.contentFrameSuggestionsC);
+
+        if (suggestionsFragmentC == null) {
+            suggestionsFragmentC = suggestionsFragmentC.newInstance(productBarcode, countryCategory);
+
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
+                    suggestionsFragmentC, R.id.contentFrameSuggestionsC
+            );
+        }
+
+        SuggestionsFilter suggestionsFilterC = SuggestionsFilter.from(SuggestionsFilterType.NUTRITION_GRADE_C);
+
+        // Create the presenter
+        new SuggestionsPresenter(
+                productBarcode,
+                countryCategory,
+                loaderProvider,
+                getSupportLoaderManager(),
+                Injection.provideFoodInspectorRepository(this),
+                suggestionsFragmentC,
+                suggestionsFilterC
+        );
+
+        SuggestionsFragment suggestionsFragmentD = (SuggestionsFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.contentFrameSuggestionsD);
+
+        if (suggestionsFragmentD == null) {
+            suggestionsFragmentD = suggestionsFragmentD.newInstance(productBarcode, countryCategory);
+
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
+                    suggestionsFragmentD, R.id.contentFrameSuggestionsD
+            );
+        }
+
+        SuggestionsFilter suggestionsFilterD = SuggestionsFilter.from(SuggestionsFilterType.NUTRITION_GRADE_D);
+
+        // Create the presenter
+        new SuggestionsPresenter(
+                productBarcode,
+                countryCategory,
+                loaderProvider,
+                getSupportLoaderManager(),
+                Injection.provideFoodInspectorRepository(this),
+                suggestionsFragmentD,
+                suggestionsFilterD
+        );
+
+        SuggestionsFragment suggestionsFragmentE = (SuggestionsFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.contentFrameSuggestionsE);
+
+        if (suggestionsFragmentE == null) {
+            suggestionsFragmentE = suggestionsFragmentA.newInstance(productBarcode, countryCategory);
+
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
+                    suggestionsFragmentE, R.id.contentFrameSuggestionsE
+            );
+        }
+
+        SuggestionsFilter suggestionsFilterE = SuggestionsFilter.from(SuggestionsFilterType.NUTRITION_GRADE_E);
+
+        // Create the presenter
+        new SuggestionsPresenter(
+                productBarcode,
+                countryCategory,
+                loaderProvider,
+                getSupportLoaderManager(),
+                Injection.provideFoodInspectorRepository(this),
+                suggestionsFragmentE,
+                suggestionsFilterE
         );
     }
 
