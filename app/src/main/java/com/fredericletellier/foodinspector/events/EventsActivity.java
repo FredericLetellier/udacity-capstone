@@ -53,7 +53,7 @@ public class EventsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_overview);
+        setContentView(R.layout.events_act);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -106,9 +106,9 @@ public class EventsActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
 
             LoaderProvider loaderProvider = new LoaderProvider(getApplicationContext());
-            EventsFilter eventsFilter;
             EventsFragment eventsFragment = EventsFragment.newInstance();
 
+            EventsFilter eventsFilter;
             switch (position) {
                 default:
                 case 0:
@@ -128,7 +128,7 @@ public class EventsActivity extends AppCompatActivity {
                     eventsFilter
             );
 
-            return EventsFragment.newInstance();
+            return eventsFragment;
         }
 
         @Override
