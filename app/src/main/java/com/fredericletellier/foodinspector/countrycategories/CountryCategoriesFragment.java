@@ -18,5 +18,11 @@
 
 package com.fredericletellier.foodinspector.countrycategories;
 
-public class CountryCategoriesFragment {
+import android.support.v4.app.Fragment;
+
+public class CountryCategoriesFragment extends Fragment implements CountryCategoriesContract.View {
+    @Override
+    public void setPresenter(CountryCategoriesContract.Presenter presenter) {
+
+    }
 }

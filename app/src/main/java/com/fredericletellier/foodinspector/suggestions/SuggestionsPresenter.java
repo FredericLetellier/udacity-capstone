@@ -18,5 +18,52 @@
 
 package com.fredericletellier.foodinspector.suggestions;
 
-public class SuggestionsPresenter {
+import android.database.Cursor;
+import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+
+import com.fredericletellier.foodinspector.data.source.FoodInspectorRepository;
+
+public class SuggestionsPresenter implements SuggestionsContract.Presenter, FoodInspectorRepository.LoadDataCallback,
+        LoaderManager.LoaderCallbacks<Cursor> {
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public void onDataLoaded(Cursor data) {
+
+    }
+
+    @Override
+    public void onDataEmpty() {
+
+    }
+
+    @Override
+    public void onError(Throwable throwable) {
+
+    }
+
+    @Override
+    public void onDataReset() {
+
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
 }

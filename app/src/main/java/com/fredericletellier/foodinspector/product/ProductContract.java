@@ -18,5 +18,19 @@
 
 package com.fredericletellier.foodinspector.product;
 
-public class ProductContract {
+import com.fredericletellier.foodinspector.BasePresenter;
+import com.fredericletellier.foodinspector.BaseView;
+
+
+public interface ProductContract {
+
+    interface View extends BaseView<Presenter> {
+
+
+    }
+
+    interface Presenter extends BasePresenter {
+
+
+    }
 }

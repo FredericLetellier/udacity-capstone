@@ -18,5 +18,18 @@
 
 package com.fredericletellier.foodinspector.countrycategories;
 
-public class CountryCategoriesContract {
+import com.fredericletellier.foodinspector.BasePresenter;
+import com.fredericletellier.foodinspector.BaseView;
+
+public interface CountryCategoriesContract {
+
+    interface View extends BaseView<Presenter> {
+
+
+    }
+
+    interface Presenter extends BasePresenter {
+
+
+    }
 }

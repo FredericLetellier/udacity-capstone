@@ -18,5 +18,31 @@
 
 package com.fredericletellier.foodinspector.suggestions;
 
+import android.os.Bundle;
+
+import com.fredericletellier.foodinspector.BuildConfig;
+
 public class SuggestionsFilter {
+    public final static String KEY_SUGGESTIONS_FILTER = BuildConfig.APPLICATION_ID + "SUGGESTIONS_FILTER";
+    private SuggestionsFilterType suggestionsFilterType = SuggestionsFilterType.NUTRITION_GRADE_A;
+    private Bundle filterExtras;
+
+    protected SuggestionsFilter(Bundle extras) {
+        this.filterExtras = extras;
+        this.suggestionsFilterType = (SuggestionsFilterType) extras.getSerializable(KEY_SUGGESTIONS_FILTER);
+    }
+
+    public static SuggestionsFilter from(SuggestionsFilterType suggestionsFilterType){
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(KEY_SUGGESTIONS_FILTER, suggestionsFilterType);
+        return new SuggestionsFilter(bundle);
+    }
+
+    public SuggestionsFilterType getSuggestionsFilterType() {
+        return suggestionsFilterType;
+    }
+
+    public Bundle getFilterExtras() {
+        return filterExtras;
+    }
 }

@@ -18,5 +18,19 @@
 
 package com.fredericletellier.foodinspector.suggestions;
 
-public class SuggestionsContract {
+import com.fredericletellier.foodinspector.BasePresenter;
+import com.fredericletellier.foodinspector.BaseView;
+
+
+public interface SuggestionsContract {
+
+    interface View extends BaseView<Presenter> {
+
+
+    }
+
+    interface Presenter extends BasePresenter {
+
+
+    }
 }

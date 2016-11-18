@@ -18,5 +18,11 @@
 
 package com.fredericletellier.foodinspector.suggestions;
 
-public class SuggestionsFragment {
+import android.support.v4.app.Fragment;
+
+public class SuggestionsFragment extends Fragment implements SuggestionsContract.View {
+    @Override
+    public void setPresenter(SuggestionsContract.Presenter presenter) {
+
+    }
 }

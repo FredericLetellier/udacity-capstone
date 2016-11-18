@@ -18,5 +18,11 @@
 
 package com.fredericletellier.foodinspector.product;
 
-public class ProductFragment {
+import android.support.v4.app.Fragment;
+
+public class ProductFragment extends Fragment implements ProductContract.View {
+    @Override
+    public void setPresenter(ProductContract.Presenter presenter) {
+
+    }
 }

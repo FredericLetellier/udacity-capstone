@@ -18,5 +18,32 @@
 
 package com.fredericletellier.foodinspector.suggestions;
 
-public class SuggestionsFilterType {
+/**
+ * Used with tabs in the suggestions list.
+ */
+public enum SuggestionsFilterType {
+    /**
+     * Filters only the suggestions with a A nutrition grade.
+     */
+    NUTRITION_GRADE_A,
+
+    /**
+     * Filters only the suggestions with a B nutrition grade.
+     */
+    NUTRITION_GRADE_B,
+
+    /**
+     * Filters only the suggestions with a C nutrition grade.
+     */
+    NUTRITION_GRADE_C,
+
+    /**
+     * Filters only the suggestions with a D nutrition grade.
+     */
+    NUTRITION_GRADE_D,
+
+    /**
+     * Filters only the suggestions with a E nutrition grade.
+     */
+    NUTRITION_GRADE_E,
 }
