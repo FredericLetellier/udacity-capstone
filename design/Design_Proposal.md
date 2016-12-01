@@ -122,6 +122,7 @@ List the main features of your app:
 * Explore the history of scan products and browse products
 * Mark a product as favorite
 * Explore the list of favorite products
+* A widget with the history of scan products and browse products
 
 
 ##User Interface Mocks <a name="user-interface-mocks"></a>
@@ -309,6 +310,12 @@ Interstitial advertising will appear sometimes :
 
 The main intended target for this application is not about tablets and big screens. 
 A special display will be developed without making any real changes in functionality.
+
+
+####Widget
+
+The widget provide the same list than History tab on the Main screen.
+Click on an item and the associated Detail screen is launched.
 
 
 ###Describe any libraries you’ll be using and share your reasoning for including them <a name="libraries"></a>
