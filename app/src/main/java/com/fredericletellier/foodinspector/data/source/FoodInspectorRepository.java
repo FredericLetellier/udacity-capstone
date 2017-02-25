@@ -272,12 +272,16 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
                 } else {
                     eventStatus = Event.STATUS_NOT_IN_OFF_DATABASE;
                 }
-                Event event = new Event(barcode, eventStatus);
+                final Event event = new Event(barcode, eventStatus);
 
                 mEventLocalDataSource.saveEvent(event, new Local.SaveEventCallback() {
                     @Override
                     public void onEventSaved() {
-                        saveScanCallback.onScanSaved();
+                        if (event.getStatus() == Event.STATUS_OK) {
+                            saveScanCallback.onScanSaved();
+                        } else {
+                            saveScanCallback.onScanSavedWithError();
+                        }
                     }
 
                     @Override

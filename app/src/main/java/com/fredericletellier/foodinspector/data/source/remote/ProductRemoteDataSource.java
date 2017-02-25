@@ -19,6 +19,7 @@
 package com.fredericletellier.foodinspector.data.source.remote;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.fredericletellier.foodinspector.data.Product;
 import com.fredericletellier.foodinspector.data.ProductBarcode;
@@ -30,11 +31,14 @@ import com.fredericletellier.foodinspector.data.source.remote.API.OpenFoodFactsA
 
 import java.util.List;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import okhttp3.logging.HttpLoggingInterceptor;
+
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -42,6 +46,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Concrete implementation of a data source as a remote db
  */
 public class ProductRemoteDataSource implements ProductDataSource {
+
+    private static final String TAG = ProductRemoteDataSource.class.getName();
 
     private static ProductRemoteDataSource INSTANCE;
 
@@ -64,12 +70,15 @@ public class ProductRemoteDataSource implements ProductDataSource {
      */
     @Override
     public void getProduct(@NonNull String barcode, @NonNull final GetProductCallback getProductCallback) {
+        Log.d(TAG, "getProduct");
+
         checkNotNull(barcode);
         checkNotNull(getProductCallback);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(OpenFoodFactsAPIEndpointInterface.ENDPOINT_BARCODE)
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(getOkHttpClient())
                 .build();
 
         OpenFoodFactsAPIEndpointInterface apiService = retrofit.create(OpenFoodFactsAPIEndpointInterface.class);
@@ -79,11 +88,17 @@ public class ProductRemoteDataSource implements ProductDataSource {
         call.enqueue(new Callback<ProductBarcode>() {
             @Override
             public void onResponse(Call<ProductBarcode> call, Response<ProductBarcode> response) {
-                if (response.isSuccessful()) {
+                Log.d(TAG, "getProduct.onResponse");
+
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.d(TAG, "getProduct.response.isSuccessful");
+
                     ProductBarcode mProductBarcode = response.body();
-                    Product mProduct = mProductBarcode.getProducts().get(0);
+                    Product mProduct = mProductBarcode.getProduct();
                     getProductCallback.onProductLoaded(mProduct);
                 } else {
+                    Log.d(TAG, "getProduct.response.isOnError");
+
                     APIError e = ErrorUtils.parseError(response);
                     Throwable t = new Throwable(e.message(), new Throwable(String.valueOf(e.status())));
                     getProductCallback.onError(t);
@@ -92,6 +107,8 @@ public class ProductRemoteDataSource implements ProductDataSource {
 
             @Override
             public void onFailure(Call<ProductBarcode> call, Throwable t) {
+                Log.d(TAG, "getProduct.onFailure" + t.toString());
+
                 getProductCallback.onError(t);
             }
         });
@@ -111,6 +128,7 @@ public class ProductRemoteDataSource implements ProductDataSource {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(OpenFoodFactsAPIEndpointInterface.ENDPOINT_SEARCH)
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(getOkHttpClient())
                 .build();
 
         OpenFoodFactsAPIEndpointInterface apiService = retrofit.create(OpenFoodFactsAPIEndpointInterface.class);
@@ -137,5 +155,23 @@ public class ProductRemoteDataSource implements ProductDataSource {
                 getProductsCallback.onError(t);
             }
         });
+    }
+
+
+    private OkHttpClient getOkHttpClient() {
+        try {
+
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+
+            final HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            builder.addInterceptor(httpLoggingInterceptor);
+
+            OkHttpClient okHttpClient = builder.build();
+
+            return okHttpClient;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

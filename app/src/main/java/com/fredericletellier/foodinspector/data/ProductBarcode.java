@@ -31,7 +31,7 @@ public class ProductBarcode {
     private String status_verbose;
     @SerializedName("product")
     @Expose
-    private List<Product> products = new ArrayList<Product>();
+    private Product product = new Product();
     @SerializedName("status")
     @Expose
     private Integer status;
@@ -51,10 +51,19 @@ public class ProductBarcode {
     /**
      *
      * @return
+     *     The product
+     */
+    public Product getProduct() {
+        return product;
+    }
+
+    /**
+     *
+     * @return
      *     The products
      */
-    public List<Product> getProducts() {
-        return products;
+    public Product getProducts() {
+        return product;
     }
 
     /**

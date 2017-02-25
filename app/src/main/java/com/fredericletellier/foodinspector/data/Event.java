@@ -20,12 +20,15 @@ package com.fredericletellier.foodinspector.data;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 import com.fredericletellier.foodinspector.data.source.local.db.EventPersistenceContract;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.util.Random;
 
 public class Event {
 
@@ -34,17 +37,11 @@ public class Event {
     public static final String STATUS_NOT_IN_OFF_DATABASE = "PRODUCT_IS_NOT_IN_OPENFOODFACTS_DATABASE";
     public static final String STATUS_NO_NETWORK = "NO_NETWORK";
 
+    @NonNull
     private long mId;
     private long mTimestamp;
     private String mBarcode;
     private String mStatus;
-
-    /**
-     * No args constructor for use in serialization
-     *
-     */
-    public Event() {
-    }
 
     /**
      *
@@ -52,6 +49,10 @@ public class Event {
      * @param barcode
      */
     public Event(String barcode, String status) {
+        Long x = 1234567L;
+        Long y = 23456789L;
+        Random r = new Random();
+        this.mId = x + ((long)(r.nextDouble()*(y-x)));
         this.mTimestamp = System.currentTimeMillis()/1000;
         this.mBarcode = barcode;
         this.mStatus = status;

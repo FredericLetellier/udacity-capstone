@@ -24,6 +24,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.util.Log;
 
 import com.fredericletellier.foodinspector.data.Event;
 import com.fredericletellier.foodinspector.data.Product;
@@ -42,8 +43,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * UI as required. It is implemented as a non UI {@link Fragment} to make use of the
  * {@link LoaderManager} mechanism for managing loading and updating data asynchronously.
  */
-public class EventsPresenter implements EventsContract.Presenter, FoodInspectorRepository.LoadDataCallback,
+public class EventsPresenter implements
+        EventsContract.Presenter,
+        FoodInspectorRepository.LoadDataCallback,
         LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static final String TAG = EventsPresenter.class.getName();
 
     public final static int EVENTS_LOADER = 1;
 
@@ -73,69 +78,60 @@ public class EventsPresenter implements EventsContract.Presenter, FoodInspectorR
         loadEvents();
     }
 
-    /**
-     * We will always have fresh data from remote, the Loaders handle the local data
-     */
     public void loadEvents() {
+        Log.d(TAG, "loadEvents");
+        mEventsView.setLoadingIndicator(true);
 
         if (mLoaderManager.getLoader(EVENTS_LOADER) == null) {
             mLoaderManager.initLoader(EVENTS_LOADER, mCurrentFiltering.getFilterExtras(), this);
         } else {
             mLoaderManager.restartLoader(EVENTS_LOADER, mCurrentFiltering.getFilterExtras(), this);
         }
-
-        /*
-        mFoodInspectorRepository.refreshEventsOnError(this);
-        */
     }
 
     @Override
     public void onDataLoaded(Cursor data) {
-        // Show the list of events
+        Log.d(TAG, "onDataLoaded");
+        mEventsView.setLoadingIndicator(false);
         mEventsView.showEvents(data);
     }
 
-
     @Override
     public void onDataEmpty() {
-        // Show a message indicating there are no events for that filter type.
-        processEmptyEvents();
+        Log.d(TAG, "onDataEmpty");
+        mEventsView.setLoadingIndicator(false);
+        mEventsView.showNoEvents();
     }
-
-
 
     @Override
     public void onError(Throwable throwable) {
+        Log.d(TAG, "onError " + throwable.toString());
+        mEventsView.setLoadingIndicator(false);
         mEventsView.showLoadingEventsError();
     }
 
     @Override
     public void onDataReset() {
+        Log.d(TAG, "onDataReset");
         mEventsView.showEvents(null);
-    }
-
-    private void processEmptyEvents() {
-        switch (mCurrentFiltering.getEventsFilterType()) {
-            default:
-            case ALL_EVENTS:
-                mEventsView.showNoEvents();
-                break;
-        }
     }
 
     @Override
     public void openEventDetails(String barcode) {
+        Log.d(TAG, "openEventDetails " + barcode);
         checkNotNull(barcode, "requestedEvent cannot be null!");
         mEventsView.showEventDetailsUi(barcode);
     }
 
     @Override
     public void clickOnFab() {
+        Log.d(TAG, "clickOnFab");
         mEventsView.showScanUi();
     }
 
     @Override
     public void newEvent(final Barcode barcode) {
+        Log.d(TAG, "newEvent " + barcode.toString());
         mFoodInspectorRepository.saveScan(barcode.displayValue, new EventDataSource.SaveScanCallback() {
             @Override
             public void onScanSaved() {
@@ -143,8 +139,13 @@ public class EventsPresenter implements EventsContract.Presenter, FoodInspectorR
             }
 
             @Override
-            public void onError(Throwable throwable) {
+            public void onScanSavedWithError() {
+                //TODO
+            }
 
+            @Override
+            public void onError(Throwable throwable) {
+                //TODO
             }
         });
 
@@ -153,13 +154,15 @@ public class EventsPresenter implements EventsContract.Presenter, FoodInspectorR
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Log.d(TAG, "onCreateLoader");
         return mLoaderProvider.createFilteredEventsLoader(mCurrentFiltering);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.d(TAG, "onLoadFinished");
         if (data != null) {
-            if (data.moveToLast()) {
+            if (data.moveToLast() && data.getCount() > 0) {
                 onDataLoaded(data);
             } else {
                 onDataEmpty();
@@ -171,6 +174,7 @@ public class EventsPresenter implements EventsContract.Presenter, FoodInspectorR
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+        Log.d(TAG, "onLoaderReset");
         onDataReset();
     }
 

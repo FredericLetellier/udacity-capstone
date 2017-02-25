@@ -34,6 +34,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -51,10 +52,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class EventsFragment extends Fragment implements EventsContract.View {
 
+    private static final String TAG = EventsFragment.class.getName();
+
     private static final String ARG_SECTION_NUMBER = "section_number";
 
     private static final int RC_BARCODE_CAPTURE = 9001;
-    private static final String TAG = "Barcode";
 
     private EventsContract.Presenter mPresenter;
 
@@ -64,12 +66,15 @@ public class EventsFragment extends Fragment implements EventsContract.View {
     private TextView mNoEventMainView;
     private ListView mListEventView;
 
+    protected View mProgressView;
+
     /**
      * Listener for clicks on events in the ListView.
      */
     EventItemListener mItemListener = new EventItemListener() {
         @Override
         public void onEventClick(Event clickedEvent) {
+            Log.d(TAG, "onEventClick");
             mPresenter.openEventDetails(clickedEvent.getBarcode());
         }
 
@@ -84,17 +89,20 @@ public class EventsFragment extends Fragment implements EventsContract.View {
     }
 
     public static EventsFragment newInstance() {
+        Log.d(TAG, "newInstance");
         return new EventsFragment();
     }
 
     @Override
     public void onResume() {
+        Log.d(TAG, "onResume");
         super.onResume();
         mPresenter.start();
     }
 
     @Override
     public void setPresenter(@NonNull EventsContract.Presenter presenter) {
+        Log.d(TAG, "setPresenter");
         mPresenter = checkNotNull(presenter);
     }
 
@@ -102,6 +110,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView");
         View root = inflater.inflate(R.layout.events_frag, container, false);
 
         // Set up events view
@@ -113,6 +122,8 @@ public class EventsFragment extends Fragment implements EventsContract.View {
         mNoEventsView = root.findViewById(R.id.noEvents);
         mNoEventIcon = (ImageView) root.findViewById(R.id.noEventsIcon);
         mNoEventMainView = (TextView) root.findViewById(R.id.noEventsMain);
+
+        mProgressView = root.findViewById(android.R.id.progress);
 
         // Set up floating action button
         FloatingActionButton fab =
@@ -131,31 +142,41 @@ public class EventsFragment extends Fragment implements EventsContract.View {
 
     @Override
     public void showEvents(Cursor events) {
-        mListAdapter.swapCursor(events);
-
+        Log.d(TAG, "showEvents");
         mListEventView.setVisibility(View.VISIBLE);
-        mNoEventsView.setVisibility(View.GONE);
+        mNoEventsView.setVisibility(View.INVISIBLE);
+        mListAdapter.swapCursor(events);
     }
 
     @Override
     public void showNoEvents() {
+        Log.d(TAG, "showNoEvents");
+
         showNoEventsViews(
                 getResources().getString(R.string.no_events_all),
                 R.drawable.ic_mood_bad_black_24dp
         );
     }
 
-
     @Override
-    public void showNoEventsWithBookmarkedProduct() {
-        showNoEventsViews(
-                getResources().getString(R.string.no_events_with_bookmarked_product),
-                R.drawable.ic_loyalty_black_24dp
-        );
+    public void setLoadingIndicator(final Boolean active) {
+        Log.d(TAG, "setLoadingIndicator");
+        if (active){
+            //show loading indicator
+            mProgressView.startAnimation(AnimationUtils.loadAnimation(this.getContext(), android.R.anim.fade_in));
+            mProgressView.setVisibility(View.VISIBLE);
+
+        } else {
+            // hide loading indicator
+            mProgressView.startAnimation(AnimationUtils.loadAnimation(this.getContext(), android.R.anim.fade_out));
+            mProgressView.setVisibility(View.GONE);
+        }
     }
+
 
     @Override
     public void showScanUi() {
+        Log.d(TAG, "showScanUi");
         Intent intent = new Intent(this.getContext(), BarcodeCaptureActivity.class);
         intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
         intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
@@ -165,6 +186,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult");
         if (requestCode == RC_BARCODE_CAPTURE) {
             if (resultCode == CommonStatusCodes.SUCCESS) {
                 if (data != null) {
@@ -184,7 +206,8 @@ public class EventsFragment extends Fragment implements EventsContract.View {
     }
 
     public void showNoEventsViews(String mainText, int iconRes) {
-        mListEventView.setVisibility(View.GONE);
+        Log.d(TAG, "showNoEventsViews");
+        mListEventView.setVisibility(View.INVISIBLE);
         mNoEventsView.setVisibility(View.VISIBLE);
 
         mNoEventMainView.setText(mainText);
@@ -193,6 +216,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
 
     @Override
     public void showEventDetailsUi(String barcode) {
+        Log.d(TAG, "showEventDetailsUi " + barcode);
         Intent intent = new Intent(getContext(), ProductActivity.class);
         intent.putExtra(ProductActivity.EXTRA_PRODUCT_BARCODE, barcode);
         startActivity(intent);
@@ -200,10 +224,12 @@ public class EventsFragment extends Fragment implements EventsContract.View {
 
     @Override
     public void showLoadingEventsError() {
+        Log.d(TAG, "showLoadingEventsError");
         showMessage(getString(R.string.loading_events_error));
     }
 
     private void showMessage(String message) {
+        Log.d(TAG, "showMessage");
         Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
     }
 
@@ -226,6 +252,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
 
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup parent) {
+            Log.d(TAG, "EventsCursorAdapter - newView");
             View view = LayoutInflater.from(context).inflate(R.layout.event_item, parent, false);
 
             ViewHolder viewHolder = new ViewHolder(view);
@@ -236,14 +263,17 @@ public class EventsFragment extends Fragment implements EventsContract.View {
 
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
+            Log.d(TAG, "EventsCursorAdapter - bindView");
 
             ViewHolder viewHolder = (ViewHolder) view.getTag();
 
             final Event event = Event.from(cursor);
+            Log.d(TAG, event.toString());
+
 
             String status = event.getStatus();
 
-            if (status == Event.STATUS_OK) {
+            if (status.equals(Event.STATUS_OK)) {
                 viewHolder.title.setText(event.getBarcode());
                 viewHolder.subtitle.setText(R.string.event_subtitle_available);
                 viewHolder.rowView.setOnClickListener(new View.OnClickListener() {

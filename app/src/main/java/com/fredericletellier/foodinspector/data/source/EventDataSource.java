@@ -48,6 +48,8 @@ public interface EventDataSource {
 
         void onScanSaved();
 
+        void onScanSavedWithError();
+
         void onError(Throwable throwable);
 
     }

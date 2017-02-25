@@ -138,7 +138,7 @@ public class FoodInspectorContentProvider extends ContentProvider {
                     if (_id > 0) {
                         returnUri = EventPersistenceContract.EventEntry.buildEventUriWith(_id);
                     } else {
-                        throw new android.database.SQLException("Failed to insert row into " + uri);
+                        throw new android.database.SQLException("Failed to insert row into " + uri + "   " + values.toString());
                     }
                 }
                 exists.close();

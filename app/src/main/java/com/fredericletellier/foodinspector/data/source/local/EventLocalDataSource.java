@@ -23,6 +23,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.fredericletellier.foodinspector.data.Event;
 import com.fredericletellier.foodinspector.data.source.EventDataSource;
@@ -38,6 +39,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Concrete implementation of a data source as a db.
  */
 public class EventLocalDataSource implements EventDataSource.Local {
+
+    private static final String TAG = EventLocalDataSource.class.getName();
+
 
     private static EventLocalDataSource INSTANCE;
 
@@ -57,6 +61,8 @@ public class EventLocalDataSource implements EventDataSource.Local {
     }
 
     private void checkExistEvent(@NonNull String barcode, @NonNull CheckExistEventCallback checkExistEventCallback) {
+        Log.d(TAG, "checkExistEvent");
+
         Cursor cursor = mContentResolver.query(
                 EventPersistenceContract.EventEntry.buildEventUri(),
                 null,
@@ -78,6 +84,8 @@ public class EventLocalDataSource implements EventDataSource.Local {
     }
 
     private void addEvent(@NonNull Event Event, @NonNull AddEventCallback addEventCallback) {
+        Log.d(TAG, "addEvent");
+
         checkNotNull(Event);
 
         ContentValues values = EventValues.from(Event);
@@ -91,6 +99,8 @@ public class EventLocalDataSource implements EventDataSource.Local {
     }
 
     private void updateEvent(@NonNull Event Event, @NonNull UpdateEventCallback updateEventCallback) {
+        Log.d(TAG, "updateEvent");
+
         checkNotNull(Event);
 
         ContentValues values = EventValues.from(Event);
@@ -109,6 +119,8 @@ public class EventLocalDataSource implements EventDataSource.Local {
 
     @Override
     public void saveEvent(@NonNull final Event Event, @NonNull final SaveEventCallback saveEventCallback) {
+        Log.d(TAG, "saveEvent");
+
         checkNotNull(Event);
 
         String barcode = Event.getBarcode();
@@ -121,11 +133,13 @@ public class EventLocalDataSource implements EventDataSource.Local {
                 updateEvent(Event, new UpdateEventCallback() {
                     @Override
                     public void onEventUpdated() {
+                        Log.d(TAG, "onEventExisted - onEventUpdated");
                         saveEventCallback.onEventSaved();
                     }
 
                     @Override
                     public void onError() {
+                        Log.d(TAG, "onEventExisted - onError");
                         saveEventCallback.onError();
                     }
                 });
@@ -136,11 +150,13 @@ public class EventLocalDataSource implements EventDataSource.Local {
                 addEvent(Event, new AddEventCallback() {
                     @Override
                     public void onEventAdded() {
+                        Log.d(TAG, "onEventNotExisted - onEventAdded");
                         saveEventCallback.onEventSaved();
                     }
 
                     @Override
                     public void onError() {
+                        Log.d(TAG, "onEventNotExisted - onError");
                         saveEventCallback.onError();
                     }
                 });

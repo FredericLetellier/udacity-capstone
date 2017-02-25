@@ -27,6 +27,8 @@ import com.fredericletellier.foodinspector.data.source.remote.API.APIError;
 import com.fredericletellier.foodinspector.data.source.remote.API.ErrorUtils;
 import com.fredericletellier.foodinspector.data.source.remote.API.OpenFoodFactsAPIEndpointInterface;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -66,6 +68,7 @@ public class CountryCategoryRemoteDataSource implements CountryCategoryDataSourc
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(OpenFoodFactsAPIEndpointInterface.ENDPOINT_SEARCH)
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(getOkHttpClient())
                 .build();
 
         OpenFoodFactsAPIEndpointInterface apiService = retrofit.create(OpenFoodFactsAPIEndpointInterface.class);
@@ -109,5 +112,22 @@ public class CountryCategoryRemoteDataSource implements CountryCategoryDataSourc
                 //}
             }
         });
+    }
+
+    private OkHttpClient getOkHttpClient() {
+        try {
+
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+
+            final HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            builder.addInterceptor(httpLoggingInterceptor);
+
+            OkHttpClient okHttpClient = builder.build();
+
+            return okHttpClient;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

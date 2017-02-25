@@ -227,4 +227,10 @@ public class ProductActivity extends AppCompatActivity {
         );
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
 }

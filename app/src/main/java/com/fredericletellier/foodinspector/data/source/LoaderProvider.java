@@ -52,7 +52,7 @@ public class LoaderProvider {
         return new CursorLoader(
                 mContext,
                 EventPersistenceContract.EventEntry.buildEventUri(),
-                null,
+                EventPersistenceContract.EventEntry.EVENT_COLUMNS,
                 selection,
                 selectionArgs,
                 null

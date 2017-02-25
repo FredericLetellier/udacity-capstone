@@ -35,13 +35,13 @@ public interface EventsContract {
 
         void showEvents(Cursor events);
 
-        void showEventDetailsUi(String barcode);
-
         void showLoadingEventsError();
 
         void showNoEvents();
 
-        void showNoEventsWithBookmarkedProduct();
+        void setLoadingIndicator(Boolean active);
+
+        void showEventDetailsUi(String barcode);
 
         void showScanUi();
 

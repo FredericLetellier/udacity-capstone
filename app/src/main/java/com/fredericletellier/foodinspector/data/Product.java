@@ -28,16 +28,15 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Product {
+import java.util.List;
 
-    public static final int LOADING_LIMIT = 20;
-    public static final String PARSING_DONE = "PARSING_DONE";
+public class Product {
 
     private long mId;
     private boolean mParsed;
     private boolean mBookmarked;
 
-    @SerializedName("barcode")
+    @SerializedName("code")
     @Expose
     private String mBarcode;
     @SerializedName("generic_name")
@@ -54,7 +53,7 @@ public class Product {
     private String mNutritionGrades;
     @SerializedName("categories_tags")
     @Expose
-    private String mParsableCategories;
+    private List<String> mParsableCategories;
     @SerializedName("brands")
     @Expose
     private String mBrands;
@@ -72,351 +71,180 @@ public class Product {
     public Product() {
     }
 
-    /**
-     *
-     * @param barcode
-     * @param parsed
-     */
-    public Product(String barcode, boolean parsed) {
-        this.mBarcode = barcode;
-        this.mParsed = parsed;
+
+    public Product(String mBarcode, boolean mBookmarked, String mBrands, String mGenericName, long mId, String mImageFrontSmallUrl, String mImageFrontUrl, String mNutritionGrades, List<String> mParsableCategories, boolean mParsed, String mProductName, String mQuantity) {
+        this.mBarcode = mBarcode;
+        this.mBookmarked = mBookmarked;
+        this.mBrands = mBrands;
+        this.mGenericName = mGenericName;
+        this.mId = mId;
+        this.mImageFrontSmallUrl = mImageFrontSmallUrl;
+        this.mImageFrontUrl = mImageFrontUrl;
+        this.mNutritionGrades = mNutritionGrades;
+        this.mParsableCategories = mParsableCategories;
+        this.mParsed = mParsed;
+        this.mProductName = mProductName;
+        this.mQuantity = mQuantity;
     }
 
-    /**
-     *
-     * @param id
-     * @param barcode
-     * @param parsed
-     * @param bookmarked
-     * @param genericName
-     * @param productName
-     * @param quantity
-     * @param nutritionGrades
-     * @param parsableCategories
-     * @param brands
-     * @param imageFrontSmallUrl
-     * @param imageFrontUrl
-     */
-    public Product(long id, String barcode, boolean parsed, boolean bookmarked, String genericName, String productName, String quantity, String nutritionGrades, String parsableCategories, String brands, String imageFrontSmallUrl, String imageFrontUrl) {
-        this.mId = id;
-        this.mBarcode = barcode;
-        this.mParsed = parsed;
-        this.mBookmarked = bookmarked;
-        this.mGenericName = genericName;
-        this.mProductName = productName;
-        this.mQuantity = quantity;
-        this.mNutritionGrades = nutritionGrades;
-        this.mParsableCategories = parsableCategories;
-        this.mBrands = brands;
-        this.mImageFrontSmallUrl = imageFrontSmallUrl;
-        this.mImageFrontUrl = imageFrontUrl;
-    }
-
-    /**
-     *
-     * @return
-     * The id
-     */
-    public long getId() {
-        return mId;
-    }
-
-    /**
-     *
-     * @return
-     * The id
-     */
-    public String getAsStringId() {
-        return String.valueOf(mId);
-    }
-
-    /**
-     *
-     * @param id
-     * The id
-     */
-    public void setId(long id) {
-        this.mId = id;
-    }
-
-    public Product withId(long id) {
-        this.mId = id;
-        return this;
-    }
-
-    /**
-     *
-     * @return
-     * The barcode
-     */
-    public String getBarcode() {
+    public String getmBarcode() {
         return mBarcode;
     }
 
-    /**
-     *
-     * @param barcode
-     * The barcode
-     */
-    public void setBarcode(String barcode) {
-        this.mBarcode = barcode;
+    public void setmBarcode(String mBarcode) {
+        this.mBarcode = mBarcode;
     }
 
-    public Product withBarcode(String barcode) {
-        this.mBarcode = barcode;
-        return this;
-    }
-
-    /**
-     *
-     * @return
-     * The parsed
-     */
-    public boolean isParsed() {
-        return mParsed;
-    }
-
-    /**
-     *
-     * @param parsed
-     * The parsed
-     */
-    public void setParsed(boolean parsed) {
-        this.mParsed = parsed;
-    }
-
-    public Product withParsed(boolean parsed) {
-        this.mParsed = parsed;
-        return this;
-    }
-
-    /**
-     *
-     * @return
-     * The bookmarked
-     */
-    public boolean isBookmarked() {
+    public boolean ismBookmarked() {
         return mBookmarked;
     }
 
-    /**
-     *
-     * @param bookmarked
-     * The bookmarked
-     */
-    public void setBookmarked(boolean bookmarked) {
-        this.mBookmarked = bookmarked;
+    public void setmBookmarked(boolean mBookmarked) {
+        this.mBookmarked = mBookmarked;
     }
 
-    public Product withBookmarked(boolean bookmarked) {
-        this.mBookmarked = bookmarked;
-        return this;
-    }
-
-    /**
-     *
-     * @return
-     * The genericName
-     */
-    public String getGenericName() {
-        return mGenericName;
-    }
-
-    /**
-     *
-     * @param genericName
-     * The generic_name
-     */
-    public void setGenericName(String genericName) {
-        this.mGenericName = genericName;
-    }
-
-    public Product withGenericName(String genericName) {
-        this.mGenericName = genericName;
-        return this;
-    }
-
-    /**
-     *
-     * @return
-     * The productName
-     */
-    public String getProductName() {
-        return mProductName;
-    }
-
-    /**
-     *
-     * @param productName
-     * The product_name
-     */
-    public void setProductName(String productName) {
-        this.mProductName = productName;
-    }
-
-    public Product withProductName(String productName) {
-        this.mProductName = productName;
-        return this;
-    }
-
-    /**
-     *
-     * @return
-     * The quantity
-     */
-    public String getQuantity() {
-        return mQuantity;
-    }
-
-    /**
-     *
-     * @param quantity
-     * The quantity
-     */
-    public void setQuantity(String quantity) {
-        this.mQuantity = quantity;
-    }
-
-    public Product withQuantity(String quantity) {
-        this.mQuantity = quantity;
-        return this;
-    }
-
-    /**
-     *
-     * @return
-     * The nutritionGrades
-     */
-    public String getNutritionGrades() {
-        return mNutritionGrades;
-    }
-
-    /**
-     *
-     * @param nutritionGrades
-     * The nutrition_grades
-     */
-    public void setNutritionGrades(String nutritionGrades) {
-        this.mNutritionGrades = nutritionGrades;
-    }
-
-    public Product withNutritionGrades(String nutritionGrades) {
-        this.mNutritionGrades = nutritionGrades;
-        return this;
-    }
-
-    /**
-     *
-     * @return
-     * The parsableCategories
-     */
-    public String getParsableCategories() {
-        return mParsableCategories;
-    }
-
-    /**
-     *
-     * @param parsableCategories
-     * The parsable-categories
-     */
-    public void setParsableCategories(String parsableCategories) {
-        this.mParsableCategories = parsableCategories;
-    }
-
-    public Product withParsableCategories(String parsableCategories) {
-        this.mParsableCategories = parsableCategories;
-        return this;
-    }
-
-    /**
-     *
-     * @return
-     * The brands
-     */
-    public String getBrands() {
+    public String getmBrands() {
         return mBrands;
     }
 
-    /**
-     *
-     * @param brands
-     * The brands
-     */
-    public void setBrands(String brands) {
-        this.mBrands = brands;
+    public void setmBrands(String mBrands) {
+        this.mBrands = mBrands;
     }
 
-    public Product withBrands(String brands) {
-        this.mBrands = brands;
-        return this;
+    public String getmGenericName() {
+        return mGenericName;
     }
 
-    /**
-     *
-     * @return
-     * The imageFrontSmallUrl
-     */
-    public String getImageFrontSmallUrl() {
+    public void setmGenericName(String mGenericName) {
+        this.mGenericName = mGenericName;
+    }
+
+    public long getmId() {
+        return mId;
+    }
+
+    public void setmId(long mId) {
+        this.mId = mId;
+    }
+
+    public String getmImageFrontSmallUrl() {
         return mImageFrontSmallUrl;
     }
 
-    /**
-     *
-     * @param imageFrontSmallUrl
-     * The image_front_small_url
-     */
-    public void setImageFrontSmallUrl(String imageFrontSmallUrl) {
-        this.mImageFrontSmallUrl = imageFrontSmallUrl;
+    public void setmImageFrontSmallUrl(String mImageFrontSmallUrl) {
+        this.mImageFrontSmallUrl = mImageFrontSmallUrl;
     }
 
-    public Product withImageFrontSmallUrl(String imageFrontSmallUrl) {
-        this.mImageFrontSmallUrl = imageFrontSmallUrl;
-        return this;
-    }
-
-    /**
-     *
-     * @return
-     * The imageFrontUrl
-     */
-    public String getImageFrontUrl() {
+    public String getmImageFrontUrl() {
         return mImageFrontUrl;
     }
 
-    /**
-     *
-     * @param imageFrontUrl
-     * The image_front_url
-     */
-    public void setImageFrontUrl(String imageFrontUrl) {
-        this.mImageFrontUrl = imageFrontUrl;
+    public void setmImageFrontUrl(String mImageFrontUrl) {
+        this.mImageFrontUrl = mImageFrontUrl;
     }
 
-    public Product withImageFrontUrl(String imageFrontUrl) {
-        this.mImageFrontUrl = imageFrontUrl;
-        return this;
+    public String getmNutritionGrades() {
+        return mNutritionGrades;
+    }
+
+    public void setmNutritionGrades(String mNutritionGrades) {
+        this.mNutritionGrades = mNutritionGrades;
+    }
+
+    public List<String> getmParsableCategories() {
+        return mParsableCategories;
+    }
+
+    public void setmParsableCategories(List<String> mParsableCategories) {
+        this.mParsableCategories = mParsableCategories;
+    }
+
+    public boolean ismParsed() {
+        return mParsed;
+    }
+
+    public void setmParsed(boolean mParsed) {
+        this.mParsed = mParsed;
+    }
+
+    public String getmProductName() {
+        return mProductName;
+    }
+
+    public void setmProductName(String mProductName) {
+        this.mProductName = mProductName;
+    }
+
+    public String getmQuantity() {
+        return mQuantity;
+    }
+
+    public void setmQuantity(String mQuantity) {
+        this.mQuantity = mQuantity;
     }
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "Product{" +
+                "mBarcode='" + mBarcode + '\'' +
+                ", mId=" + mId +
+                ", mParsed=" + mParsed +
+                ", mBookmarked=" + mBookmarked +
+                ", mGenericName='" + mGenericName + '\'' +
+                ", mProductName='" + mProductName + '\'' +
+                ", mQuantity='" + mQuantity + '\'' +
+                ", mNutritionGrades='" + mNutritionGrades + '\'' +
+                ", mParsableCategories=" + mParsableCategories +
+                ", mBrands='" + mBrands + '\'' +
+                ", mImageFrontSmallUrl='" + mImageFrontSmallUrl + '\'' +
+                ", mImageFrontUrl='" + mImageFrontUrl + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Product product = (Product) o;
+
+        if (getmId() != product.getmId()) return false;
+        if (ismParsed() != product.ismParsed()) return false;
+        if (ismBookmarked() != product.ismBookmarked()) return false;
+        if (getmBarcode() != null ? !getmBarcode().equals(product.getmBarcode()) : product.getmBarcode() != null)
+            return false;
+        if (getmGenericName() != null ? !getmGenericName().equals(product.getmGenericName()) : product.getmGenericName() != null)
+            return false;
+        if (getmProductName() != null ? !getmProductName().equals(product.getmProductName()) : product.getmProductName() != null)
+            return false;
+        if (getmQuantity() != null ? !getmQuantity().equals(product.getmQuantity()) : product.getmQuantity() != null)
+            return false;
+        if (getmNutritionGrades() != null ? !getmNutritionGrades().equals(product.getmNutritionGrades()) : product.getmNutritionGrades() != null)
+            return false;
+        if (getmParsableCategories() != null ? !getmParsableCategories().equals(product.getmParsableCategories()) : product.getmParsableCategories() != null)
+            return false;
+        if (getmBrands() != null ? !getmBrands().equals(product.getmBrands()) : product.getmBrands() != null)
+            return false;
+        if (getmImageFrontSmallUrl() != null ? !getmImageFrontSmallUrl().equals(product.getmImageFrontSmallUrl()) : product.getmImageFrontSmallUrl() != null)
+            return false;
+        return getmImageFrontUrl() != null ? getmImageFrontUrl().equals(product.getmImageFrontUrl()) : product.getmImageFrontUrl() == null;
+
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(mId).append(mBarcode).append(mParsed).append(mBookmarked).append(mGenericName).append(mProductName).append(mQuantity).append(mNutritionGrades).append(mParsableCategories).append(mBrands).append(mImageFrontSmallUrl).append(mImageFrontUrl).toHashCode();
+        int result = (int) (getmId() ^ (getmId() >>> 32));
+        result = 31 * result + (ismParsed() ? 1 : 0);
+        result = 31 * result + (ismBookmarked() ? 1 : 0);
+        result = 31 * result + (getmBarcode() != null ? getmBarcode().hashCode() : 0);
+        result = 31 * result + (getmGenericName() != null ? getmGenericName().hashCode() : 0);
+        result = 31 * result + (getmProductName() != null ? getmProductName().hashCode() : 0);
+        result = 31 * result + (getmQuantity() != null ? getmQuantity().hashCode() : 0);
+        result = 31 * result + (getmNutritionGrades() != null ? getmNutritionGrades().hashCode() : 0);
+        result = 31 * result + (getmParsableCategories() != null ? getmParsableCategories().hashCode() : 0);
+        result = 31 * result + (getmBrands() != null ? getmBrands().hashCode() : 0);
+        result = 31 * result + (getmImageFrontSmallUrl() != null ? getmImageFrontSmallUrl().hashCode() : 0);
+        result = 31 * result + (getmImageFrontUrl() != null ? getmImageFrontUrl().hashCode() : 0);
+        return result;
     }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == this) {
-            return true;
-        }
-        if ((other instanceof Product) == false) {
-            return false;
-        }
-        Product rhs = ((Product) other);
-        return new EqualsBuilder().append(mId, rhs.mId).append(mBarcode, rhs.mBarcode).append(mParsed, rhs.mParsed).append(mBookmarked, rhs.mBookmarked).append(mGenericName, rhs.mGenericName).append(mProductName, rhs.mProductName).append(mQuantity, rhs.mQuantity).append(mNutritionGrades, rhs.mNutritionGrades).append(mParsableCategories, rhs.mParsableCategories).append(mBrands, rhs.mBrands).append(mImageFrontSmallUrl, rhs.mImageFrontSmallUrl).append(mImageFrontUrl, rhs.mImageFrontUrl).isEquals();
-    }
-
 }

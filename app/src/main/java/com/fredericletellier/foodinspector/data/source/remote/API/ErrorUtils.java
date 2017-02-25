@@ -41,7 +41,7 @@ public class ErrorUtils {
 
         try {
             error = converter.convert(response.errorBody());
-        } catch (IOException e) {
+        } catch (IOException|NullPointerException e) {
             return new APIError();
         }
 
