@@ -21,8 +21,6 @@ package com.fredericletellier.foodinspector.data;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.fredericletellier.foodinspector.data.source.local.db.CountryCategoryPersistenceContract;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -65,36 +63,6 @@ public class CountryCategory {
         this.mCategoryKey = categoryKey;
         this.mCountryKey = countryKey;
         this.mSumOfProducts = sumOfProducts;
-    }
-
-    /**
-     * Use this constructor to return a CountryCategory from a Cursor
-     *
-     * @return
-     */
-    public static CountryCategory from(Cursor cursor) {
-        long id = cursor.getLong(cursor.getColumnIndexOrThrow(
-                CountryCategoryPersistenceContract.CountryCategoryEntry._ID));
-        String categoryKey = cursor.getString(cursor.getColumnIndexOrThrow(
-                CountryCategoryPersistenceContract.CountryCategoryEntry.COLUMN_NAME_CATEGORY_KEY));
-        String countryKey = cursor.getString(cursor.getColumnIndexOrThrow(
-                CountryCategoryPersistenceContract.CountryCategoryEntry.COLUMN_NAME_COUNTRY_KEY));
-        int sumOfProducts = cursor.getInt(cursor.getColumnIndexOrThrow(
-                CountryCategoryPersistenceContract.CountryCategoryEntry.COLUMN_NAME_SUM_OF_PRODUCTS));
-        return new CountryCategory(id, categoryKey, countryKey, sumOfProducts);
-    }
-
-    /**
-     * Use this constructor to return a CountryCategory from ContentValues
-     *
-     * @return
-     */
-    public static CountryCategory from(ContentValues values) {
-        long id = values.getAsLong(CountryCategoryPersistenceContract.CountryCategoryEntry._ID);
-        String categoryKey = values.getAsString(CountryCategoryPersistenceContract.CountryCategoryEntry.COLUMN_NAME_CATEGORY_KEY);
-        String countryKey = values.getAsString(CountryCategoryPersistenceContract.CountryCategoryEntry.COLUMN_NAME_COUNTRY_KEY);
-        int sumOfProducts = values.getAsInteger(CountryCategoryPersistenceContract.CountryCategoryEntry.COLUMN_NAME_SUM_OF_PRODUCTS);
-        return new CountryCategory(id, categoryKey, countryKey, sumOfProducts);
     }
 
     /**

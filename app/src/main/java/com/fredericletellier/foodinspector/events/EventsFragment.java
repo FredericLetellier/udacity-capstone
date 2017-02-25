@@ -30,6 +30,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,12 +42,19 @@ import android.widget.TextView;
 import com.fredericletellier.foodinspector.R;
 import com.fredericletellier.foodinspector.data.Event;
 import com.fredericletellier.foodinspector.data.Product;
+import com.fredericletellier.foodinspector.product.ProductActivity;
+import com.fredericletellier.foodinspector.scan.BarcodeCaptureActivity;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.vision.barcode.Barcode;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class EventsFragment extends Fragment implements EventsContract.View {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
+
+    private static final int RC_BARCODE_CAPTURE = 9001;
+    private static final String TAG = "Barcode";
 
     private EventsContract.Presenter mPresenter;
 
@@ -62,7 +70,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
     EventItemListener mItemListener = new EventItemListener() {
         @Override
         public void onEventClick(Event clickedEvent) {
-            mPresenter.openEventDetails(clickedEvent);
+            mPresenter.openEventDetails(clickedEvent.getBarcode());
         }
 
         @Override
@@ -114,7 +122,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.scanNewBarcode();
+                mPresenter.clickOnFab();
             }
         });
 
@@ -147,6 +155,34 @@ public class EventsFragment extends Fragment implements EventsContract.View {
     }
 
     @Override
+    public void showScanUi() {
+        Intent intent = new Intent(this.getContext(), BarcodeCaptureActivity.class);
+        intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
+        intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
+
+        startActivityForResult(intent, RC_BARCODE_CAPTURE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RC_BARCODE_CAPTURE) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
+                    Log.d(TAG, "Barcode read: " + barcode.displayValue);
+                    mPresenter.newEvent(barcode);
+                } else {
+                    Log.d(TAG, "No barcode captured, intent data is null");
+                }
+            } else {
+
+            }
+        }
+        else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
     public void showNoEventsViews(String mainText, int iconRes) {
         mListEventView.setVisibility(View.GONE);
         mNoEventsView.setVisibility(View.VISIBLE);
@@ -156,11 +192,9 @@ public class EventsFragment extends Fragment implements EventsContract.View {
     }
 
     @Override
-    public void showEventDetailsUi(Event event) {
-        // in it's own Activity, since it makes more sense that way and it gives us the flexibility
-        // to show some Intent stubbing.
+    public void showEventDetailsUi(String barcode) {
         Intent intent = new Intent(getContext(), ProductActivity.class);
-        intent.putExtra(ProductActivity.EXTRA_TASK_ID, event.getBarcode());
+        intent.putExtra(ProductActivity.EXTRA_PRODUCT_BARCODE, barcode);
         startActivity(intent);
     }
 
@@ -206,13 +240,12 @@ public class EventsFragment extends Fragment implements EventsContract.View {
             ViewHolder viewHolder = (ViewHolder) view.getTag();
 
             final Event event = Event.from(cursor);
-            final Product product = Product.from(cursor);
 
             String status = event.getStatus();
 
             if (status == Event.STATUS_OK) {
-                viewHolder.title.setText(product.getProductName());
-                viewHolder.subtitle.setText(product.getBrands() + " - " + product.getQuantity());
+                viewHolder.title.setText(event.getBarcode());
+                viewHolder.subtitle.setText(R.string.event_subtitle_available);
                 viewHolder.rowView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

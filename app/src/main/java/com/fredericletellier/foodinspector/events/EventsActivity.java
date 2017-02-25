@@ -23,6 +23,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -32,23 +33,11 @@ import android.view.MenuItem;
 import com.fredericletellier.foodinspector.Injection;
 import com.fredericletellier.foodinspector.R;
 import com.fredericletellier.foodinspector.data.source.LoaderProvider;
+import com.fredericletellier.foodinspector.util.ActivityUtils;
 
 public class EventsActivity extends AppCompatActivity {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
-    private ViewPager mViewPager;
+    private EventsPresenter mEventsPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,16 +46,28 @@ public class EventsActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        // Create the presenter
+        LoaderProvider loaderProvider = new LoaderProvider(this);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
+        EventsFragment eventsFragment =
+                (EventsFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrameEvents);
+        if (eventsFragment == null) {
+            // Create the fragment
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            int frameId = R.id.contentFrameEvents;
+            eventsFragment = EventsFragment.newInstance();
+            transaction.add(frameId, eventsFragment);
+            transaction.commit();
+        }
+
+        // Create the presenter
+        mEventsPresenter = new EventsPresenter(
+                loaderProvider,
+                getSupportLoaderManager(),
+                Injection.provideFoodInspectorRepository(getApplicationContext()),
+                eventsFragment
+        );
     }
 
 
@@ -90,62 +91,5 @@ public class EventsActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-
-            LoaderProvider loaderProvider = new LoaderProvider(getApplicationContext());
-            EventsFragment eventsFragment = EventsFragment.newInstance();
-
-            EventsFilter eventsFilter;
-            switch (position) {
-                default:
-                case 0:
-                    eventsFilter = EventsFilter.from(EventsFilterType.ALL_EVENTS);
-                    break;
-                case 1:
-                    eventsFilter = EventsFilter.from(EventsFilterType.EVENTS_WITH_BOOKMARKED_PRODUCT);
-                    break;
-            }
-
-            // Create the presenter
-            new EventsPresenter(
-                    loaderProvider,
-                    getSupportLoaderManager(),
-                    Injection.provideFoodInspectorRepository(getApplicationContext()),
-                    eventsFragment,
-                    eventsFilter
-            );
-
-            return eventsFragment;
-        }
-
-        @Override
-        public int getCount() {
-            // Show 2 total pages.
-            return 2;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "SECTION 1";
-                case 1:
-                    return "SECTION 2";
-            }
-            return null;
-        }
     }
 }

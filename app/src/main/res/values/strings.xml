@@ -3,8 +3,16 @@
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
+    <string name="ok">OK</string>
+    <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
+    <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
+    <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
+
+
+
     <string name="language_code">en</string>
 
+    <string name="event_subtitle_available">Product detail available</string>
     <string name="event_subtitle_no_network">Awaiting network access</string>
     <string name="event_subtitle_not_in_off_database">Product unrecognized by OpenFoodFacts</string>
     <string name="event_subtitle_not_a_product">Unrecognized : food product, really?</string>

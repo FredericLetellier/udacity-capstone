@@ -65,24 +65,4 @@ public class CategoryRemoteDataSource implements CategoryDataSource {
 
         getCategoryCallback.onCategoryLoaded(category);
     }
-
-    @Override
-    public void checkExistCategory(@NonNull String categoryKey, @NonNull CheckExistCategoryCallback checkExistCategoryCallback) {
-        //no-op in remote
-    }
-
-    @Override
-    public void addCategory(@NonNull Category category, @NonNull AddCategoryCallback addCategoryCallback) {
-        //no-op in remote
-    }
-
-    @Override
-    public void updateCategory(@NonNull Category category, @NonNull UpdateCategoryCallback updateCategoryCallback) {
-        //no-op in remote
-    }
-
-    @Override
-    public void saveCategory(@NonNull Category category, @NonNull SaveCategoryCallback saveCategoryCallback) {
-        //no-op in remote
-    }
 }

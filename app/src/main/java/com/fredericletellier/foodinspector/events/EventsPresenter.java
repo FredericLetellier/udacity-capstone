@@ -26,9 +26,12 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
 import com.fredericletellier.foodinspector.data.Event;
+import com.fredericletellier.foodinspector.data.Product;
 import com.fredericletellier.foodinspector.data.source.EventDataSource;
 import com.fredericletellier.foodinspector.data.source.FoodInspectorRepository;
 import com.fredericletellier.foodinspector.data.source.LoaderProvider;
+import com.fredericletellier.foodinspector.data.source.ProductDataSource;
+import com.google.android.gms.vision.barcode.Barcode;
 
 import java.util.List;
 
@@ -40,7 +43,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * {@link LoaderManager} mechanism for managing loading and updating data asynchronously.
  */
 public class EventsPresenter implements EventsContract.Presenter, FoodInspectorRepository.LoadDataCallback,
-        EventDataSource.RefreshEventsOnErrorCallback, LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     public final static int EVENTS_LOADER = 1;
 
@@ -56,18 +59,17 @@ public class EventsPresenter implements EventsContract.Presenter, FoodInspectorR
     public EventsPresenter(@NonNull LoaderProvider loaderProvider,
                            @NonNull LoaderManager loaderManager,
                            @NonNull FoodInspectorRepository foodInspectorRepository,
-                           @NonNull EventsContract.View eventsView,
-                           @NonNull EventsFilter eventsFilter) {
+                           @NonNull EventsContract.View eventsView) {
         mLoaderProvider = checkNotNull(loaderProvider, "loaderProvider provider cannot be null");
         mLoaderManager = checkNotNull(loaderManager, "loaderManager provider cannot be null");
         mFoodInspectorRepository = checkNotNull(foodInspectorRepository, "foodInspectorRepository provider cannot be null");
         mEventsView = checkNotNull(eventsView, "eventsView cannot be null!");
-        mCurrentFiltering = checkNotNull(eventsFilter, "eventsFilter cannot be null!");
         mEventsView.setPresenter(this);
     }
 
     @Override
     public void start() {
+        mCurrentFiltering = EventsFilter.from(EventsFilterType.ALL_EVENTS);
         loadEvents();
     }
 
@@ -75,7 +77,16 @@ public class EventsPresenter implements EventsContract.Presenter, FoodInspectorR
      * We will always have fresh data from remote, the Loaders handle the local data
      */
     public void loadEvents() {
+
+        if (mLoaderManager.getLoader(EVENTS_LOADER) == null) {
+            mLoaderManager.initLoader(EVENTS_LOADER, mCurrentFiltering.getFilterExtras(), this);
+        } else {
+            mLoaderManager.restartLoader(EVENTS_LOADER, mCurrentFiltering.getFilterExtras(), this);
+        }
+
+        /*
         mFoodInspectorRepository.refreshEventsOnError(this);
+        */
     }
 
     @Override
@@ -91,15 +102,7 @@ public class EventsPresenter implements EventsContract.Presenter, FoodInspectorR
         processEmptyEvents();
     }
 
-    @Override
-    public void onEventsOnErrorRefreshed(List<Event> events) {
-        // we don't care about the result since the CursorLoader will load the data for us
-        if (mLoaderManager.getLoader(EVENTS_LOADER) == null) {
-            mLoaderManager.initLoader(EVENTS_LOADER, mCurrentFiltering.getFilterExtras(), this);
-        } else {
-            mLoaderManager.restartLoader(EVENTS_LOADER, mCurrentFiltering.getFilterExtras(), this);
-        }
-    }
+
 
     @Override
     public void onError(Throwable throwable) {
@@ -117,16 +120,34 @@ public class EventsPresenter implements EventsContract.Presenter, FoodInspectorR
             case ALL_EVENTS:
                 mEventsView.showNoEvents();
                 break;
-            case EVENTS_WITH_BOOKMARKED_PRODUCT:
-                mEventsView.showNoEventsWithBookmarkedProduct();
-                break;
         }
     }
 
     @Override
-    public void openEventDetails(@NonNull Event requestedEvent) {
-        checkNotNull(requestedEvent, "requestedEvent cannot be null!");
-        mEventsView.showEventDetailsUi(requestedEvent);
+    public void openEventDetails(String barcode) {
+        checkNotNull(barcode, "requestedEvent cannot be null!");
+        mEventsView.showEventDetailsUi(barcode);
+    }
+
+    @Override
+    public void clickOnFab() {
+        mEventsView.showScanUi();
+    }
+
+    @Override
+    public void newEvent(final Barcode barcode) {
+        mFoodInspectorRepository.saveScan(barcode.displayValue, new EventDataSource.SaveScanCallback() {
+            @Override
+            public void onScanSaved() {
+                mEventsView.showEventDetailsUi(barcode.displayValue);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+
+            }
+        });
+
     }
 
 

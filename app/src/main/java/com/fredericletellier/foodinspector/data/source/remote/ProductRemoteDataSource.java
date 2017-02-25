@@ -138,36 +138,4 @@ public class ProductRemoteDataSource implements ProductDataSource {
             }
         });
     }
-
-    @Override
-    public void checkExistProduct(@NonNull String barcode,
-                                  @NonNull CheckExistProductCallback checkExistProductCallback) {
-        //no-op in remote
-    }
-
-    @Override
-    public void addProduct(@NonNull Product product, @NonNull AddProductCallback addProductCallback) {
-        //no-op in remote
-    }
-
-    @Override
-    public void updateProduct(@NonNull Product product, @NonNull UpdateProductCallback updateProductCallback) {
-        //no-op in remote
-    }
-
-    @Override
-    public void saveProduct(@NonNull Product product, @NonNull SaveProductCallback saveProductCallback) {
-        //no-op in remote
-    }
-
-    @Override
-    public void parseProduct(@NonNull String barcode, @NonNull ParseProductCallback parseProductCallback) {
-        //no-op in remote
-    }
-
-    @Override
-    public void updateProductBookmark(@NonNull String barcode,
-                                      @NonNull UpdateProductBookmarkCallback updateProductBookmarkCallback) {
-        //no-op in remote
-    }
 }

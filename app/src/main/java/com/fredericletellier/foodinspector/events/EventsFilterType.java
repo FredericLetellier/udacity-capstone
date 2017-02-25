@@ -25,10 +25,5 @@ public enum EventsFilterType {
     /**
      * Do not filter events.
      */
-    ALL_EVENTS,
-
-    /**
-     * Filters only the events linked with a bookmarked product.
-     */
-    EVENTS_WITH_BOOKMARKED_PRODUCT
+    ALL_EVENTS
 }

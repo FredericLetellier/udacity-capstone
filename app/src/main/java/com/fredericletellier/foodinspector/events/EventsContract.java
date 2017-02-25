@@ -24,6 +24,7 @@ import android.support.annotation.NonNull;
 import com.fredericletellier.foodinspector.BasePresenter;
 import com.fredericletellier.foodinspector.BaseView;
 import com.fredericletellier.foodinspector.data.Event;
+import com.google.android.gms.vision.barcode.Barcode;
 
 /**
  * This specifies the contract between the view and the presenter.
@@ -34,7 +35,7 @@ public interface EventsContract {
 
         void showEvents(Cursor events);
 
-        void showEventDetailsUi(Event event);
+        void showEventDetailsUi(String barcode);
 
         void showLoadingEventsError();
 
@@ -42,13 +43,19 @@ public interface EventsContract {
 
         void showNoEventsWithBookmarkedProduct();
 
+        void showScanUi();
+
     }
 
     interface Presenter extends BasePresenter {
 
         void loadEvents();
 
-        void openEventDetails(@NonNull Event requestedEvent);
+        void openEventDetails(String barcode);
+
+        void clickOnFab();
+
+        void newEvent(Barcode barcode);
 
     }
 }

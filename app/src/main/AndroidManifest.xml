@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.fredericletellier.foodinspector">
 
+    <uses-permission android:name="android.permission.CAMERA" />
     <application
         android:name="com.fredericletellier.foodinspector.FoodInspector"
         android:allowBackup="true"
@@ -9,16 +10,39 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".events.EventsActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="vnd.android.cursor.item/vnd.${packageName}.event" />
+            </intent-filter>
+
         </activity>
+
+        <activity android:name="com.fredericletellier.foodinspector.product.ProductActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.${packageName}.event" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".scan.BarcodeCaptureActivity"
+            android:label="Read Barcode"/>
+
+        <provider
+            android:name=".data.source.local.FoodInspectorContentProvider"
+            android:authorities="${packageName}"
+            android:exported="false" />
     </application>
 
 </manifest>

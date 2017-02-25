@@ -28,8 +28,8 @@ import retrofit2.http.Query;
 
 public interface OpenFoodFactsAPIEndpointInterface {
 
-    public static final String ENDPOINT_BARCODE = "http://world.openfoodfacts.org/api/v0/product";
-    public static final String ENDPOINT_SEARCH = "http://world.openfoodfacts.org/cgi";
+    public static final String ENDPOINT_BARCODE = "http://world.openfoodfacts.org/api/v0/product/";
+    public static final String ENDPOINT_SEARCH = "http://world.openfoodfacts.org/cgi/";
 
     //Example : http://world.openfoodfacts.org/api/v0/product/3046920029759.json
     @GET("{barcode}.json")

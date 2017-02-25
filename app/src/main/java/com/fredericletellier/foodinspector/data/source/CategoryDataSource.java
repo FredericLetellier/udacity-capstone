@@ -35,46 +35,6 @@ public interface CategoryDataSource {
 
     }
 
-    interface CheckExistCategoryCallback {
-
-        void onCategoryExisted(long id);
-
-        void onCategoryNotExisted();
-
-    }
-
-    interface AddCategoryCallback {
-
-        void onCategoryAdded();
-
-        void onError();
-
-    }
-
-    interface UpdateCategoryCallback {
-
-        void onCategoryUpdated();
-
-        void onError();
-
-    }
-
-    interface SaveCategoryCallback {
-
-        void onCategorySaved();
-
-        void onError();
-
-    }
-
     void getCategory(@NonNull String categoryKey, @NonNull GetCategoryCallback getCategoryCallback);
-
-    void checkExistCategory(@NonNull String categoryKey, @NonNull CheckExistCategoryCallback checkExistCategoryCallback);
-
-    void addCategory(@NonNull Category category, @NonNull AddCategoryCallback addCategoryCallback);
-
-    void updateCategory(@NonNull Category category, @NonNull UpdateCategoryCallback updateCategoryCallback);
-
-    void saveCategory(@NonNull Category category, @NonNull SaveCategoryCallback saveCategoryCallback);
 
 }

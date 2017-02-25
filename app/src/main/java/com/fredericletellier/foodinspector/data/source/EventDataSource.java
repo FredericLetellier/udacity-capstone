@@ -28,38 +28,21 @@ import java.util.List;
  * Main entry point for accessing event data.
  */
 public interface EventDataSource {
-    
-    interface CheckExistEventCallback {
 
-        void onEventExisted(long id);
+    interface Local {
 
-        void onEventNotExisted();
+        interface SaveEventCallback {
 
+            void onEventSaved();
+
+            void onError();
+
+        }
+
+        void saveEvent(@NonNull Event event, @NonNull SaveEventCallback saveEventCallback);
     }
 
-    interface AddEventCallback {
 
-        void onEventAdded();
-
-        void onError();
-
-    }
-
-    interface UpdateEventCallback {
-
-        void onEventUpdated();
-
-        void onError();
-
-    }
-
-    interface SaveEventCallback {
-
-        void onEventSaved();
-
-        void onError();
-
-    }
 
     interface SaveScanCallback {
 
@@ -69,34 +52,6 @@ public interface EventDataSource {
 
     }
 
-    interface RefreshEventsOnErrorCallback {
-
-        void onEventsOnErrorRefreshed(List<Event> events);
-
-        void onError(Throwable throwable);
-
-    }
-
-    interface GetEventsOnErrorCallback {
-
-        void onEventsOnErrorLoaded(List<String> barcodeEventsOnError);
-
-        void onError();
-
-    }
-
-    void checkExistEvent(@NonNull String barcode, @NonNull CheckExistEventCallback checkExistEventCallback);
-
-    void addEvent(@NonNull Event event, @NonNull AddEventCallback addEventCallback);
-
-    void updateEvent(@NonNull Event event, @NonNull UpdateEventCallback updateEventCallback);
-
-    void saveEvent(@NonNull Event event, @NonNull SaveEventCallback saveEventCallback);
-
     void saveScan(@NonNull String barcode, @NonNull SaveScanCallback saveScanCallback);
-
-    void refreshEventsOnError(@NonNull RefreshEventsOnErrorCallback refreshEventsOnErrorCallback);
-
-    void getEventsOnError(@NonNull GetEventsOnErrorCallback getEventsOnErrorCallback);
 
 }

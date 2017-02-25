@@ -21,7 +21,6 @@ package com.fredericletellier.foodinspector.data;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.fredericletellier.foodinspector.data.source.local.db.ProductPersistenceContract;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -114,64 +113,10 @@ public class Product {
     }
 
     /**
-     * Use this constructor to return a Product from a Cursor
      *
      * @return
+     * The id
      */
-    public static Product from(Cursor cursor) {
-        long id = cursor.getLong(cursor.getColumnIndexOrThrow(
-                ProductPersistenceContract.ProductEntry._ID));
-        String barcode = cursor.getString(cursor.getColumnIndexOrThrow(
-                ProductPersistenceContract.ProductEntry.COLUMN_NAME_BARCODE));
-        boolean parsed = cursor.getInt(cursor.getColumnIndexOrThrow(
-                ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSED)) == 1;;
-        boolean bookmarked = cursor.getInt(cursor.getColumnIndexOrThrow(
-                ProductPersistenceContract.ProductEntry.COLUMN_NAME_BOOKMARKED)) == 1;;
-        String genericName = cursor.getString(cursor.getColumnIndexOrThrow(
-                ProductPersistenceContract.ProductEntry.COLUMN_NAME_GENERIC_NAME));
-        String productName = cursor.getString(cursor.getColumnIndexOrThrow(
-                ProductPersistenceContract.ProductEntry.COLUMN_NAME_PRODUCT_NAME));
-        String quantity = cursor.getString(cursor.getColumnIndexOrThrow(
-                ProductPersistenceContract.ProductEntry.COLUMN_NAME_QUANTITY));
-        String nutritionGrades = cursor.getString(cursor.getColumnIndexOrThrow(
-                ProductPersistenceContract.ProductEntry.COLUMN_NAME_NUTRITION_GRADES));
-        String parsableCategories = cursor.getString(cursor.getColumnIndexOrThrow(
-                ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSABLE_CATEGORIES));
-        String brands = cursor.getString(cursor.getColumnIndexOrThrow(
-                ProductPersistenceContract.ProductEntry.COLUMN_NAME_BRANDS));
-        String imageFrontSmallUrl = cursor.getString(cursor.getColumnIndexOrThrow(
-                ProductPersistenceContract.ProductEntry.COLUMN_NAME_IMAGE_FRONT_SMALL_URL));
-        String imageFrontUrl = cursor.getString(cursor.getColumnIndexOrThrow(
-                ProductPersistenceContract.ProductEntry.COLUMN_NAME_IMAGE_FRONT_URL));
-        return new Product(id, barcode, parsed, bookmarked, genericName, productName, quantity, nutritionGrades, parsableCategories, brands, imageFrontSmallUrl, imageFrontUrl);
-    }
-
-    /**
-     * Use this constructor to return a Product from ContentValues
-     *
-     * @return
-     */
-    public static Product from(ContentValues values) {
-        long id = values.getAsLong(ProductPersistenceContract.ProductEntry._ID);
-        String barcode = values.getAsString(ProductPersistenceContract.ProductEntry.COLUMN_NAME_BARCODE);
-        boolean parsed = values.getAsInteger(ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSED) == 1;
-        boolean bookmarked = values.getAsInteger(ProductPersistenceContract.ProductEntry.COLUMN_NAME_BOOKMARKED) == 1;
-        String genericName = values.getAsString(ProductPersistenceContract.ProductEntry.COLUMN_NAME_GENERIC_NAME);
-        String productName = values.getAsString(ProductPersistenceContract.ProductEntry.COLUMN_NAME_PRODUCT_NAME);
-        String quantity = values.getAsString(ProductPersistenceContract.ProductEntry.COLUMN_NAME_QUANTITY);
-        String nutritionGrades = values.getAsString(ProductPersistenceContract.ProductEntry.COLUMN_NAME_NUTRITION_GRADES);
-        String parsableCategories = values.getAsString(ProductPersistenceContract.ProductEntry.COLUMN_NAME_PARSABLE_CATEGORIES);
-        String brands = values.getAsString(ProductPersistenceContract.ProductEntry.COLUMN_NAME_BRANDS);
-        String imageFrontSmallUrl = values.getAsString(ProductPersistenceContract.ProductEntry.COLUMN_NAME_IMAGE_FRONT_SMALL_URL);
-        String imageFrontUrl = values.getAsString(ProductPersistenceContract.ProductEntry.COLUMN_NAME_IMAGE_FRONT_URL);
-        return new Product(id, barcode, parsed, bookmarked, genericName, productName, quantity, nutritionGrades, parsableCategories, brands, imageFrontSmallUrl, imageFrontUrl);
-    }
-
-        /**
-         *
-         * @return
-         * The id
-         */
     public long getId() {
         return mId;
     }

@@ -21,8 +21,6 @@ package com.fredericletellier.foodinspector.data;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.fredericletellier.foodinspector.data.source.local.db.CategoryPersistenceContract;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -60,33 +58,6 @@ public class Category {
         this.mId = id;
         this.mCategoryKey = categoryKey;
         this.mCategoryName = categoryName;
-    }
-
-    /**
-     * Use this constructor to return a Category from a Cursor
-     *
-     * @return
-     */
-    public static Category from(Cursor cursor) {
-        long id = cursor.getLong(cursor.getColumnIndexOrThrow(
-                CategoryPersistenceContract.CategoryEntry._ID));
-        String categoryKey = cursor.getString(cursor.getColumnIndexOrThrow(
-                CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_CATEGORY_KEY));
-        String categoryName = cursor.getString(cursor.getColumnIndexOrThrow(
-                CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_CATEGORY_NAME));
-        return new Category(id, categoryKey, categoryName);
-    }
-
-    /**
-     * Use this constructor to return a Category from ContentValues
-     *
-     * @return
-     */
-    public static Category from(ContentValues values) {
-        long id = values.getAsLong(CategoryPersistenceContract.CategoryEntry._ID);
-        String categoryKey = values.getAsString(CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_CATEGORY_KEY);
-        String categoryName = values.getAsString(CategoryPersistenceContract.CategoryEntry.COLUMN_NAME_CATEGORY_NAME);
-        return new Category(id, categoryKey, categoryName);
     }
 
     /**

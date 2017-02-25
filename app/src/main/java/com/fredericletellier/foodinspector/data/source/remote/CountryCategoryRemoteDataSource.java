@@ -110,33 +110,4 @@ public class CountryCategoryRemoteDataSource implements CountryCategoryDataSourc
             }
         });
     }
-
-    @Override
-    public void checkExistCountryCategory(@NonNull String categoryKey, @NonNull String countryKey, @NonNull CheckExistCountryCategoryCallback checkExistCountryCategoryCallback) {
-        //no-op in remote
-    }
-
-    @Override
-    public void addCountryCategory(@NonNull CountryCategory countryCategory,
-                                   @NonNull AddCountryCategoryCallback addCountryCategoryCallback) {
-        //no-op in remote
-    }
-
-    @Override
-    public void updateCountryCategory(@NonNull CountryCategory countryCategory,
-                                      @NonNull UpdateCountryCategoryCallback updateCountryCategoryCallback) {
-        //no-op in remote
-    }
-
-    @Override
-    public void saveCountryCategory(@NonNull CountryCategory countryCategory,
-                                    @NonNull SaveCountryCategoryCallback saveCountryCategoryCallback) {
-        //no-op in remote
-    }
-
-    @Override
-    public void getCountryCategoryOfProduct(@NonNull String barcode, @NonNull String countryKey,
-                                            @NonNull GetCountryCategoryOfProductCallback getCountryCategoryOfProductCallback) {
-        //no-op in remote
-    }
 }

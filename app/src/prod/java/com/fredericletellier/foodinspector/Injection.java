@@ -40,14 +40,10 @@ public class Injection {
         checkNotNull(context);
         return FoodInspectorRepository.getInstance(
                 ProductRemoteDataSource.getInstance(),
-                ProductLocalDataSource.getInstance(context.getContentResolver()),
                 EventLocalDataSource.getInstance(context.getContentResolver()),
                 CategoryRemoteDataSource.getInstance(),
-                CategoryLocalDataSource.getInstance(context.getContentResolver()),
-                CategoryTagLocalDataSource.getInstance(context.getContentResolver()),
-                CountryCategoryRemoteDataSource.getInstance(),
-                CountryCategoryLocalDataSource.getInstance(context.getContentResolver()),
-                SuggestionLocalDataSource.getInstance(context.getContentResolver()));
+                CountryCategoryRemoteDataSource.getInstance()
+        );
     }
 
 }

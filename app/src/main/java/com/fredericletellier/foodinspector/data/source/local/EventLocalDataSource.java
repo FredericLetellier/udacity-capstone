@@ -37,7 +37,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Concrete implementation of a data source as a db.
  */
-public class EventLocalDataSource implements EventDataSource {
+public class EventLocalDataSource implements EventDataSource.Local {
 
     private static EventLocalDataSource INSTANCE;
 
@@ -56,8 +56,7 @@ public class EventLocalDataSource implements EventDataSource {
         return INSTANCE;
     }
 
-    @Override
-    public void checkExistEvent(@NonNull String barcode, @NonNull CheckExistEventCallback checkExistEventCallback) {
+    private void checkExistEvent(@NonNull String barcode, @NonNull CheckExistEventCallback checkExistEventCallback) {
         Cursor cursor = mContentResolver.query(
                 EventPersistenceContract.EventEntry.buildEventUri(),
                 null,
@@ -65,17 +64,20 @@ public class EventLocalDataSource implements EventDataSource {
                 new String[]{barcode},
                 null);
 
-        if (cursor.moveToLast()) {
-            long _id = cursor.getLong(cursor.getColumnIndex(EventPersistenceContract.EventEntry._ID));
-            checkExistEventCallback.onEventExisted(_id);
+        if (cursor != null){
+            if (cursor.moveToLast()) {
+                long _id = cursor.getLong(cursor.getColumnIndex(EventPersistenceContract.EventEntry._ID));
+                checkExistEventCallback.onEventExisted(_id);
+            } else {
+                checkExistEventCallback.onEventNotExisted();
+            }
+            cursor.close();
         } else {
             checkExistEventCallback.onEventNotExisted();
         }
-        cursor.close();
     }
 
-    @Override
-    public void addEvent(@NonNull Event Event, @NonNull EventDataSource.AddEventCallback addEventCallback) {
+    private void addEvent(@NonNull Event Event, @NonNull AddEventCallback addEventCallback) {
         checkNotNull(Event);
 
         ContentValues values = EventValues.from(Event);
@@ -88,8 +90,7 @@ public class EventLocalDataSource implements EventDataSource {
         }
     }
 
-    @Override
-    public void updateEvent(@NonNull Event Event, @NonNull EventDataSource.UpdateEventCallback updateEventCallback) {
+    private void updateEvent(@NonNull Event Event, @NonNull UpdateEventCallback updateEventCallback) {
         checkNotNull(Event);
 
         ContentValues values = EventValues.from(Event);
@@ -107,7 +108,7 @@ public class EventLocalDataSource implements EventDataSource {
     }
 
     @Override
-    public void saveEvent(@NonNull final Event Event, @NonNull final EventDataSource.SaveEventCallback saveEventCallback) {
+    public void saveEvent(@NonNull final Event Event, @NonNull final SaveEventCallback saveEventCallback) {
         checkNotNull(Event);
 
         String barcode = Event.getBarcode();
@@ -117,7 +118,7 @@ public class EventLocalDataSource implements EventDataSource {
             @Override
             public void onEventExisted(long id) {
                 Event.setId(id);
-                updateEvent(Event, new EventDataSource.UpdateEventCallback() {
+                updateEvent(Event, new UpdateEventCallback() {
                     @Override
                     public void onEventUpdated() {
                         saveEventCallback.onEventSaved();
@@ -132,7 +133,7 @@ public class EventLocalDataSource implements EventDataSource {
 
             @Override
             public void onEventNotExisted() {
-                addEvent(Event, new EventDataSource.AddEventCallback() {
+                addEvent(Event, new AddEventCallback() {
                     @Override
                     public void onEventAdded() {
                         saveEventCallback.onEventSaved();
@@ -147,38 +148,27 @@ public class EventLocalDataSource implements EventDataSource {
         });
     }
 
-    @Override
-    public void saveScan(@NonNull String barcode, @NonNull SaveScanCallback saveScanCallback) {
-        // no-op in local
+    interface CheckExistEventCallback {
+
+        void onEventExisted(long id);
+
+        void onEventNotExisted();
+
     }
 
-    @Override
-    public void refreshEventsOnError(@NonNull RefreshEventsOnErrorCallback refreshEventsOnErrorCallback) {
-        // no-op in local
+    interface AddEventCallback {
+
+        void onEventAdded();
+
+        void onError();
+
     }
 
-    @Override
-    public void getEventsOnError(@NonNull GetEventsOnErrorCallback getEventsOnErrorCallback) {
+    interface UpdateEventCallback {
 
-        Cursor cursor = mContentResolver.query(
-                EventPersistenceContract.EventEntry.buildEventUri(),
-                null,
-                EventPersistenceContract.EventEntry.COLUMN_NAME_STATUS + " = ?",
-                new String[]{Event.STATUS_NO_NETWORK},
-                null);
+        void onEventUpdated();
 
-        if (cursor.moveToFirst()) {
+        void onError();
 
-            List<String> barcodeEventsOnError = new ArrayList<String>();
-            do {
-                Event event = Event.from(cursor);
-                barcodeEventsOnError.add(event.getBarcode());
-            } while (cursor.moveToNext());
-
-            getEventsOnErrorCallback.onEventsOnErrorLoaded(barcodeEventsOnError);
-        } else {
-            getEventsOnErrorCallback.onError();
-        }
-        cursor.close();
     }
 }

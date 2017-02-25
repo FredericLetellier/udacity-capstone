@@ -25,7 +25,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
 import com.fredericletellier.foodinspector.data.source.local.db.EventPersistenceContract;
-import com.fredericletellier.foodinspector.data.source.local.db.ProductPersistenceContract;
 import com.fredericletellier.foodinspector.events.EventsFilter;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -48,15 +47,11 @@ public class LoaderProvider {
                 selection = null;
                 selectionArgs = null;
                 break;
-            case EVENTS_WITH_BOOKMARKED_PRODUCT:
-                selection = ProductPersistenceContract.ProductEntry.COLUMN_NAME_BOOKMARKED + " = ? ";
-                selectionArgs = new String[]{String.valueOf(1)};
-                break;
         }
 
         return new CursorLoader(
                 mContext,
-                EventPersistenceContract.EventEntry.buildEventsAndProductsUri(),
+                EventPersistenceContract.EventEntry.buildEventUri(),
                 null,
                 selection,
                 selectionArgs,

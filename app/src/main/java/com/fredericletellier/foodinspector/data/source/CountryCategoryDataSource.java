@@ -37,56 +37,6 @@ public interface CountryCategoryDataSource {
 
     }
 
-    interface CheckExistCountryCategoryCallback {
-
-        void onCountryCategoryExisted(long id);
-
-        void onCountryCategoryNotExisted();
-
-    }
-
-    interface AddCountryCategoryCallback {
-
-        void onCountryCategoryAdded();
-
-        void onError();
-
-    }
-
-    interface UpdateCountryCategoryCallback {
-
-        void onCountryCategoryUpdated();
-
-        void onError();
-
-    }
-
-    interface SaveCountryCategoryCallback {
-
-        void onCountryCategorySaved();
-
-        void onError();
-
-    }
-
-    interface GetCountryCategoryOfProductCallback {
-
-        void onCountryCategoryOfProductLoaded(List<CountryCategory> countryCategories);
-
-        void onError(Throwable throwable);
-
-    }
-
     void getCountryCategory(@NonNull String categoryKey, @NonNull String countryKey, @NonNull GetCountryCategoryCallback getCountryCategoryCallback);
-
-    void checkExistCountryCategory(@NonNull String categoryKey, @NonNull String countryKey, @NonNull CheckExistCountryCategoryCallback checkExistCountryCategoryCallback);
-
-    void addCountryCategory(@NonNull CountryCategory countryCategory, @NonNull AddCountryCategoryCallback addCountryCategoryCallback);
-
-    void updateCountryCategory(@NonNull CountryCategory countryCategory, @NonNull UpdateCountryCategoryCallback updateCountryCategoryCallback);
-
-    void saveCountryCategory(@NonNull CountryCategory countryCategory, @NonNull SaveCountryCategoryCallback saveCountryCategoryCallback);
-
-    void getCountryCategoryOfProduct(@NonNull String barcode, @NonNull String countryKey, @NonNull GetCountryCategoryOfProductCallback getCountryCategoryOfProductCallback);
 
 }
