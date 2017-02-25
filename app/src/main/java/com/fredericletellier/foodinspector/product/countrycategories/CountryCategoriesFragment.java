@@ -112,7 +112,7 @@ public class CountryCategoriesFragment extends Fragment implements ProductContra
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                parent.setSelection(0);
+                //no-op
             }
         });
     }

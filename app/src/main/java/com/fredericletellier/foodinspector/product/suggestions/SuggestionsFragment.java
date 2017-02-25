@@ -18,11 +18,13 @@
 
 package com.fredericletellier.foodinspector.product.suggestions;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -34,6 +36,7 @@ import android.widget.TextView;
 
 import com.fredericletellier.foodinspector.R;
 import com.fredericletellier.foodinspector.data.Product;
+import com.fredericletellier.foodinspector.product.ProductActivity;
 import com.fredericletellier.foodinspector.product.ProductContract;
 import com.squareup.picasso.Picasso;
 
@@ -120,15 +123,19 @@ public class SuggestionsFragment extends Fragment implements ProductContract.Sug
 
     public class SuggestionViewHolder extends RecyclerView.ViewHolder {
 
+        public CardView cardView;
         public ImageView ivImageSmall;
         public TextView tvTitle;
         public TextView tvSubtitle;
 
         public SuggestionViewHolder(View view) {
             super(view);
+            cardView = (CardView) view.findViewById(R.id.card_view);
             ivImageSmall = (ImageView) view.findViewById(R.id.ivImageSmall);
             tvTitle = (TextView) view.findViewById(R.id.tvTitle);
             tvSubtitle = (TextView) view.findViewById(R.id.tvSubtitle);
+
+            cardView.setTag(this);
         }
     }
 
@@ -158,6 +165,18 @@ public class SuggestionsFragment extends Fragment implements ProductContract.Sug
 
             holder.tvTitle.setText(product.getmProductName());
             holder.tvSubtitle.setText(product.getmQuantity());
+
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SuggestionViewHolder holder = (SuggestionViewHolder)(v.getTag());
+                    String barcode = list.get(holder.getAdapterPosition()).getmBarcode();
+
+                    Intent intent = new Intent(getContext(), ProductActivity.class);
+                    intent.putExtra(ProductActivity.ARGUMENT_PRODUCT_BARCODE, barcode);
+                    startActivity(intent);
+                }
+            });
 
         }
 

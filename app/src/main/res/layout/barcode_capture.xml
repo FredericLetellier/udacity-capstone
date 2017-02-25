@@ -6,7 +6,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:keepScreenOn="true">
+    android:keepScreenOn="true"
+    android:background="@color/cardview_dark_background">
 
     <com.fredericletellier.foodinspector.scan.ui.camera.CameraSourcePreview
         android:id="@+id/preview"
