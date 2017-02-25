@@ -41,14 +41,12 @@ public interface ProductDataSource {
 
         void onProductsLoaded(List<Product> products);
 
-        void onProductsUnfilled();
-
         void onError(Throwable throwable);
 
     }
 
     void getProduct(@NonNull String barcode, @NonNull GetProductCallback getProductCallback);
 
-    void getProducts(@NonNull String categoryKey, @NonNull String countryKey, @NonNull String nutritionGradeValue, @NonNull Integer offsetProducts, @NonNull Integer numberOfProducts, @NonNull GetProductsCallback getProductsCallback);
+    void getProducts(@NonNull String categoryKey, @NonNull String nutritionGradeValue, @NonNull GetProductsCallback getProductsCallback);
 
 }

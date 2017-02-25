@@ -39,13 +39,10 @@ public interface OpenFoodFactsAPIEndpointInterface {
 
 
     //Example : http://world.openfoodfacts.org/cgi/search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tag_0=cheese&tagtype_1=countries&tag_contains_1=contains&tag_1=france&tagtype_2=nutrition_grades&tag_contains_2=contains&tag_2=a&sort_by=unique_scans_n&page_size=20&page=1&json=1
-    @GET("search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tagtype_1=countries&tag_contains_1=contains&tagtype_2=nutrition_grades&tag_contains_2=contains&sort_by=unique_scans_n&json=1")
+    @GET("search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tagtype_1=nutrition_grades&tag_contains_1=contains&sort_by=unique_scans_n&page_size=20&page=1&json=1")
     Call<Search> getProducts(
             @Query("tag_0") String categoryKey,
-            @Query("tag_1") String countryKey,
-            @Query("tag_2") String nutritionGrade,
-            @Query("page_size") String pageSize,
-            @Query("page") String page
+            @Query("tag_1") String nutritionGrade
     );
 
 

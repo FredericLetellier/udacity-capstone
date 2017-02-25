@@ -218,7 +218,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
     public void showEventDetailsUi(String barcode) {
         Log.d(TAG, "showEventDetailsUi " + barcode);
         Intent intent = new Intent(getContext(), ProductActivity.class);
-        intent.putExtra(ProductActivity.EXTRA_PRODUCT_BARCODE, barcode);
+        intent.putExtra(ProductActivity.ARGUMENT_PRODUCT_BARCODE, barcode);
         startActivity(intent);
     }
 

@@ -16,8 +16,9 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.fredericletellier.foodinspector.product;
+package com.fredericletellier.foodinspector.product.countrycategories;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,36 +28,35 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.fredericletellier.foodinspector.R;
-import com.fredericletellier.foodinspector.data.Product;
-import com.squareup.picasso.Picasso;
+import com.fredericletellier.foodinspector.data.Category;
+import com.fredericletellier.foodinspector.events.EventsContract;
+import com.fredericletellier.foodinspector.product.ProductContract;
+
+import java.util.HashMap;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class ProductFragment extends Fragment implements ProductContract.ProductView {
+public class CountryCategoriesFragment extends Fragment implements ProductContract.CategoryView {
 
     private ProductContract.Presenter mPresenter;
 
     protected View mProgressView;
-    private ImageView mIvImageBig;
-    private TextView mTxProductName;
-    private TextView mTxGenericName;
-    private TextView mTxBrands;
-    private TextView mTxQuantity;
-    private TextView mTxNutritionGrade;
+    private Spinner mSpinner;
 
 
-    public ProductFragment() {
+    public CountryCategoriesFragment() {
         // Requires empty public constructor
     }
 
-    public static ProductFragment newInstance() {
-        return new ProductFragment();
+    public static CountryCategoriesFragment newInstance() {
+        return new CountryCategoriesFragment();
     }
-
 
     @Override
     public void setPresenter(ProductContract.Presenter presenter) {
@@ -66,22 +66,18 @@ public class ProductFragment extends Fragment implements ProductContract.Product
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.startProduct();
+        mPresenter.startCountryCategory();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.product_frag, container, false);
+        View root = inflater.inflate(R.layout.countrycategories_frag, container, false);
 
         mProgressView = root.findViewById(android.R.id.progress);
-        mIvImageBig = (ImageView) root.findViewById(R.id.ivImageBig);
-        mTxProductName = (TextView) root.findViewById(R.id.txProductName);
-        mTxGenericName = (TextView) root.findViewById(R.id.txGenericName);
-        mTxBrands = (TextView) root.findViewById(R.id.txBrands);
-        mTxQuantity = (TextView) root.findViewById(R.id.txQuantity);
-        mTxNutritionGrade = (TextView) root.findViewById(R.id.txNutritionGrade);
+        mSpinner = (Spinner) root.findViewById(R.id.spCountryCategories);
+
         return root;
     }
 
@@ -100,20 +96,24 @@ public class ProductFragment extends Fragment implements ProductContract.Product
     }
 
     @Override
-    public void showProduct(Product product) {
-        Picasso.with(this.getContext())
-                .load(product.getmImageFrontUrl())
-                .into(mIvImageBig);
+    public void showCategories(List<Category> categoryList) {
+        ArrayAdapter<Category> dataAdapter = new ArrayAdapter<Category>(this.getContext(), android.R.layout.simple_spinner_item, categoryList);
+        // Specify the layout to use when the list of choices appears
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        mSpinner.setAdapter(dataAdapter);
 
-        mTxProductName.setText(product.getmProductName());
-        mTxGenericName.setText(product.getmGenericName());
-        mTxBrands.setText(product.getmBrands());
-        mTxQuantity.setText(product.getmQuantity());
-        mTxNutritionGrade.setText(product.getmNutritionGrades());
-    }
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Category category = (Category) parent.getItemAtPosition(position);
+                mPresenter.chooseNewCategory(category.getCategoryKey());
+            }
 
-    @Override
-    public void showError() {
-        //TODO
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                parent.setSelection(0);
+            }
+        });
     }
 }

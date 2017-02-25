@@ -20,17 +20,50 @@ package com.fredericletellier.foodinspector.product;
 
 import com.fredericletellier.foodinspector.BasePresenter;
 import com.fredericletellier.foodinspector.BaseView;
+import com.fredericletellier.foodinspector.data.Category;
+import com.fredericletellier.foodinspector.data.Product;
+
+import java.util.List;
 
 
 public interface ProductContract {
 
-    interface View extends BaseView<Presenter> {
+    interface ActivityView extends BaseView<Presenter> {
+        void hideCategoryView();
+        void hideSuggestionsViewA();
+        void hideSuggestionsViewB();
+        void hideSuggestionsViewC();
+        void hideSuggestionsViewD();
+        void hideSuggestionsViewE();
 
+        void showCategoryView();
+        void showSuggestionsViewA();
+        void showSuggestionsViewB();
+        void showSuggestionsViewC();
+        void showSuggestionsViewD();
+        void showSuggestionsViewE();
+    }
 
+    interface ProductView extends BaseView<Presenter> {
+        void setLoadingIncator(Boolean active);
+        void showProduct(Product product);
+        void showError();
+    }
+
+    interface CategoryView extends BaseView<Presenter> {
+        void setLoadingIncator(Boolean active);
+        void showCategories(List<Category> categoryList);
+    }
+
+    interface SuggestionsView extends BaseView<Presenter> {
+        void setLoadingIncator(Boolean active);
+        void showProducts(List<Product> products);
     }
 
     interface Presenter extends BasePresenter {
-
-
+        void startProduct();
+        void startCountryCategory();
+        void startSuggestion(String rank);
+        void chooseNewCategory(String parsableCategory);
     }
 }

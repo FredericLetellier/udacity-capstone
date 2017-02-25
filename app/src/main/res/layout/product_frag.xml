@@ -26,50 +26,54 @@
 
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/ivImageBig"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/txProductName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <TextView
-            android:id="@+id/txGenericName"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/txBrands"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
 
-        <TextView
-            android:id="@+id/txQuantity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/txProductName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
-        <ImageView
-            android:id="@+id/ivNutritionGrade"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/txGenericName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
+            <TextView
+                android:id="@+id/txBrands"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/txQuantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/txNutritionGrade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+    <ProgressBar
+        android:id="@android:id/progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        android:clickable="true"
-        app:layout_anchor="@id/ivImageBig"
-        app:layout_anchorGravity="bottom|right|end"
-        android:src="@drawable/ic_favorite_border_black_24dp" />
+        android:layout_gravity="center"
+        android:visibility="invisible"/>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -22,23 +22,24 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.fredericletellier.foodinspector.Injection;
 import com.fredericletellier.foodinspector.R;
-import com.fredericletellier.foodinspector.countrycategories.CountryCategoriesFragment;
-import com.fredericletellier.foodinspector.countrycategories.CountryCategoriesPresenter;
+import com.fredericletellier.foodinspector.product.countrycategories.CountryCategoriesFragment;
 import com.fredericletellier.foodinspector.data.source.LoaderProvider;
-import com.fredericletellier.foodinspector.suggestions.SuggestionsFilter;
-import com.fredericletellier.foodinspector.suggestions.SuggestionsFilterType;
-import com.fredericletellier.foodinspector.suggestions.SuggestionsFragment;
-import com.fredericletellier.foodinspector.suggestions.SuggestionsPresenter;
+import com.fredericletellier.foodinspector.product.suggestions.SuggestionsFragment;
 import com.fredericletellier.foodinspector.util.ActivityUtils;
 
-public class ProductActivity extends AppCompatActivity {
+public class ProductActivity extends AppCompatActivity implements ProductContract.ActivityView {
 
-    public static final String EXTRA_PRODUCT_BARCODE = "PRODUCT_BARCODE";
-    private static final String CURRENT_COUNTRY_CATEGORY = "CURRENT_COUNTRY_CATEGORY";
-    public LoaderProvider loaderProvider;
+    public static final String ARGUMENT_PRODUCT_BARCODE = "PRODUCT_BARCODE";
+    public static final String SUGGESTIONS_RANK_A = "A";
+    public static final String SUGGESTIONS_RANK_B = "B";
+    public static final String SUGGESTIONS_RANK_C = "C";
+    public static final String SUGGESTIONS_RANK_D = "D";
+    public static final String SUGGESTIONS_RANK_E = "E";
+
     public String productBarcode;
     public String countryCategory;
 
@@ -55,175 +56,70 @@ public class ProductActivity extends AppCompatActivity {
         ab.setDisplayShowHomeEnabled(true);
 
         // Get the requested product barcode
-        productBarcode = getIntent().getStringExtra(EXTRA_PRODUCT_BARCODE);
+        productBarcode = getIntent().getStringExtra(ARGUMENT_PRODUCT_BARCODE);
 
-        ProductFragment productFragment = (ProductFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.contentFrameProduct);
-
+        /* Create fragment Product */
+        ProductFragment productFragment = (ProductFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrameProduct);
         if (productFragment == null) {
-            productFragment = ProductFragment.newInstance(productBarcode);
+            productFragment = ProductFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), productFragment, R.id.contentFrameProduct);
+        }
 
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
-                    productFragment, R.id.contentFrameProduct
+        /* Create fragment CountryCategories */
+        CountryCategoriesFragment countryCategoriesFragment = (CountryCategoriesFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrameCountryCategories);
+        if (countryCategoriesFragment == null) {
+            countryCategoriesFragment = countryCategoriesFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), countryCategoriesFragment, R.id.contentFrameCountryCategories
             );
         }
 
-        loaderProvider = new LoaderProvider(getApplicationContext());
+        /* Create fragment Suggestions, rank A */
+        SuggestionsFragment suggestionsFragmentA = (SuggestionsFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrameSuggestionsA);
+        if (suggestionsFragmentA == null) {
+            suggestionsFragmentA = SuggestionsFragment.newInstance(SUGGESTIONS_RANK_A);
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), suggestionsFragmentA, R.id.contentFrameSuggestionsA);
+        }
+
+        /* Create fragment Suggestions, rank B */
+        SuggestionsFragment suggestionsFragmentB = (SuggestionsFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrameSuggestionsB);
+        if (suggestionsFragmentB == null) {
+            suggestionsFragmentB = SuggestionsFragment.newInstance(SUGGESTIONS_RANK_B);
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), suggestionsFragmentB, R.id.contentFrameSuggestionsB);
+        }
+
+        /* Create fragment Suggestions, rank C */
+        SuggestionsFragment suggestionsFragmentC = (SuggestionsFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrameSuggestionsC);
+        if (suggestionsFragmentC == null) {
+            suggestionsFragmentC = SuggestionsFragment.newInstance(SUGGESTIONS_RANK_C);
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), suggestionsFragmentC, R.id.contentFrameSuggestionsC);
+        }
+
+        /* Create fragment Suggestions, rank D */
+        SuggestionsFragment suggestionsFragmentD = (SuggestionsFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrameSuggestionsD);
+        if (suggestionsFragmentD == null) {
+            suggestionsFragmentD = SuggestionsFragment.newInstance(SUGGESTIONS_RANK_D);
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), suggestionsFragmentD, R.id.contentFrameSuggestionsD);
+        }
+
+        /* Create fragment Suggestions, rank E */
+        SuggestionsFragment suggestionsFragmentE = (SuggestionsFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrameSuggestionsE);
+        if (suggestionsFragmentE == null) {
+            suggestionsFragmentE = SuggestionsFragment.newInstance(SUGGESTIONS_RANK_E);
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),suggestionsFragmentE, R.id.contentFrameSuggestionsE);
+        }
 
         // Create the presenter
         new ProductPresenter(
                 productBarcode,
-                loaderProvider,
-                getSupportLoaderManager(),
                 Injection.provideFoodInspectorRepository(this),
-                productFragment
-        );
-
-        CountryCategoriesFragment countryCategoriesFragment = (CountryCategoriesFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.contentFrameCountryCategories);
-
-        if (countryCategoriesFragment == null) {
-            countryCategoriesFragment = countryCategoriesFragment.newInstance(productBarcode);
-
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
-                    countryCategoriesFragment, R.id.contentFrameCountryCategories
-            );
-        }
-
-        // Create the presenter
-        new CountryCategoriesPresenter(
-                productBarcode,
-                loaderProvider,
-                getSupportLoaderManager(),
-                Injection.provideFoodInspectorRepository(this),
-                countryCategoriesFragment
-        );
-
-        if (savedInstanceState != null) {
-            countryCategory = (String) savedInstanceState.getSerializable(CURRENT_COUNTRY_CATEGORY);
-            initSuggestions();
-        }
-    }
-
-    private void initSuggestions(){
-        SuggestionsFragment suggestionsFragmentA = (SuggestionsFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.contentFrameSuggestionsA);
-
-        if (suggestionsFragmentA == null) {
-            suggestionsFragmentA = suggestionsFragmentA.newInstance(productBarcode, countryCategory);
-
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
-                    suggestionsFragmentA, R.id.contentFrameSuggestionsA
-            );
-        }
-
-        SuggestionsFilter suggestionsFilterA = SuggestionsFilter.from(SuggestionsFilterType.NUTRITION_GRADE_A);
-
-        // Create the presenter
-        new SuggestionsPresenter(
-                productBarcode,
-                countryCategory,
-                loaderProvider,
-                getSupportLoaderManager(),
-                Injection.provideFoodInspectorRepository(this),
+                this,
+                productFragment,
+                countryCategoriesFragment,
                 suggestionsFragmentA,
-                suggestionsFilterA
-        );
-
-        SuggestionsFragment suggestionsFragmentB = (SuggestionsFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.contentFrameSuggestionsB);
-
-        if (suggestionsFragmentB == null) {
-            suggestionsFragmentB = suggestionsFragmentB.newInstance(productBarcode, countryCategory);
-
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
-                    suggestionsFragmentB, R.id.contentFrameSuggestionsB
-            );
-        }
-
-        SuggestionsFilter suggestionsFilterB = SuggestionsFilter.from(SuggestionsFilterType.NUTRITION_GRADE_B);
-
-        // Create the presenter
-        new SuggestionsPresenter(
-                productBarcode,
-                countryCategory,
-                loaderProvider,
-                getSupportLoaderManager(),
-                Injection.provideFoodInspectorRepository(this),
                 suggestionsFragmentB,
-                suggestionsFilterB
-        );
-
-        SuggestionsFragment suggestionsFragmentC = (SuggestionsFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.contentFrameSuggestionsC);
-
-        if (suggestionsFragmentC == null) {
-            suggestionsFragmentC = suggestionsFragmentC.newInstance(productBarcode, countryCategory);
-
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
-                    suggestionsFragmentC, R.id.contentFrameSuggestionsC
-            );
-        }
-
-        SuggestionsFilter suggestionsFilterC = SuggestionsFilter.from(SuggestionsFilterType.NUTRITION_GRADE_C);
-
-        // Create the presenter
-        new SuggestionsPresenter(
-                productBarcode,
-                countryCategory,
-                loaderProvider,
-                getSupportLoaderManager(),
-                Injection.provideFoodInspectorRepository(this),
                 suggestionsFragmentC,
-                suggestionsFilterC
-        );
-
-        SuggestionsFragment suggestionsFragmentD = (SuggestionsFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.contentFrameSuggestionsD);
-
-        if (suggestionsFragmentD == null) {
-            suggestionsFragmentD = suggestionsFragmentD.newInstance(productBarcode, countryCategory);
-
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
-                    suggestionsFragmentD, R.id.contentFrameSuggestionsD
-            );
-        }
-
-        SuggestionsFilter suggestionsFilterD = SuggestionsFilter.from(SuggestionsFilterType.NUTRITION_GRADE_D);
-
-        // Create the presenter
-        new SuggestionsPresenter(
-                productBarcode,
-                countryCategory,
-                loaderProvider,
-                getSupportLoaderManager(),
-                Injection.provideFoodInspectorRepository(this),
                 suggestionsFragmentD,
-                suggestionsFilterD
-        );
-
-        SuggestionsFragment suggestionsFragmentE = (SuggestionsFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.contentFrameSuggestionsE);
-
-        if (suggestionsFragmentE == null) {
-            suggestionsFragmentE = suggestionsFragmentA.newInstance(productBarcode, countryCategory);
-
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
-                    suggestionsFragmentE, R.id.contentFrameSuggestionsE
-            );
-        }
-
-        SuggestionsFilter suggestionsFilterE = SuggestionsFilter.from(SuggestionsFilterType.NUTRITION_GRADE_E);
-
-        // Create the presenter
-        new SuggestionsPresenter(
-                productBarcode,
-                countryCategory,
-                loaderProvider,
-                getSupportLoaderManager(),
-                Injection.provideFoodInspectorRepository(this),
-                suggestionsFragmentE,
-                suggestionsFilterE
+                suggestionsFragmentE
         );
     }
 
@@ -233,4 +129,68 @@ public class ProductActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public void hideCategoryView() {
+        this.findViewById(R.id.contentFrameCountryCategories).setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void hideSuggestionsViewA() {
+        this.findViewById(R.id.contentFrameSuggestionsA).setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void hideSuggestionsViewB() {
+        this.findViewById(R.id.contentFrameSuggestionsB).setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void hideSuggestionsViewC() {
+        this.findViewById(R.id.contentFrameSuggestionsC).setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void hideSuggestionsViewD() {
+        this.findViewById(R.id.contentFrameSuggestionsD).setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void hideSuggestionsViewE() {
+        this.findViewById(R.id.contentFrameSuggestionsE).setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void showCategoryView() {
+        this.findViewById(R.id.contentFrameCountryCategories).setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showSuggestionsViewA() {
+        this.findViewById(R.id.contentFrameSuggestionsA).setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showSuggestionsViewB() {
+        this.findViewById(R.id.contentFrameSuggestionsB).setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showSuggestionsViewC() {
+        this.findViewById(R.id.contentFrameSuggestionsC).setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showSuggestionsViewD() {
+        this.findViewById(R.id.contentFrameSuggestionsD).setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showSuggestionsViewE() {
+        this.findViewById(R.id.contentFrameSuggestionsE).setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setPresenter(ProductContract.Presenter presenter) {
+        //no-op
+    }
 }

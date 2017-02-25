@@ -135,19 +135,12 @@ public class FoodInspectorRepository implements ProductDataSource, EventDataSour
     }
 
     @Override
-    public void getProducts(@NonNull final String categoryKey, @NonNull final String countryKey,
-                            @NonNull final String nutritionGradeValue, @NonNull final Integer offsetProducts,
-                            @NonNull final Integer numberOfProducts, @NonNull final GetProductsCallback getProductsCallback) {
-        mProductRemoteDataSource.getProducts(categoryKey, countryKey, nutritionGradeValue, offsetProducts,
-                numberOfProducts, new GetProductsCallback() {
+    public void getProducts(@NonNull final String categoryKey,
+                            @NonNull final String nutritionGradeValue, @NonNull final GetProductsCallback getProductsCallback) {
+        mProductRemoteDataSource.getProducts(categoryKey, nutritionGradeValue, new GetProductsCallback() {
                     @Override
                     public void onProductsLoaded(List<Product> products) {
                         getProductsCallback.onProductsLoaded(products);
-                    }
-
-                    @Override
-                    public void onProductsUnfilled() {
-                        getProductsCallback.onProductsUnfilled();
                     }
 
                     @Override

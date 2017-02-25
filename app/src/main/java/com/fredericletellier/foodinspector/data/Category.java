@@ -140,7 +140,7 @@ public class Category {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return mCategoryName;
     }
 
     @Override

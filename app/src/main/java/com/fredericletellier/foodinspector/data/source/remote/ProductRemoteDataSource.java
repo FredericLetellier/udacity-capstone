@@ -115,15 +115,10 @@ public class ProductRemoteDataSource implements ProductDataSource {
     }
 
     @Override
-    public void getProducts(@NonNull String categoryKey, @NonNull String countryKey,
-                            @NonNull String nutritionGradeValue, @NonNull Integer offsetProducts,
-                            @NonNull Integer numberOfProducts, @NonNull final GetProductsCallback getProductsCallback) {
+    public void getProducts(@NonNull String categoryKey,
+                            @NonNull String nutritionGradeValue, @NonNull final GetProductsCallback getProductsCallback) {
         checkNotNull(categoryKey);
-        checkNotNull(countryKey);
         checkNotNull(nutritionGradeValue);
-        checkNotNull(offsetProducts);
-        checkNotNull(numberOfProducts);
-
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(OpenFoodFactsAPIEndpointInterface.ENDPOINT_SEARCH)
@@ -133,9 +128,7 @@ public class ProductRemoteDataSource implements ProductDataSource {
 
         OpenFoodFactsAPIEndpointInterface apiService = retrofit.create(OpenFoodFactsAPIEndpointInterface.class);
 
-        int page = offsetProducts / numberOfProducts;
-        Call<Search> call = apiService.getProducts(categoryKey, countryKey, nutritionGradeValue,
-                String.valueOf(numberOfProducts), String.valueOf(page));
+        Call<Search> call = apiService.getProducts(categoryKey, nutritionGradeValue);
 
         call.enqueue(new Callback<Search>() {
             @Override
