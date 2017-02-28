@@ -19,25 +19,26 @@
 package com.fredericletellier.foodinspector.data.source.remote;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.fredericletellier.foodinspector.data.CountryCategory;
 import com.fredericletellier.foodinspector.data.Search;
 import com.fredericletellier.foodinspector.data.source.CountryCategoryDataSource;
-import com.fredericletellier.foodinspector.data.source.remote.API.APIError;
-import com.fredericletellier.foodinspector.data.source.remote.API.ErrorUtils;
-import com.fredericletellier.foodinspector.data.source.remote.API.OpenFoodFactsAPIEndpointInterface;
+import com.fredericletellier.foodinspector.data.source.remote.API.CountryCategoryNotExistException;
+import com.fredericletellier.foodinspector.data.source.remote.API.OpenFoodFactsAPIClient;
+import com.fredericletellier.foodinspector.data.source.remote.API.ServerUnreachableException;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class CountryCategoryRemoteDataSource implements CountryCategoryDataSource{
+public class CountryCategoryRemoteDataSource implements CountryCategoryDataSource {
+
+    private static final String TAG = CountryCategoryRemoteDataSource.class.getName();
 
     private static CountryCategoryRemoteDataSource INSTANCE;
 
@@ -65,69 +66,39 @@ public class CountryCategoryRemoteDataSource implements CountryCategoryDataSourc
         checkNotNull(countryKey);
         checkNotNull(getCountryCategoryCallback);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(OpenFoodFactsAPIEndpointInterface.ENDPOINT_SEARCH)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(getOkHttpClient())
-                .build();
-
-        OpenFoodFactsAPIEndpointInterface apiService = retrofit.create(OpenFoodFactsAPIEndpointInterface.class);
-
-        Call<Search> call = apiService.getCountryCategory(categoryKey,countryKey);
+        OpenFoodFactsAPIClient openFoodFactsAPIClient = new OpenFoodFactsAPIClient(OpenFoodFactsAPIClient.ENDPOINT_SEARCH);
+        Call<Search> call = openFoodFactsAPIClient.getCountryCategory(categoryKey, countryKey);
 
         call.enqueue(new Callback<Search>() {
             @Override
             public void onResponse(Call<Search> call, Response<Search> response) {
-                if (response.isSuccessful()) {
-                    Search search = response.body();
-                    int sumOfProducts = search.getCount();
-                    CountryCategory countryCategory = new CountryCategory(categoryKey, countryKey, sumOfProducts);
-                    getCountryCategoryCallback.onCountryCategoryLoaded(countryCategory);
-                } else {
-                    APIError e = ErrorUtils.parseError(response);
-                    Throwable t = new Throwable(e.message(), new Throwable(String.valueOf(e.status())));
-                    getCountryCategoryCallback.onError(t);
+                if (!response.isSuccessful() || response.body() == null) {
+                    ServerUnreachableException e = new ServerUnreachableException();
+                    Log.w(TAG, e);
+                    getCountryCategoryCallback.onError(e);
+                    return;
                 }
+
+                Search search = response.body();
+
+                if (search.getCount() == 0) {
+                    CountryCategoryNotExistException e = new CountryCategoryNotExistException();
+                    Log.w(TAG, e);
+                    getCountryCategoryCallback.onError(e);
+                    return;
+                }
+
+                int sumOfProducts = search.getCount();
+                CountryCategory countryCategory = new CountryCategory(categoryKey, countryKey, sumOfProducts);
+                getCountryCategoryCallback.onCountryCategoryLoaded(countryCategory);
             }
 
             @Override
             public void onFailure(Call<Search> call, Throwable t) {
-                getCountryCategoryCallback.onError(t);
-
-                // TODO Optimize handling error
-                // Get action about error directly
-                // And call onError() without parameters (or something basic like a code)
-
-
-                //if (t instanceof IOException) {
-                //    errorType. = "Network problem (socket timeout, unknown host, etc.)";
-                //    errorDesc = String.valueOf(t.getCause());
-                //}
-                //else if (t instanceof IllegalStateException) {
-                //    errorType = "ConversionError";
-                //    errorDesc = String.valueOf(t.getCause());
-                //} else {
-                //    errorType = "Other Error";
-                //    errorDesc = String.valueOf(t.getLocalizedMessage());
-                //}
+                ServerUnreachableException e = new ServerUnreachableException();
+                Log.w(TAG, e);
+                getCountryCategoryCallback.onError(e);
             }
         });
-    }
-
-    private OkHttpClient getOkHttpClient() {
-        try {
-
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-
-            final HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            builder.addInterceptor(httpLoggingInterceptor);
-
-            OkHttpClient okHttpClient = builder.build();
-
-            return okHttpClient;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

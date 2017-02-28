@@ -25,19 +25,15 @@ import com.fredericletellier.foodinspector.data.Product;
 import com.fredericletellier.foodinspector.data.ProductBarcode;
 import com.fredericletellier.foodinspector.data.Search;
 import com.fredericletellier.foodinspector.data.source.ProductDataSource;
-import com.fredericletellier.foodinspector.data.source.remote.API.APIError;
-import com.fredericletellier.foodinspector.data.source.remote.API.ErrorUtils;
-import com.fredericletellier.foodinspector.data.source.remote.API.OpenFoodFactsAPIEndpointInterface;
+import com.fredericletellier.foodinspector.data.source.remote.API.OpenFoodFactsAPIClient;
+import com.fredericletellier.foodinspector.data.source.remote.API.ProductNotExistException;
+import com.fredericletellier.foodinspector.data.source.remote.API.ServerUnreachableException;
 
 import java.util.List;
 
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import okhttp3.logging.HttpLoggingInterceptor;
 
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -71,45 +67,41 @@ public class ProductRemoteDataSource implements ProductDataSource {
     @Override
     public void getProduct(@NonNull String barcode, @NonNull final GetProductCallback getProductCallback) {
         Log.d(TAG, "getProduct");
-
         checkNotNull(barcode);
         checkNotNull(getProductCallback);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(OpenFoodFactsAPIEndpointInterface.ENDPOINT_BARCODE)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(getOkHttpClient())
-                .build();
-
-        OpenFoodFactsAPIEndpointInterface apiService = retrofit.create(OpenFoodFactsAPIEndpointInterface.class);
-
-        Call<ProductBarcode> call = apiService.getProduct(barcode);
+        OpenFoodFactsAPIClient openFoodFactsAPIClient = new OpenFoodFactsAPIClient(OpenFoodFactsAPIClient.ENDPOINT_BARCODE);
+        Call<ProductBarcode> call = openFoodFactsAPIClient.getProduct(barcode);
 
         call.enqueue(new Callback<ProductBarcode>() {
             @Override
             public void onResponse(Call<ProductBarcode> call, Response<ProductBarcode> response) {
-                Log.d(TAG, "getProduct.onResponse");
 
-                if (response.isSuccessful() && response.body() != null) {
-                    Log.d(TAG, "getProduct.response.isSuccessful");
-
-                    ProductBarcode mProductBarcode = response.body();
-                    Product mProduct = mProductBarcode.getProduct();
-                    getProductCallback.onProductLoaded(mProduct);
-                } else {
-                    Log.d(TAG, "getProduct.response.isOnError");
-
-                    APIError e = ErrorUtils.parseError(response);
-                    Throwable t = new Throwable(e.message(), new Throwable(String.valueOf(e.status())));
-                    getProductCallback.onError(t);
+                if (!response.isSuccessful() || response.body() == null) {
+                    ServerUnreachableException e = new ServerUnreachableException();
+                    Log.w(TAG, e);
+                    getProductCallback.onError(e);
+                    return;
                 }
+
+                ProductBarcode productBarcode = response.body();
+
+                if (productBarcode.getStatus() != 1) {
+                    ProductNotExistException e = new ProductNotExistException();
+                    Log.w(TAG, e);
+                    getProductCallback.onError(e);
+                    return;
+                }
+
+                Product product = productBarcode.getProduct();
+                getProductCallback.onProductLoaded(product);
             }
 
             @Override
             public void onFailure(Call<ProductBarcode> call, Throwable t) {
-                Log.d(TAG, "getProduct.onFailure" + t.toString());
-
-                getProductCallback.onError(t);
+                ServerUnreachableException e = new ServerUnreachableException();
+                Log.w(TAG, e);
+                getProductCallback.onError(e);
             }
         });
     }
@@ -120,51 +112,39 @@ public class ProductRemoteDataSource implements ProductDataSource {
         checkNotNull(categoryKey);
         checkNotNull(nutritionGradeValue);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(OpenFoodFactsAPIEndpointInterface.ENDPOINT_SEARCH)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(getOkHttpClient())
-                .build();
-
-        OpenFoodFactsAPIEndpointInterface apiService = retrofit.create(OpenFoodFactsAPIEndpointInterface.class);
-
-        Call<Search> call = apiService.getProducts(categoryKey, nutritionGradeValue);
+        OpenFoodFactsAPIClient openFoodFactsAPIClient = new OpenFoodFactsAPIClient(OpenFoodFactsAPIClient.ENDPOINT_SEARCH);
+        Call<Search> call = openFoodFactsAPIClient.getProducts(categoryKey, nutritionGradeValue);
 
         call.enqueue(new Callback<Search>() {
             @Override
             public void onResponse(Call<Search> call, Response<Search> response) {
-                if (response.isSuccessful()) {
-                    List<Product> products = response.body().getProducts();
-                    getProductsCallback.onProductsLoaded(products);
-                } else {
-                    APIError e = ErrorUtils.parseError(response);
-                    Throwable t = new Throwable(e.message(), new Throwable(String.valueOf(e.status())));
-                    getProductsCallback.onError(t);
+
+                if (!response.isSuccessful() || response.body() == null) {
+                    ServerUnreachableException e = new ServerUnreachableException();
+                    Log.w(TAG, e);
+                    getProductsCallback.onError(e);
+                    return;
                 }
+
+                Search search = response.body();
+
+                if (search.getCount() == 0) {
+                    ProductNotExistException e = new ProductNotExistException();
+                    Log.w(TAG, e);
+                    getProductsCallback.onError(e);
+                    return;
+                }
+
+                List<Product> products = search.getProducts();
+                getProductsCallback.onProductsLoaded(products);
             }
 
             @Override
             public void onFailure(Call<Search> call, Throwable t) {
-                getProductsCallback.onError(t);
+                ProductNotExistException e = new ProductNotExistException();
+                Log.w(TAG, e);
+                getProductsCallback.onError(e);
             }
         });
-    }
-
-
-    private OkHttpClient getOkHttpClient() {
-        try {
-
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-
-            final HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            builder.addInterceptor(httpLoggingInterceptor);
-
-            OkHttpClient okHttpClient = builder.build();
-
-            return okHttpClient;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

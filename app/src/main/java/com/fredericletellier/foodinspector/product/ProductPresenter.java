@@ -165,26 +165,27 @@ public class ProductPresenter implements ProductContract.Presenter {
 
         List<Category> categoryList = new ArrayList<>();
 
-        //parse category
-        for (String parsableCategory: parsableCategories) {
-            String segments[] = parsableCategory.split(":");
-            String mShortParsableCategory;
-            if (segments.length > 0) {
-                mShortParsableCategory = segments[1];
-            } else {
-                mShortParsableCategory = segments[0];
+        if (parsableCategories != null) {
+            //parse category
+            for (String parsableCategory: parsableCategories) {
+                String segments[] = parsableCategory.split(":");
+                String mShortParsableCategory;
+                if (segments.length > 0) {
+                    mShortParsableCategory = segments[1];
+                } else {
+                    mShortParsableCategory = segments[0];
+                }
+
+                mShortParsableCategory = mShortParsableCategory.replace("-", " ");
+                String categoryName = mShortParsableCategory.substring(0, 1).toUpperCase() + mShortParsableCategory.substring(1).toLowerCase();
+
+                Category category = new Category(parsableCategory, categoryName);
+                categoryList.add(category);
             }
 
-            mShortParsableCategory = mShortParsableCategory.replace("-", " ");
-            String categoryName = mShortParsableCategory.substring(0, 1).toUpperCase() + mShortParsableCategory.substring(1).toLowerCase();
-
-            Category category = new Category(parsableCategory, categoryName);
-            categoryList.add(category);
-        }
-
-        if (categoryList.size() >= 1){
             mCategoryView.setLoadingIncator(false);
             mCategoryView.showCategories(categoryList);
+
         } else {
             mCategoryView.setLoadingIncator(false);
             mProductActivity.hideCategoryView();
