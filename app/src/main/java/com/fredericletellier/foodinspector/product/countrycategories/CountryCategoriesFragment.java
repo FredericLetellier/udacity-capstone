@@ -92,7 +92,7 @@ public class CountryCategoriesFragment extends Fragment implements ProductContra
 
     @Override
     public void showCategories(List<Category> categoryList) {
-        ArrayAdapter<Category> dataAdapter = new ArrayAdapter<Category>(this.getContext(), android.R.layout.simple_spinner_item, categoryList);
+        ArrayAdapter<Category> dataAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, categoryList);
         // Specify the layout to use when the list of choices appears
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner

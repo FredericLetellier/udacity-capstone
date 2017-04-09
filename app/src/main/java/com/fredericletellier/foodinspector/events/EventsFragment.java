@@ -30,8 +30,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.CursorAdapter;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatDrawableManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -211,7 +209,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
         mNoEventsView.setVisibility(View.VISIBLE);
 
         mNoEventMainView.setText(mainText);
-        mNoEventIcon.setImageDrawable(getResources().getDrawable(iconRes));
+        mNoEventIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), iconRes));
     }
 
     @Override

@@ -36,6 +36,7 @@
     <string name="new_event_error">Le produit associé ne peux être trouvé !</string>
 
     <string name="choose_category">Choississez une catégorie de produit :</string>
+    <string name="event_icon">Icône d\'un évenement</string>
 
     <string name="image_of_product">Image du product </string>
     <string name="image_of_suggestion">Image de la suggestion </string>

@@ -1,13 +1,8 @@
 package com.fredericletellier.foodinspector.widget;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Binder;
-import android.os.Build;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.media.MediaMetadataCompat;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;

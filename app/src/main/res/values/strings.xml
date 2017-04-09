@@ -25,6 +25,9 @@
     <string name="image_of_rank">Image of rank </string>
     <string name="error_product_cannot_be_load">Product cannot be load</string>
 
+    <string name="event_icon">Event icon</string>
+
+
     <string name="content_description_noEventsIcon">Icon for no events</string>
 
     <string name="barcode">Barcode %s</string>
