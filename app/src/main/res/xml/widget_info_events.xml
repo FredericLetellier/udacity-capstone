@@ -9,5 +9,6 @@
     android:initialLayout="@layout/widget_events_item"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="0"
+    android:previewImage="@drawable/widget_preview"
     android:widgetCategory="home_screen|keyguard"
     tools:ignore="UnusedAttribute" />
