@@ -3,12 +3,8 @@ package com.fredericletellier.foodinspector.widget;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
-import android.util.Log;
-import android.view.View;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -18,17 +14,11 @@ import com.fredericletellier.foodinspector.data.Event;
 import com.fredericletellier.foodinspector.data.source.local.db.EventPersistenceContract;
 import com.fredericletellier.foodinspector.product.ProductActivity;
 
-import java.util.concurrent.ExecutionException;
-
 /**
  * Created by fletellier on 09/04/17.
  */
 
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class EventsWidgetIntentService extends RemoteViewsService {
-    public final String LOG_TAG = EventsWidgetIntentService.class.getSimpleName();
-
-    private final static String EXTRA_LISTVIEW_BARCODE = "EXTRA_LISTVIEW_BARCODE";
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {

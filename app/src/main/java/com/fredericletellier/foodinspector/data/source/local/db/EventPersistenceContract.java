@@ -23,8 +23,6 @@ import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import com.fredericletellier.foodinspector.BuildConfig;
-
 /**
  * The contract used for the db to save the category locally.
  */
