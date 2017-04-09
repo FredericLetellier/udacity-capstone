@@ -49,7 +49,7 @@ public class ProductFragment extends Fragment implements ProductContract.Product
     private TextView mTxGenericName;
     private TextView mTxBrands;
     private TextView mTxQuantity;
-    private TextView mTxNutritionGrade;
+    private ImageView mIvNutritionGrade;
 
 
     public ProductFragment() {
@@ -84,7 +84,7 @@ public class ProductFragment extends Fragment implements ProductContract.Product
         mTxGenericName = (TextView) root.findViewById(R.id.txGenericName);
         mTxBrands = (TextView) root.findViewById(R.id.txBrands);
         mTxQuantity = (TextView) root.findViewById(R.id.txQuantity);
-        mTxNutritionGrade = (TextView) root.findViewById(R.id.txNutritionGrade);
+        mIvNutritionGrade = (ImageView) root.findViewById(R.id.ivNutritionGrade);
         return root;
     }
 
@@ -113,7 +113,28 @@ public class ProductFragment extends Fragment implements ProductContract.Product
         mTxGenericName.setText(product.getmGenericName());
         mTxBrands.setText(product.getmBrands());
         mTxQuantity.setText(product.getmQuantity());
-        mTxNutritionGrade.setText(product.getmNutritionGrades());
+
+        String rank = product.getmNutritionGrades();
+        switch (rank){
+            case ProductActivity.SUGGESTIONS_RANK_A:
+                mIvNutritionGrade.setImageResource(R.mipmap.nutriscore_a);
+                break;
+            case ProductActivity.SUGGESTIONS_RANK_B:
+                mIvNutritionGrade.setImageResource(R.mipmap.nutriscore_b);
+                break;
+            case ProductActivity.SUGGESTIONS_RANK_C:
+                mIvNutritionGrade.setImageResource(R.mipmap.nutriscore_c);
+                break;
+            case ProductActivity.SUGGESTIONS_RANK_D:
+                mIvNutritionGrade.setImageResource(R.mipmap.nutriscore_d);
+                break;
+            case ProductActivity.SUGGESTIONS_RANK_E:
+                mIvNutritionGrade.setImageResource(R.mipmap.nutriscore_e);
+                break;
+            default:
+                break;
+        }
+        mIvNutritionGrade.setContentDescription(R.string.image_of_rank + rank);
     }
 
     @Override

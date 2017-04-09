@@ -6,6 +6,8 @@
     <dimen name="activity_right_margin">8dp</dimen>
 
     <dimen name="text_size">8sp</dimen>
+    <dimen name="text_size_title">24sp</dimen>
+
 
     <dimen name="card_height">170dp</dimen>
 

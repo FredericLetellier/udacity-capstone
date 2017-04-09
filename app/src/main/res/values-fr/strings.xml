@@ -35,8 +35,11 @@
     <string name="loading_events_error">Une erreur est survenu durant le chargement des produits</string>
     <string name="new_event_error">Le produit associé ne peux être trouvé !</string>
 
+    <string name="choose_category">Choississez une catégorie de produit :</string>
+
     <string name="image_of_product">Image du product </string>
     <string name="image_of_suggestion">Image de la suggestion </string>
+    <string name="image_of_rank">Image du range </string>
     <string name="error_product_cannot_be_load">Le produit ne peut être chargé</string>
 
     <string name="content_description_noEventsIcon">Icône pour aucun évenements</string>

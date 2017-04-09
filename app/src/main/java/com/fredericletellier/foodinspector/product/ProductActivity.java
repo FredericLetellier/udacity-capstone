@@ -33,11 +33,11 @@ import com.fredericletellier.foodinspector.util.ActivityUtils;
 public class ProductActivity extends AppCompatActivity implements ProductContract.ActivityView {
 
     public static final String ARGUMENT_PRODUCT_BARCODE = "PRODUCT_BARCODE";
-    public static final String SUGGESTIONS_RANK_A = "A";
-    public static final String SUGGESTIONS_RANK_B = "B";
-    public static final String SUGGESTIONS_RANK_C = "C";
-    public static final String SUGGESTIONS_RANK_D = "D";
-    public static final String SUGGESTIONS_RANK_E = "E";
+    public static final String SUGGESTIONS_RANK_A = "a";
+    public static final String SUGGESTIONS_RANK_B = "b";
+    public static final String SUGGESTIONS_RANK_C = "c";
+    public static final String SUGGESTIONS_RANK_D = "d";
+    public static final String SUGGESTIONS_RANK_E = "e";
 
     public String productBarcode;
     public String countryCategory;

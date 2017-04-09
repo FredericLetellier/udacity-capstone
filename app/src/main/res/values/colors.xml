@@ -9,6 +9,7 @@
     <color name="secondary_text">#757575</color>
     <color name="divider_color">#BDBDBD</color>
 
+    <color name="white">#FFFFFF</color>
     <drawable name="touchFeedback">#CFD8DC</drawable>
     <color name="activated">#E0E0E0</color>
 </resources>

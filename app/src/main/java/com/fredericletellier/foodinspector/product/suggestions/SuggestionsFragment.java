@@ -85,10 +85,31 @@ public class SuggestionsFragment extends Fragment implements ProductContract.Sug
         View root = inflater.inflate(R.layout.suggestions_frag, container, false);
 
         mProgressView = root.findViewById(android.R.id.progress);
-        TextView mTxNutritionGrade = (TextView) root.findViewById(R.id.txNutritionGrade);
+        ImageView mIvNutritionGrade = (ImageView) root.findViewById(R.id.ivNutritionGrade);
         mSuggestionRecyclerView = (RecyclerView) root.findViewById(R.id.rvSuggestions);
 
-        mTxNutritionGrade.setText(this.getArguments().getString(ARGUMENT_SUGGESTIONS_RANK));
+        String rank = this.getArguments().getString(ARGUMENT_SUGGESTIONS_RANK);
+        switch (rank){
+            case ProductActivity.SUGGESTIONS_RANK_A:
+                mIvNutritionGrade.setImageResource(R.mipmap.nutriscore_a);
+                break;
+            case ProductActivity.SUGGESTIONS_RANK_B:
+                mIvNutritionGrade.setImageResource(R.mipmap.nutriscore_b);
+                break;
+            case ProductActivity.SUGGESTIONS_RANK_C:
+                mIvNutritionGrade.setImageResource(R.mipmap.nutriscore_c);
+                break;
+            case ProductActivity.SUGGESTIONS_RANK_D:
+                mIvNutritionGrade.setImageResource(R.mipmap.nutriscore_d);
+                break;
+            case ProductActivity.SUGGESTIONS_RANK_E:
+                mIvNutritionGrade.setImageResource(R.mipmap.nutriscore_e);
+                break;
+            default:
+                break;
+        }
+        mIvNutritionGrade.setContentDescription(R.string.image_of_rank + rank);
+
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);

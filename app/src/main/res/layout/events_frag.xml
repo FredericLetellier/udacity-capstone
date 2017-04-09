@@ -38,8 +38,8 @@
 
         <ImageView
             android:id="@+id/noEventsIcon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_mood_bad_black_24dp"
             android:contentDescription="@string/content_description_noEventsIcon"/>
@@ -49,8 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/no_events_all"
-            android:layout_marginBottom="@dimen/list_item_padding" />
+            android:text="@string/no_events_all"/>
 
     </LinearLayout>
 

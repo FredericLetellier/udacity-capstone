@@ -17,8 +17,12 @@
     <string name="loading_events_error">Error while loading tasks</string>
     <string name="new_event_error">The associated product cannot be found !</string>
 
+    <string name="choose_category">Choose a category of product :</string>
+
+
     <string name="image_of_product">Image of product </string>
     <string name="image_of_suggestion">Image of suggestion </string>
+    <string name="image_of_rank">Image of rank </string>
     <string name="error_product_cannot_be_load">Product cannot be load</string>
 
     <string name="content_description_noEventsIcon">Icon for no events</string>
