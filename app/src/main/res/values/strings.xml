@@ -25,5 +25,9 @@
 
     <string name="barcode">Barcode %s</string>
 
+    <string name="title_widget_events">Food inspector history</string>
+    <string name="empty_widget_list">No Information Available</string>
+
+
 
 </resources>

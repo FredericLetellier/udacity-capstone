@@ -3,47 +3,58 @@
     package="com.fredericletellier.foodinspector">
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
-        android:name="com.fredericletellier.foodinspector.FoodInspector"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:fullBackupContent="@xml/backup_descriptor">
+        android:supportsRtl="true">
 
         <activity
             android:name=".events.EventsActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="vnd.android.cursor.item/vnd.${packageName}.event" />
-            </intent-filter>
 
         </activity>
 
-        <activity android:name="com.fredericletellier.foodinspector.product.ProductActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.item/vnd.${packageName}.event" />
-            </intent-filter>
+        <activity android:name=".product.ProductActivity"
+            android:parentActivityName=".events.EventsActivity"
+            android:theme="@style/AppTheme">
         </activity>
 
         <activity android:name=".scan.BarcodeCaptureActivity"
-            android:label="Read Barcode"/>
+            android:parentActivityName=".events.EventsActivity"
+            android:theme="@style/AppTheme"/>
 
         <provider
+            android:authorities="com.fredericletellier.foodinspector"
             android:name=".data.source.local.FoodInspectorContentProvider"
-            android:authorities="${packageName}"
             android:exported="false" />
+
+
+
+        <receiver
+            android:name=".widget.EventsWidgetProvider"
+            android:label="@string/title_widget_events" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.fredericletellier.foodinspector.ACTION_DATA_UPDATED" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_events" />
+        </receiver>
+
+
+        <service android:name=".widget.EventsWidgetIntentService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
     </application>
 
 </manifest>

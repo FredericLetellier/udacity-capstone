@@ -18,6 +18,7 @@
 
 package com.fredericletellier.foodinspector.data.source.local.db;
 
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -29,22 +30,20 @@ import com.fredericletellier.foodinspector.BuildConfig;
  */
 public final class EventPersistenceContract {
 
-    public static final String CONTENT_AUTHORITY = BuildConfig.APPLICATION_ID;
-    public static final String CONTENT_EVENT_TYPE = "vnd.android.cursor.dir/" + CONTENT_AUTHORITY + "/" + EventEntry.TABLE_NAME;
-    public static final String CONTENT_EVENT_ITEM_TYPE = "vnd.android.cursor.item/" + CONTENT_AUTHORITY + "/" + EventEntry.TABLE_NAME;
-    public static final String VND_ANDROID_CURSOR_ITEM_VND = "vnd.android.cursor.item/vnd." + CONTENT_AUTHORITY + ".";
-    private static final String CONTENT_SCHEME = "content://";
-    public static final Uri BASE_CONTENT_URI = Uri.parse(CONTENT_SCHEME + CONTENT_AUTHORITY);
-    private static final String VND_ANDROID_CURSOR_DIR_VND = "vnd.android.cursor.dir/vnd." + CONTENT_AUTHORITY + ".";
-    private static final String SEPARATOR = "/";
+    public static final String CONTENT_AUTHORITY = "com.fredericletellier.foodinspector";
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     // To prevent someone from accidentally instantiating the contract class,
     // give it an empty constructor.
     private EventPersistenceContract() {}
 
-    public static Uri getBaseEventUri(String eventId) {
-        return Uri.parse(CONTENT_SCHEME + CONTENT_EVENT_ITEM_TYPE + SEPARATOR + eventId);
-    }
+    public static final Uri CONTENT_URI =
+            BASE_CONTENT_URI.buildUpon().appendPath(EventEntry.TABLE_NAME).build();
+
+    public static final String CONTENT_TYPE =
+            ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + EventEntry.TABLE_NAME;
+    public static final String CONTENT_ITEM_TYPE =
+            ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + EventEntry.TABLE_NAME;
 
     /* Inner class that defines the table contents */
     public static abstract class EventEntry implements BaseColumns {
@@ -53,7 +52,6 @@ public final class EventPersistenceContract {
         public static final String COLUMN_NAME_TIMESTAMP = "timestamp";
         public static final String COLUMN_NAME_BARCODE = "barcode";
         public static final String COLUMN_NAME_STATUS = "status";
-        public static final Uri CONTENT_EVENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
         public static String[] EVENT_COLUMNS = new String[]{
                 EventPersistenceContract.EventEntry._ID,
                 EventPersistenceContract.EventEntry.COLUMN_NAME_TIMESTAMP,
@@ -61,15 +59,11 @@ public final class EventPersistenceContract {
                 EventPersistenceContract.EventEntry.COLUMN_NAME_STATUS};
 
         public static Uri buildEventUriWith(long id) {
-            return ContentUris.withAppendedId(CONTENT_EVENT_URI, id);
-        }
-
-        public static Uri buildEventUriWith(String id) {
-            return CONTENT_EVENT_URI.buildUpon().appendPath(id).build();
+            return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
         public static Uri buildEventUri() {
-            return CONTENT_EVENT_URI.buildUpon().build();
+            return CONTENT_URI.buildUpon().build();
         }
 
     }

@@ -59,9 +59,9 @@ public class FoodInspectorContentProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case EVENT:
-                return EventPersistenceContract.CONTENT_EVENT_TYPE;
+                return EventPersistenceContract.CONTENT_TYPE;
             case EVENT_ITEM:
-                return EventPersistenceContract.CONTENT_EVENT_ITEM_TYPE;
+                return EventPersistenceContract.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }

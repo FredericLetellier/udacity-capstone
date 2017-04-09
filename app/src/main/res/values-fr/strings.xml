@@ -43,4 +43,7 @@
 
     <string name="barcode">Code-Barre %s</string>
 
+    <string name="title_widget_events">Food inspector (historique)</string>
+    <string name="empty_widget_list">Pas d\'informations disponible</string>
+
 </resources>

@@ -14,4 +14,13 @@
 
     <dimen name="fab_margin">16dp</dimen>
 
+    <dimen name="widget_events_default_width">250dp</dimen>
+    <dimen name="widget_events_default_height">180dp</dimen>
+    <dimen name="widget_events_min_resize_width">220dp</dimen>
+    <dimen name="widget_events_min_resize_height">180dp</dimen>
+    <dimen name="widget_events_large_width">220dp</dimen>
+
+    <dimen name="widget_margin">8dp</dimen>
+    <dimen name="list_icon">40dp</dimen>
+
 </resources>
