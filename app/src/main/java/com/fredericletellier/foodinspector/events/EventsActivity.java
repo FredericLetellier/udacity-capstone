@@ -29,6 +29,9 @@ import android.view.MenuItem;
 import com.fredericletellier.foodinspector.Injection;
 import com.fredericletellier.foodinspector.R;
 import com.fredericletellier.foodinspector.data.source.LoaderProvider;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 public class EventsActivity extends AppCompatActivity {
 
@@ -65,6 +68,11 @@ public class EventsActivity extends AppCompatActivity {
                 Injection.provideFoodInspectorRepository(getApplicationContext()),
                 eventsFragment
         );
+
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-3940256099942544/1033173712");
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
 
