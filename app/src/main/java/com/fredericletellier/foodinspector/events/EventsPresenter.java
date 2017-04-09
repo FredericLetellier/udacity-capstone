@@ -26,15 +26,10 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
 
-import com.fredericletellier.foodinspector.data.Event;
-import com.fredericletellier.foodinspector.data.Product;
 import com.fredericletellier.foodinspector.data.source.EventDataSource;
 import com.fredericletellier.foodinspector.data.source.FoodInspectorRepository;
 import com.fredericletellier.foodinspector.data.source.LoaderProvider;
-import com.fredericletellier.foodinspector.data.source.ProductDataSource;
 import com.google.android.gms.vision.barcode.Barcode;
-
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -140,12 +135,13 @@ public class EventsPresenter implements
 
             @Override
             public void onScanSavedWithError() {
-                //TODO
+                mEventsView.showNewEventError();
             }
 
             @Override
             public void onError(Throwable throwable) {
-                //TODO
+                Log.e(TAG, throwable.toString());
+                mEventsView.showNewEventError();
             }
         });
 

@@ -44,7 +44,6 @@ public class CategoryRemoteDataSource implements CategoryDataSource {
     // TODO Implement real remote method
     @Override
     public void getCategory(@NonNull String categoryKey, @NonNull GetCategoryCallback getCategoryCallback) {
-        String mLongCategoryKey = categoryKey;
         String segments[] = categoryKey.split(":");
 
         String mExtension;

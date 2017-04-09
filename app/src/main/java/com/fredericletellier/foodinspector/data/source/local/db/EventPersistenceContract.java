@@ -65,8 +65,7 @@ public final class EventPersistenceContract {
         }
 
         public static Uri buildEventUriWith(String id) {
-            Uri uri = CONTENT_EVENT_URI.buildUpon().appendPath(id).build();
-            return uri;
+            return CONTENT_EVENT_URI.buildUpon().appendPath(id).build();
         }
 
         public static Uri buildEventUri() {

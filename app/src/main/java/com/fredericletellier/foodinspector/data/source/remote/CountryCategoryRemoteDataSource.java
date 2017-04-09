@@ -28,8 +28,6 @@ import com.fredericletellier.foodinspector.data.source.remote.API.CountryCategor
 import com.fredericletellier.foodinspector.data.source.remote.API.OpenFoodFactsAPIClient;
 import com.fredericletellier.foodinspector.data.source.remote.API.ServerUnreachableException;
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

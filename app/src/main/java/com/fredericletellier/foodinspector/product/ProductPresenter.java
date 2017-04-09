@@ -18,16 +18,11 @@
 
 package com.fredericletellier.foodinspector.product;
 
-import android.database.Cursor;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 
 import com.fredericletellier.foodinspector.data.Category;
 import com.fredericletellier.foodinspector.data.Product;
 import com.fredericletellier.foodinspector.data.source.FoodInspectorRepository;
-import com.fredericletellier.foodinspector.data.source.LoaderProvider;
 import com.fredericletellier.foodinspector.data.source.ProductDataSource;
 
 import java.util.ArrayList;
@@ -140,19 +135,19 @@ public class ProductPresenter implements ProductContract.Presenter {
     }
 
     private void loadProduct(){
-        mProductView.setLoadingIncator(true);
+        mProductView.setLoadingIndicator(true);
 
         mFoodInspectorRepository.getProduct(mProductBarcode, new ProductDataSource.GetProductCallback() {
             @Override
             public void onProductLoaded(Product product) {
-                mProductView.setLoadingIncator(false);
+                mProductView.setLoadingIndicator(false);
                 mProductView.showProduct(product);
                 loadCountryCategories(product.getmParsableCategories());
             }
 
             @Override
             public void onError(Throwable throwable) {
-                mProductView.setLoadingIncator(false);
+                mProductView.setLoadingIndicator(false);
                 mProductView.showError();
             }
         });
@@ -161,7 +156,7 @@ public class ProductPresenter implements ProductContract.Presenter {
     private void loadCountryCategories(List<String> parsableCategories){
 
         mProductActivity.showCategoryView();
-        mCategoryView.setLoadingIncator(true);
+        mCategoryView.setLoadingIndicator(true);
 
         List<Category> categoryList = new ArrayList<>();
 
@@ -183,11 +178,11 @@ public class ProductPresenter implements ProductContract.Presenter {
                 categoryList.add(category);
             }
 
-            mCategoryView.setLoadingIncator(false);
+            mCategoryView.setLoadingIndicator(false);
             mCategoryView.showCategories(categoryList);
 
         } else {
-            mCategoryView.setLoadingIncator(false);
+            mCategoryView.setLoadingIndicator(false);
             mProductActivity.hideCategoryView();
         }
     }
@@ -196,23 +191,23 @@ public class ProductPresenter implements ProductContract.Presenter {
         switch (rank){
             case ProductActivity.SUGGESTIONS_RANK_A:
                 mProductActivity.showSuggestionsViewA();
-                mSuggestionsViewA.setLoadingIncator(true);
+                mSuggestionsViewA.setLoadingIndicator(true);
                 break;
             case ProductActivity.SUGGESTIONS_RANK_B:
                 mProductActivity.showSuggestionsViewB();
-                mSuggestionsViewB.setLoadingIncator(true);
+                mSuggestionsViewB.setLoadingIndicator(true);
                 break;
             case ProductActivity.SUGGESTIONS_RANK_C:
                 mProductActivity.showSuggestionsViewC();
-                mSuggestionsViewC.setLoadingIncator(true);
+                mSuggestionsViewC.setLoadingIndicator(true);
                 break;
             case ProductActivity.SUGGESTIONS_RANK_D:
                 mProductActivity.showSuggestionsViewD();
-                mSuggestionsViewD.setLoadingIncator(true);
+                mSuggestionsViewD.setLoadingIndicator(true);
                 break;
             case ProductActivity.SUGGESTIONS_RANK_E:
                 mProductActivity.showSuggestionsViewE();
-                mSuggestionsViewE.setLoadingIncator(true);
+                mSuggestionsViewE.setLoadingIndicator(true);
                 break;
             default:
                 break;
@@ -223,23 +218,23 @@ public class ProductPresenter implements ProductContract.Presenter {
             public void onProductsLoaded(List<Product> products) {
                 switch (rank){
                     case ProductActivity.SUGGESTIONS_RANK_A:
-                        mSuggestionsViewA.setLoadingIncator(false);
+                        mSuggestionsViewA.setLoadingIndicator(false);
                         mSuggestionsViewA.showProducts(products);
                         break;
                     case ProductActivity.SUGGESTIONS_RANK_B:
-                        mSuggestionsViewB.setLoadingIncator(false);
+                        mSuggestionsViewB.setLoadingIndicator(false);
                         mSuggestionsViewB.showProducts(products);
                         break;
                     case ProductActivity.SUGGESTIONS_RANK_C:
-                        mSuggestionsViewC.setLoadingIncator(false);
+                        mSuggestionsViewC.setLoadingIndicator(false);
                         mSuggestionsViewC.showProducts(products);
                         break;
                     case ProductActivity.SUGGESTIONS_RANK_D:
-                        mSuggestionsViewD.setLoadingIncator(false);
+                        mSuggestionsViewD.setLoadingIndicator(false);
                         mSuggestionsViewD.showProducts(products);
                         break;
                     case ProductActivity.SUGGESTIONS_RANK_E:
-                        mSuggestionsViewE.setLoadingIncator(false);
+                        mSuggestionsViewE.setLoadingIndicator(false);
                         mSuggestionsViewE.showProducts(products);
                         break;
                     default:
@@ -251,23 +246,23 @@ public class ProductPresenter implements ProductContract.Presenter {
             public void onError(Throwable throwable) {
                 switch (rank){
                     case ProductActivity.SUGGESTIONS_RANK_A:
-                        mSuggestionsViewA.setLoadingIncator(false);
+                        mSuggestionsViewA.setLoadingIndicator(false);
                         mProductActivity.hideSuggestionsViewA();
                         break;
                     case ProductActivity.SUGGESTIONS_RANK_B:
-                        mSuggestionsViewB.setLoadingIncator(false);
+                        mSuggestionsViewB.setLoadingIndicator(false);
                         mProductActivity.hideSuggestionsViewB();
                         break;
                     case ProductActivity.SUGGESTIONS_RANK_C:
-                        mSuggestionsViewC.setLoadingIncator(false);
+                        mSuggestionsViewC.setLoadingIndicator(false);
                         mProductActivity.hideSuggestionsViewC();
                         break;
                     case ProductActivity.SUGGESTIONS_RANK_D:
-                        mSuggestionsViewD.setLoadingIncator(false);
+                        mSuggestionsViewD.setLoadingIndicator(false);
                         mProductActivity.hideSuggestionsViewD();
                         break;
                     case ProductActivity.SUGGESTIONS_RANK_E:
-                        mSuggestionsViewE.setLoadingIncator(false);
+                        mSuggestionsViewE.setLoadingIndicator(false);
                         mProductActivity.hideSuggestionsViewE();
                         break;
                     default:

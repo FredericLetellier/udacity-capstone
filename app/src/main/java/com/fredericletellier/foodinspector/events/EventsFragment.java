@@ -20,6 +20,7 @@ package com.fredericletellier.foodinspector.events;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,22 +28,18 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.CursorAdapter;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.fredericletellier.foodinspector.R;
 import com.fredericletellier.foodinspector.data.Event;
-import com.fredericletellier.foodinspector.data.Product;
 import com.fredericletellier.foodinspector.product.ProductActivity;
 import com.fredericletellier.foodinspector.scan.BarcodeCaptureActivity;
 import com.google.android.gms.common.api.CommonStatusCodes;
@@ -197,7 +194,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
                     Log.d(TAG, "No barcode captured, intent data is null");
                 }
             } else {
-
+                Log.d(TAG, "onActivityResult is not a success");
             }
         }
         else {
@@ -226,6 +223,12 @@ public class EventsFragment extends Fragment implements EventsContract.View {
     public void showLoadingEventsError() {
         Log.d(TAG, "showLoadingEventsError");
         showMessage(getString(R.string.loading_events_error));
+    }
+
+    @Override
+    public void showNewEventError() {
+        Log.d(TAG, "showLoadingEventsError");
+        showMessage(getString(R.string.new_event_error));
     }
 
     private void showMessage(String message) {
@@ -284,7 +287,9 @@ public class EventsFragment extends Fragment implements EventsContract.View {
                 });
             } else {
 
-                viewHolder.title.setText("Barcode: " + event.getBarcode());
+                Resources res = context.getResources();
+                String barcode = res.getString(R.string.barcode, event.getBarcode());
+                viewHolder.title.setText(barcode);
 
                 switch (status) {
                     case Event.STATUS_NO_NETWORK:

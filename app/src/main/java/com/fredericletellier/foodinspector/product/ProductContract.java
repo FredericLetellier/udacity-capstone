@@ -45,18 +45,18 @@ public interface ProductContract {
     }
 
     interface ProductView extends BaseView<Presenter> {
-        void setLoadingIncator(Boolean active);
+        void setLoadingIndicator(Boolean active);
         void showProduct(Product product);
         void showError();
     }
 
     interface CategoryView extends BaseView<Presenter> {
-        void setLoadingIncator(Boolean active);
+        void setLoadingIndicator(Boolean active);
         void showCategories(List<Category> categoryList);
     }
 
     interface SuggestionsView extends BaseView<Presenter> {
-        void setLoadingIncator(Boolean active);
+        void setLoadingIndicator(Boolean active);
         void showProducts(List<Product> products);
     }
 

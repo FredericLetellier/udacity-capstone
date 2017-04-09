@@ -26,7 +26,6 @@ import com.fredericletellier.foodinspector.data.Search;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
@@ -62,9 +61,7 @@ public class OpenFoodFactsAPIClient {
             httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             builder.addInterceptor(httpLoggingInterceptor);
 
-            OkHttpClient okHttpClient = builder.build();
-
-            return okHttpClient;
+            return builder.build();
         } catch (Exception e) {
             throw new ServerUnreachableException();
         }

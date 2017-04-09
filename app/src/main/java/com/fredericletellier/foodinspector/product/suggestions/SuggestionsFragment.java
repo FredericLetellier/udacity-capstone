@@ -20,7 +20,6 @@ package com.fredericletellier.foodinspector.product.suggestions;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -52,7 +51,6 @@ public class SuggestionsFragment extends Fragment implements ProductContract.Sug
     private ProductContract.Presenter mPresenter;
 
     protected View mProgressView;
-    private TextView mTxNutritionGrade;
     private RecyclerView mSuggestionRecyclerView;
 
 
@@ -87,7 +85,7 @@ public class SuggestionsFragment extends Fragment implements ProductContract.Sug
         View root = inflater.inflate(R.layout.suggestions_frag, container, false);
 
         mProgressView = root.findViewById(android.R.id.progress);
-        mTxNutritionGrade = (TextView) root.findViewById(R.id.txNutritionGrade);
+        TextView mTxNutritionGrade = (TextView) root.findViewById(R.id.txNutritionGrade);
         mSuggestionRecyclerView = (RecyclerView) root.findViewById(R.id.rvSuggestions);
 
         mTxNutritionGrade.setText(this.getArguments().getString(ARGUMENT_SUGGESTIONS_RANK));
@@ -103,7 +101,7 @@ public class SuggestionsFragment extends Fragment implements ProductContract.Sug
     }
 
     @Override
-    public void setLoadingIncator(Boolean active) {
+    public void setLoadingIndicator(Boolean active) {
         if (active){
             //show loading indicator
             mProgressView.startAnimation(AnimationUtils.loadAnimation(this.getContext(), android.R.anim.fade_in));
@@ -150,8 +148,7 @@ public class SuggestionsFragment extends Fragment implements ProductContract.Sug
         public SuggestionViewHolder onCreateViewHolder(ViewGroup parent,int viewType) {
             // create a new view
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.suggestion_item, parent, false);
-            SuggestionViewHolder holder = new SuggestionViewHolder(view);
-            return holder;
+            return new SuggestionViewHolder(view);
         }
 
         @Override
@@ -162,6 +159,8 @@ public class SuggestionsFragment extends Fragment implements ProductContract.Sug
             Picasso.with(getContext())
                     .load(product.getmImageFrontSmallUrl())
                     .into(holder.ivImageSmall);
+
+            holder.ivImageSmall.setContentDescription(R.string.image_of_suggestion + product.getmProductName());
 
             holder.tvTitle.setText(product.getmProductName());
             holder.tvSubtitle.setText(product.getmQuantity());

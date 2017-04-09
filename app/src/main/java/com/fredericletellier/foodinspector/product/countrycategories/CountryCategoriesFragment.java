@@ -18,12 +18,9 @@
 
 package com.fredericletellier.foodinspector.product.countrycategories;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,10 +31,8 @@ import android.widget.Spinner;
 
 import com.fredericletellier.foodinspector.R;
 import com.fredericletellier.foodinspector.data.Category;
-import com.fredericletellier.foodinspector.events.EventsContract;
 import com.fredericletellier.foodinspector.product.ProductContract;
 
-import java.util.HashMap;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -82,7 +77,7 @@ public class CountryCategoriesFragment extends Fragment implements ProductContra
     }
 
     @Override
-    public void setLoadingIncator(Boolean active) {
+    public void setLoadingIndicator(Boolean active) {
         if (active){
             //show loading indicator
             mProgressView.startAnimation(AnimationUtils.loadAnimation(this.getContext(), android.R.anim.fade_in));

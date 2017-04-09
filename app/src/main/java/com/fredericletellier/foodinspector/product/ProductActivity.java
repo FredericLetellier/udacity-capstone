@@ -27,7 +27,6 @@ import android.view.View;
 import com.fredericletellier.foodinspector.Injection;
 import com.fredericletellier.foodinspector.R;
 import com.fredericletellier.foodinspector.product.countrycategories.CountryCategoriesFragment;
-import com.fredericletellier.foodinspector.data.source.LoaderProvider;
 import com.fredericletellier.foodinspector.product.suggestions.SuggestionsFragment;
 import com.fredericletellier.foodinspector.util.ActivityUtils;
 
@@ -68,7 +67,7 @@ public class ProductActivity extends AppCompatActivity implements ProductContrac
         /* Create fragment CountryCategories */
         CountryCategoriesFragment countryCategoriesFragment = (CountryCategoriesFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrameCountryCategories);
         if (countryCategoriesFragment == null) {
-            countryCategoriesFragment = countryCategoriesFragment.newInstance();
+            countryCategoriesFragment = CountryCategoriesFragment.newInstance();
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), countryCategoriesFragment, R.id.contentFrameCountryCategories
             );
         }

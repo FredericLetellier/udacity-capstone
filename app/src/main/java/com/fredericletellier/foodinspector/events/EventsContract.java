@@ -19,11 +19,9 @@
 package com.fredericletellier.foodinspector.events;
 
 import android.database.Cursor;
-import android.support.annotation.NonNull;
 
 import com.fredericletellier.foodinspector.BasePresenter;
 import com.fredericletellier.foodinspector.BaseView;
-import com.fredericletellier.foodinspector.data.Event;
 import com.google.android.gms.vision.barcode.Barcode;
 
 /**
@@ -44,6 +42,8 @@ public interface EventsContract {
         void showEventDetailsUi(String barcode);
 
         void showScanUi();
+
+        void showNewEventError();
 
     }
 

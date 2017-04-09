@@ -19,12 +19,7 @@
 package com.fredericletellier.foodinspector.events;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -34,13 +29,8 @@ import android.view.MenuItem;
 import com.fredericletellier.foodinspector.Injection;
 import com.fredericletellier.foodinspector.R;
 import com.fredericletellier.foodinspector.data.source.LoaderProvider;
-import com.fredericletellier.foodinspector.util.ActivityUtils;
 
 public class EventsActivity extends AppCompatActivity {
-
-    private DrawerLayout mDrawerLayout;
-
-    private EventsPresenter mEventsPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +38,7 @@ public class EventsActivity extends AppCompatActivity {
         setContentView(R.layout.events_act);
 
         // Set up the navigation drawer.
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setStatusBarBackground(R.color.colorPrimaryDark);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -69,7 +59,7 @@ public class EventsActivity extends AppCompatActivity {
         }
 
         // Create the presenter
-        mEventsPresenter = new EventsPresenter(
+        EventsPresenter mEventsPresenter = new EventsPresenter(
                 loaderProvider,
                 getSupportLoaderManager(),
                 Injection.provideFoodInspectorRepository(getApplicationContext()),

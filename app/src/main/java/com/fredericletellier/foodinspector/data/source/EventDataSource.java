@@ -22,8 +22,6 @@ import android.support.annotation.NonNull;
 
 import com.fredericletellier.foodinspector.data.Event;
 
-import java.util.List;
-
 /**
  * Main entry point for accessing event data.
  */

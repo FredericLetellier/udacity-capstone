@@ -39,7 +39,8 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_mood_bad_black_24dp" />
+            android:src="@drawable/ic_mood_bad_black_24dp"
+            android:contentDescription="@string/content_description_noEventsIcon"/>
 
         <TextView
             android:id="@+id/noEventsMain"

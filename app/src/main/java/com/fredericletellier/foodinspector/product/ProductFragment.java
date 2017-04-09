@@ -19,9 +19,10 @@
 package com.fredericletellier.foodinspector.product;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +38,8 @@ import com.squareup.picasso.Picasso;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ProductFragment extends Fragment implements ProductContract.ProductView {
+
+    private static final String TAG = ProductFragment.class.getName();
 
     private ProductContract.Presenter mPresenter;
 
@@ -86,7 +89,7 @@ public class ProductFragment extends Fragment implements ProductContract.Product
     }
 
     @Override
-    public void setLoadingIncator(Boolean active) {
+    public void setLoadingIndicator(Boolean active) {
         if (active){
             //show loading indicator
             mProgressView.startAnimation(AnimationUtils.loadAnimation(this.getContext(), android.R.anim.fade_in));
@@ -105,6 +108,7 @@ public class ProductFragment extends Fragment implements ProductContract.Product
                 .load(product.getmImageFrontUrl())
                 .into(mIvImageBig);
 
+        mIvImageBig.setContentDescription(R.string.image_of_product + product.getmProductName());
         mTxProductName.setText(product.getmProductName());
         mTxGenericName.setText(product.getmGenericName());
         mTxBrands.setText(product.getmBrands());
@@ -114,6 +118,10 @@ public class ProductFragment extends Fragment implements ProductContract.Product
 
     @Override
     public void showError() {
-        //TODO
+        Log.w(TAG, "Product cannot be load");
+        Snackbar.make(getView(), R.string.error_product_cannot_be_load, Snackbar.LENGTH_LONG).show();
+
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        fm.popBackStack();
     }
 }

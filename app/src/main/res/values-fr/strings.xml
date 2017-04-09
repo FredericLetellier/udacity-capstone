@@ -18,5 +18,29 @@
   -->
 
 <resources>
-    <string name="language_code">fr</string>
+    <string name="action_settings">Paramètres</string>
+
+    <string name="ok">OK</string>
+    <string name="permission_camera_rationale">L\'accès à la caméra est nécessaire pour la détection</string>
+    <string name="low_storage_error">Les dépendances du détecteur de visage ne peuvent pas être téléchargées en raison du faible espace de stockage de l\'appareil</string>
+    <string name="no_camera_permission">Cette application ne peut pas s\'exécuter car elle n\'a pas l\'autorisation d\'utiliser la caméra. L\'application va maintenant se fermer.</string>
+
+    <string name="event_subtitle_available">Le détail du produit n\'est pas disponible</string>
+    <string name="event_subtitle_no_network">En attente de réseau</string>
+    <string name="event_subtitle_not_in_off_database">Produit non reconnu par OpenFoodFacts</string>
+    <string name="event_subtitle_not_a_product">Non reconnu : produit alimentaire, vraiment ?</string>
+
+    <string name="no_events_all">Scanner un produit alimentaire pour commencer</string>
+
+    <string name="loading_events_error">Une erreur est survenu durant le chargement des produits</string>
+    <string name="new_event_error">Le produit associé ne peux être trouvé !</string>
+
+    <string name="image_of_product">Image du product </string>
+    <string name="image_of_suggestion">Image de la suggestion </string>
+    <string name="error_product_cannot_be_load">Le produit ne peut être chargé</string>
+
+    <string name="content_description_noEventsIcon">Icône pour aucun évenements</string>
+
+    <string name="barcode">Code-Barre %s</string>
+
 </resources>

@@ -30,9 +30,6 @@ import com.fredericletellier.foodinspector.data.source.EventDataSource;
 import com.fredericletellier.foodinspector.data.source.EventValues;
 import com.fredericletellier.foodinspector.data.source.local.db.EventPersistenceContract;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**

@@ -14,8 +14,4 @@
 
     <style name="Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="TwoWayView">
-        <item name="android:orientation">horizontal</item>
-    </style>
-
 </resources>

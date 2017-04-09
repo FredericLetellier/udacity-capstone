@@ -18,9 +18,6 @@
 
 package com.fredericletellier.foodinspector.data;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -181,7 +178,7 @@ public class CountryCategory {
         if (other == this) {
             return true;
         }
-        if ((other instanceof CountryCategory) == false) {
+        if (!(other instanceof CountryCategory)) {
             return false;
         }
         CountryCategory rhs = ((CountryCategory) other);
