@@ -25,7 +25,7 @@
     <string name="low_storage_error">Les dépendances du détecteur de visage ne peuvent pas être téléchargées en raison du faible espace de stockage de l\'appareil</string>
     <string name="no_camera_permission">Cette application ne peut pas s\'exécuter car elle n\'a pas l\'autorisation d\'utiliser la caméra. L\'application va maintenant se fermer.</string>
 
-    <string name="event_subtitle_available">Le détail du produit n\'est pas disponible</string>
+    <string name="event_subtitle_available">Le détail du produit est disponible</string>
     <string name="event_subtitle_no_network">En attente de réseau</string>
     <string name="event_subtitle_not_in_off_database">Produit non reconnu par OpenFoodFacts</string>
     <string name="event_subtitle_not_a_product">Non reconnu : produit alimentaire, vraiment ?</string>

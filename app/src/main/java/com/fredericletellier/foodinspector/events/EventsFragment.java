@@ -28,7 +28,10 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.CursorAdapter;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatDrawableManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -277,6 +280,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
             String status = event.getStatus();
 
             if (status.equals(Event.STATUS_OK)) {
+                viewHolder.icon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_search_black_24dp));
                 viewHolder.title.setText(event.getBarcode());
                 viewHolder.subtitle.setText(R.string.event_subtitle_available);
                 viewHolder.rowView.setOnClickListener(new View.OnClickListener() {
@@ -293,13 +297,16 @@ public class EventsFragment extends Fragment implements EventsContract.View {
 
                 switch (status) {
                     case Event.STATUS_NO_NETWORK:
+                        viewHolder.icon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_cloud_off_black_24dp));
                         viewHolder.subtitle.setText(R.string.event_subtitle_no_network);
                         break;
                     default:
                     case Event.STATUS_NOT_IN_OFF_DATABASE:
+                        viewHolder.icon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_layers_clear_black_24dp));
                         viewHolder.subtitle.setText(R.string.event_subtitle_not_in_off_database);
                         break;
                     case Event.STATUS_NOT_A_PRODUCT:
+                        viewHolder.icon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_layers_clear_black_24dp));
                         viewHolder.subtitle.setText(R.string.event_subtitle_not_a_product);
                         break;
                 }
@@ -315,11 +322,13 @@ public class EventsFragment extends Fragment implements EventsContract.View {
 
         public static class ViewHolder {
             public final View rowView;
+            public final ImageView icon;
             public final TextView title;
             public final TextView subtitle;
 
             public ViewHolder(View view) {
                 rowView = view;
+                icon = (ImageView) view.findViewById(R.id.icon);
                 title = (TextView) view.findViewById(R.id.title);
                 subtitle = (TextView) view.findViewById(R.id.subtitle);
             }

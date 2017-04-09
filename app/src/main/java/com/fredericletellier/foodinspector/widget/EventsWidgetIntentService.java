@@ -3,8 +3,11 @@ package com.fredericletellier.foodinspector.widget;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Binder;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.media.MediaMetadataCompat;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -82,19 +85,23 @@ public class EventsWidgetIntentService extends RemoteViewsService {
 
                 switch (status) {
                     case Event.STATUS_OK:
+                        views.setImageViewResource(R.id.widget_item_icon, R.drawable.ic_search_black_24dp);
                         views.setTextViewText(R.id.widget_item_subtitle, getResources().getString(R.string.event_subtitle_available));
                         final Intent fillInIntent = new Intent();
                         fillInIntent.putExtra(ProductActivity.ARGUMENT_PRODUCT_BARCODE, barcode);
                         views.setOnClickFillInIntent(R.id.widget_list_item, fillInIntent);
                         break;
                     case Event.STATUS_NO_NETWORK:
+                        views.setImageViewResource(R.id.widget_item_icon, R.drawable.ic_cloud_off_black_24dp);
                         views.setTextViewText(R.id.widget_item_subtitle, getResources().getString(R.string.event_subtitle_no_network));
                         break;
                     default:
                     case Event.STATUS_NOT_IN_OFF_DATABASE:
+                        views.setImageViewResource(R.id.widget_item_icon, R.drawable.ic_layers_clear_black_24dp);
                         views.setTextViewText(R.id.widget_item_subtitle, getResources().getString(R.string.event_subtitle_not_in_off_database));
                         break;
                     case Event.STATUS_NOT_A_PRODUCT:
+                        views.setImageViewResource(R.id.widget_item_icon, R.drawable.ic_layers_clear_black_24dp);
                         views.setTextViewText(R.id.widget_item_subtitle, getResources().getString(R.string.event_subtitle_not_a_product));
                         break;
                 }
